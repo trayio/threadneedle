@@ -204,3 +204,5 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
   } 
 } 
 ```
+
+Like `expects`, `notExpects` can be specified shorthand, or as a function. 
