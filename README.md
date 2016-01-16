@@ -45,8 +45,8 @@ threadneedle.getLists({
 
 # API
 
-* [addMethod](#addMethod)
-* [addMethodsInDirectory](#addMethodsInDirectory)
+* [addMethod](#addmethod)
+* [addMethodsInDirectory](#addmethodsindirectory)
 
 
 ## addMethod
@@ -214,3 +214,34 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 ```
 
 Like `expects`, `notExpects` can be specified shorthand, or as a function. 
+
+
+## addMethodsInDirectory
+
+While using `addMethod` directly is useful, often it can be simpler and more declarative to place all your methods in a directory (one file per method), and then require the whole directory, running `addMethod` on each one:
+
+```js
+threadneedle.addMethodsInDirectory(__dirname+'/methods');
+```
+
+This lends itself to a simple API module paradign, where the entire API is `export`ed:
+
+```js
+// api.js
+var ThreadNeedle = require('threadneedle');
+var threadneedle = new ThreadNeedle();
+
+threadneedle.addMethodsInDirectory(__dirname+'/methods');
+
+module.exports = threadneedle;
+```
+
+
+```js
+// someconsumerfile.js
+var api = require('../api');
+
+api.getLists({
+  // ...
+});
+```
