@@ -226,6 +226,16 @@ threadneedle.addMethodsInDirectory(__dirname+'/methods');
 
 This lends itself to a simple API module paradign, where the entire API is `export`ed:
 
+
+```js
+// mySampleMethod.js
+
+module.exports = {
+  method: 'get',
+  url: '...'
+};
+```
+
 ```js
 // api.js
 var ThreadNeedle = require('threadneedle');
