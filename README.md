@@ -33,7 +33,8 @@ And to actually run the method and get the MailChimp lists:
 
 ```js
 threadneedle.getLists({
-  apiKey: '123'
+  apiKey: '123',
+  dc: 'us5'
 })
 
 .done(function (result) {
@@ -212,6 +213,7 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
   } 
 } 
 ```
+
 
 Like `expects`, `notExpects` can be specified shorthand, or as a function. 
 
