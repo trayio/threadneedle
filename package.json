@@ -1,0 +1,41 @@
+{
+  "name": "threadneedle",
+  "version": "1.0.0",
+  "description": "A framework for simplifying working with HTTP-based APIs.",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisjhoughton/threadneedle.git"
+  },
+  "keywords": [
+    "needle",
+    "rest",
+    "http",
+    "api"
+  ],
+  "author": "Chris Houghton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisjhoughton/threadneedle/issues"
+  },
+  "homepage": "https://github.com/chrisjhoughton/threadneedle#readme",
+  "dependencies": {
+    "lodash": "^4.0.0",
+    "needle": "^0.11.0",
+    "when": "^3.7.7"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.3.4",
+    "mocha-unfunk-reporter": "^0.4.0"
+  }
+}
