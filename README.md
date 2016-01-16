@@ -45,6 +45,10 @@ threadneedle.getLists({
 
 # API
 
+* [addMethod](#addMethod)
+* [addMethodsInDirectory](#addMethodsInDirectory)
+
+
 ## addMethod
 
 The vast majority of threadneedle focuses around this singular method. Whenever you run `addMethod`, you're adding another method to the core `threadneedle` object. 
