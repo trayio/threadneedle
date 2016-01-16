@@ -38,6 +38,8 @@ threadneedle.getLists({
 
 .done(function (result) {
   console.log(result);
+}, function (error) {
+  console.log(error);
 });
 ```
 
@@ -53,6 +55,8 @@ Required parameters are:
 
 * `url`
 * `method`
+
+`addMethod` uses JavaScript promises (using [When.js](https://github.com/cujojs/when)), which allows for the chaining of multiple API calls together, and smart error handling.
 
 Each of the properties you can pass to `addMethod` are described below:
 
