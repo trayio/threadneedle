@@ -143,3 +143,64 @@ For example, to send & receive the data as json, just declare the `json` option:
 }
 ```
 
+### expects
+
+Usually you'll want to do some kind of validation after you've made a request to a third party service. Typically validations will be one of the following:
+
+* Status codes - was the result a `200` (good) or a `401` (bad) request?
+* Body - what's the response returned? Does it have an `error` message, or similar?
+
+These can be declared within the `expects` object:
+
+```js
+{
+  expects: {
+    statusCode: 200,
+    body: 'euid'
+  }
+}
+```
+
+The above expects the response to return a `200` response status code, and for the response body to have the text `euid` in. If either of these things fail to happen, the method will error.
+
+You can also specify these parameters as arrays:
+
+* For `statusCode`, if __ANY__ of the status codes match the response the validation will pass.
+* For `body`, if __ALL__ of the string texts are found in the response, the validation will pass.
+
+You can also declare `expects` as a function, where you can run your own custom validation logic. If your logic determines there's an error, you should return it as a string from the function:
+
+```js
+{
+  expects: function (res, body) {
+    if (res.statusCode !== 201) {
+      return 'Invalid status code';
+    }
+  }
+}
+```
+
+You can also specify the above in shorthand, declaring the status codes OR body strings on the top level:
+
+```js
+{
+  expects: 201
+}
+
+{
+  expects: ['euid', 'email']
+}
+```
+
+### notExpects
+
+The counterpart to `expects`, except that if __ANY__ of the specified status codes / body strings are found, the method will fail:
+
+```js
+{
+  notExpects: {
+    statusCode: [401, 404, 403],
+    body: 'error'
+  } 
+} 
+```
