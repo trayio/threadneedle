@@ -123,3 +123,23 @@ Or if you'd prefer, as a function:
 }
 ```
 
+### options
+
+Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+
+For example, to send & receive the data as json, just declare the `json` option:
+
+```js
+{
+  method: 'post',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
+  data: {
+    id: '{{listId}}',
+    apikey: '{{apiKey}}'
+  },
+  options: {
+    json: true
+  }
+}
+```
+
