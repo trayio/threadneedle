@@ -132,6 +132,14 @@ Or if you'd prefer, as a function:
 }
 ```
 
+### query
+
+If you have to specify a lot of parameters in the query string for the URL, you can specify them here.
+The data will be URL encoded and appended at the end of the endpoint.
+
+Templating is supported, as with the `endpoint` and `data` parameters.
+
+
 ### options
 
 Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.

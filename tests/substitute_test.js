@@ -51,4 +51,15 @@ describe('#substitute', function () {
     assert.deepEqual(output, [{ firstName: 'Chris', list: '123' }]);
   });
 
+  it('should substitute into function templates', function () {
+    var url = function (params) {
+      return 'https://'+params.dc+'.api.mailchimp.com/2.0/lists/list?apikey='+params.apiKey;
+    };
+    var output = substitute(url, {
+      dc: 'us5',
+      apiKey: '123'
+    });
+    assert.strictEqual(output, 'https://us5.api.mailchimp.com/2.0/lists/list?apikey=123');
+  });
+
 });
