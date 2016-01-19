@@ -156,6 +156,26 @@ describe('#validateExpects', function () {
       assert.equal(err.message, 'Invalid body response. Could not find "christopher" in the response: {"result":false}');
     });
 
+    it('should validate shorthand status code: ok', function () {
+      var err = validateExpects({
+        body: {
+          result: true
+        }
+      }, 'result');
+      assert(_.isUndefined(err));
+    }); 
+
+    it('should validate shorthand status code: error', function () {
+      var err = validateExpects({
+        body: {
+          result: true
+        }
+      }, 'result2');
+      assert(_.isError(err));
+      assert.equal(err.message, 'Invalid body response. Could not find "result2" in the response: {"result":true}');
+    }); 
+
+
     it('should validate shorthand body as array: ok', function () {
       var err = validateExpects({
         body: {
@@ -199,13 +219,5 @@ describe('#validateExpects', function () {
     }); 
 
   });
-
-  // it('should validate shorthand body', function () {
-  //   var err = validateExpects({
-  //     statusCode: 201
-  //   }, 200);
-  //   assert(_.isError(err));
-  //   assert.equal(err.message, 'Invalid status code. Got 201 but expected: 200');
-  // }); 
 
 });
