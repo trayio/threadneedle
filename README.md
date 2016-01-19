@@ -197,7 +197,7 @@ You can also declare `expects` as a function, where you can run your own custom 
 }
 ```
 
-You can also specify the above in shorthand, declaring the status codes OR body strings on the top level:
+You can also specify the above in shorthand, declaring the status codes OR body strings at the top level:
 
 ```js
 {
