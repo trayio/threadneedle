@@ -220,4 +220,41 @@ describe('#validateExpects', function () {
 
   });
 
+  describe('Function', function () {
+
+    it('should validate a blank function as fine', function () {
+      var called = false;
+
+      var err = validateExpects({
+        body: {
+          result: false
+        }
+      }, function (res) {
+        called = true;
+      });
+
+      assert(_.isUndefined(err));
+      assert(called);
+    });
+
+    it('should error for a message returned from a function', function () {
+      var called = false;
+
+      var err = validateExpects({
+        body: {
+          result: false
+        }
+      }, function (res) {
+        called = true;
+        return 'A nasty error';
+      });
+
+      assert(called);
+      assert(_.isError(err));
+      assert.equal(err.message, 'A nasty error');
+    });
+
+
+  });
+
 });
