@@ -2,6 +2,7 @@ var assert       = require('assert');
 var _            = require('lodash');
 var express      = require('express');
 var bodyParser   = require('body-parser');
+var when         = require('when');
 var randString   = require('mout/random/randString');
 var ThreadNeedle = require('../');
 
@@ -343,6 +344,40 @@ describe('#addMethod', function () {
       });
     });
 
+
+  });
+
+
+  describe('Ad-hoc', function () {
+
+    var threadneedle;
+    beforeEach(function () {
+      threadneedle = new ThreadNeedle();
+    });
+
+    it('should be fine with allowing the method config to be a function', function (done) {
+
+      var called = false;
+
+      threadneedle.addMethod('myCustomMethod', function (params) {
+        return when.promise(function (resolve, reject) {
+
+          assert.equal(params.name, 'Chris');
+          called = true;
+
+          setTimeout(function () {
+            resolve();
+          }, 200);
+
+        });
+      });
+
+      threadneedle.myCustomMethod({ name: 'Chris' }).done(function () {
+        assert(called);
+        done();
+      });
+
+    });
 
   });
 

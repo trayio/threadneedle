@@ -120,6 +120,7 @@ As with the URL, you can provide Mustache parameters here:
 Or if you'd prefer, as a function:
 
 ```js
+// On the `data` object level:
 {
   method: 'post',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
@@ -128,6 +129,18 @@ Or if you'd prefer, as a function:
       id: params.listId,
       apikey: params.apiKey
     };
+  }
+}
+
+// On the `data` key level: (recursive)
+{
+  method: 'post',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
+  data: {
+    apikey: '{{apiKey}}',
+    id: function (params) {
+      return String(params);
+    }
   }
 }
 ```
@@ -265,3 +278,42 @@ api.getLists({
   // ...
 });
 ```
+
+
+## Known limitations
+
+### Typecasting: 
+
+When parameters are substituted into objects like `data`, they are automatically typecasted using [Mout](moutjs.com/docs/latest/string.html#typecast) when subtituted into the Mustache templates.
+
+This results in the following behaviour:
+
+```js
+// myMethod.js
+{
+  method: 'get',
+  url: 'http://mydomain.com/api'
+  data: {
+    age: '{{age}}'
+  },
+  options: {
+    json: true
+  }
+}
+
+// Running the method
+threadneedle.myMethod({
+  age: '25'
+})
+
+// The raw JSON body sent:
+{
+  age: 25
+}
+```
+
+Usually this kind of behaviour is harmless, but occasionally you might accidentally send an ID as a number 
+instead of a string, for example.
+
+To get around this, use a function wrapper for the whole `data` object, or for the parameter individually.
+

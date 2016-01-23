@@ -85,6 +85,26 @@ describe('#substitute', function () {
     assert.strictEqual(output, 'https://us5.api.mailchimp.com/2.0/lists/list?apikey=123');
   });
 
+  it('should substitute into function templates within nested objects', function () {
+    var output = substitute({
+      id: function (params) {
+        return String(params.id);
+      }
+    }, {
+      id: 123
+    });
+    assert.strictEqual(output.id, '123');
+
+    var output = substitute({
+      id: function (params) {
+        return String(params.id);
+      }
+    }, {
+      id: '123'
+    });
+    assert.strictEqual(output.id, '123');
+  });
+
   it('should typecast automatically', function () {
     var output = substitute({
       age: '{{age}}',
@@ -110,5 +130,6 @@ describe('#substitute', function () {
     assert.strictEqual(output.age, '25');
     assert.strictEqual(output.isReincarnated, 'true');
   });
+
 
 });
