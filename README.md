@@ -48,6 +48,7 @@ threadneedle.getLists({
 
 * [addMethod](#addmethod)
 * [addMethodsInDirectory](#addmethodsindirectory)
+* [utils](#utils)
 
 
 ## addMethod
