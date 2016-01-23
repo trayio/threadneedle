@@ -241,6 +241,26 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 Like `expects`, `notExpects` can be specified shorthand, or as a function. 
 
 
+### Function input
+
+Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper. 
+
+While this behaviour should be kept to a minimum, you can simply pass a function (that should return a promise)
+when calling `addMethod`, for you to run your own asynchronous logic:
+
+```js
+threadneedle.addMethod('myWeirdMethod', function () {
+  return when.promise(function (resolve, reject) {
+
+    // random async logic
+    
+    resolve();
+
+  });
+});
+```
+
+
 ## addMethodsInDirectory
 
 While using `addMethod` directly is useful, often it can be simpler and more declarative to place all your methods in a directory (one file per method), and then require the whole directory, running `addMethod` on each one:
