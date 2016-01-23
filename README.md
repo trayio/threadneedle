@@ -157,6 +157,8 @@ Templating is supported, as with the `endpoint` and `data` parameters.
 
 Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
 
+Also gets templated.
+
 For example, to send & receive the data as json, just declare the `json` option:
 
 ```js
@@ -308,7 +310,7 @@ threadneedle.myMethod({
 
 // The raw JSON body sent:
 {
-  age: 25
+  age: 25 // should be '25'
 }
 ```
 
