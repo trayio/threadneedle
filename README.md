@@ -317,3 +317,5 @@ instead of a string, for example.
 
 To get around this, use a function wrapper for the whole `data` object, or for the parameter individually.
 
+TODO - respect the type of the param inputted on single parameter substitutions.
+
