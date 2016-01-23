@@ -6,7 +6,7 @@ Threadneedle works by allowing you to declare various API methods, providing you
 ## Installation
 
 ```
-npm install threadneedle
+npm install threadneedle --save
 ```
 
 
@@ -249,16 +249,26 @@ While this behaviour should be kept to a minimum, you can simply pass a function
 when calling `addMethod`, for you to run your own asynchronous logic:
 
 ```js
-threadneedle.addMethod('myWeirdMethod', function () {
+threadneedle.addMethod('myWeirdMethod', function (params, utils) {
+
   return when.promise(function (resolve, reject) {
 
     // random async logic
-    
+
     resolve();
 
   });
 });
 ```
+
+Another good use-case here is to create a method that wraps around a chain of other methods. Because these methods
+are run in the context where `this` is `threadneedle`, you can easily access the other methods you've declared.
+
+The `utils` object contains some stuff that may be useful:
+
+* `_`: the Lodash module
+* `when`: the When.js module
+* `needle`: the raw Needle module
 
 
 ## addMethodsInDirectory

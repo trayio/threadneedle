@@ -359,10 +359,21 @@ describe('#addMethod', function () {
 
       var called = false;
 
-      threadneedle.addMethod('myCustomMethod', function (params) {
+      threadneedle.addMethod('myCustomMethod', function (params, utils) {
+
+        assert(_.isObject(params));
+
+        // Validate the utils
+        assert(utils._.find);
+        assert(utils.needle.get);
+        assert(utils.when.promise);
+
+        var self = this;
+
         return when.promise(function (resolve, reject) {
 
           assert.equal(params.name, 'Chris');
+          assert.deepEqual(self, threadneedle); // context
           called = true;
 
           setTimeout(function () {
@@ -375,6 +386,8 @@ describe('#addMethod', function () {
       threadneedle.myCustomMethod({ name: 'Chris' }).done(function () {
         assert(called);
         done();
+      }, function (err) {
+        console.log(err);
       });
 
     });
