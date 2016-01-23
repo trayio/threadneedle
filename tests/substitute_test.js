@@ -33,6 +33,29 @@ describe('#substitute', function () {
     });
   });
 
+  it('should substitute into nested object templates', function () {
+    var data = {
+      nested: {
+        apikey: '{{apiKey}}',
+        id: '{{listId}}',
+        name: 'The name is {{name}}, created at {{created}}'  
+      }
+    };
+    var output = substitute(data, {
+      apiKey: '123',
+      listId: '6543',
+      name: 'Chris',
+      created: new Date(2016, 1, 5)
+    });
+    assert.deepEqual(output, {
+      nested: {
+        apikey: '123',
+        id: '6543',
+        name: 'The name is Chris, created at Fri Feb 05 2016 00:00:00 GMT+0000 (GMT)'
+      }
+    });
+  });
+
   it('should substitute into array templates', function () {
     var data = ['{{name}}', '{{listId}}'];
     var output = substitute(data, {
@@ -60,6 +83,32 @@ describe('#substitute', function () {
       apiKey: '123'
     });
     assert.strictEqual(output, 'https://us5.api.mailchimp.com/2.0/lists/list?apikey=123');
+  });
+
+  it('should typecast automatically', function () {
+    var output = substitute({
+      age: '{{age}}',
+      isReincarnated: '{{reincarnated}}'
+    }, {
+      age: 25,
+      reincarnated: true
+    });
+
+    assert.strictEqual(output.age, 25);
+    assert.strictEqual(output.isReincarnated, true);
+  });
+
+  it.skip('should not typecast keys inputted not as string params', function () {
+    var output = substitute({
+      age: '{{reincarnated}} at {{age}}',
+      isReincarnated: '{{reincarnated}}'
+    }, {
+      age: '25',
+      reincarnated: 'true'
+    });
+
+    assert.strictEqual(output.age, '25');
+    assert.strictEqual(output.isReincarnated, 'true');
   });
 
 });
