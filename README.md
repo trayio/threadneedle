@@ -1,5 +1,5 @@
 # threadneedle
-An opinionated abstraction layer for interacting with third party HTTP-based APIs. Built on top of the fantastic [Needle](https://github.com/tomas/needle) API to provide a more structured and declarative framework.
+An opinionated ORM-style abstraction layer for interacting with third party HTTP-based APIs. Built on top of the fantastic [Needle](https://github.com/tomas/needle) API to provide a more structured and declarative framework.
 
 Threadneedle works by allowing you to declare and run various API methods, easily handle expected responses, and providing you with a vastly simpler framework for running requests in your core code.
 
