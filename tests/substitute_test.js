@@ -1,5 +1,6 @@
 var assert       = require('assert');
 var _            = require('lodash');
+var utils        = require('../lib/utils');
 var substitute   = require('../lib/addMethod/substitute');
 
 
@@ -86,17 +87,21 @@ describe('#substitute', function () {
   });
 
   it('should substitute into function templates within nested objects', function () {
+    var numberUtils = 0;
+
     var output = substitute({
-      id: function (params) {
+      id: function (params, utils) {
+        numberUtils = _.keys(utils).length;
         return String(params.id);
       }
     }, {
       id: 123
-    });
+    }, utils);
     assert.strictEqual(output.id, '123');
+    assert.equal(numberUtils, 3);
 
     var output = substitute({
-      id: function (params) {
+      id: function (params, utils) {
         return String(params.id);
       }
     }, {
