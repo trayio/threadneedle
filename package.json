@@ -27,6 +27,7 @@
   "homepage": "https://github.com/chrisjhoughton/threadneedle#readme",
   "dependencies": {
     "lodash": "^4.0.0",
+    "mout": "^0.11.1",
     "mustache": "^2.2.1",
     "needle": "^0.11.0",
     "when": "^3.7.7"
