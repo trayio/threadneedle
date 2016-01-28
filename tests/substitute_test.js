@@ -105,30 +105,39 @@ describe('#substitute', function () {
     assert.strictEqual(output.id, '123');
   });
 
-  it('should typecast automatically', function () {
+  it('should preserve the parameter types on single variable substitutions', function () {
     var output = substitute({
       age: '{{age}}',
-      isReincarnated: '{{reincarnated}}'
+      isReincarnated: '{{reincarnated}}',
+      isClever: '{{clever}}'
     }, {
       age: 25,
-      reincarnated: true
+      reincarnated: true,
+      clever: null
     });
 
     assert.strictEqual(output.age, 25);
     assert.strictEqual(output.isReincarnated, true);
+    assert.strictEqual(output.isClever, null);
   });
 
-  it.skip('should not typecast keys inputted not as string params', function () {
+  it('should not typecast keys inputted not as string params', function () {
     var output = substitute({
-      age: '{{reincarnated}} at {{age}}',
-      isReincarnated: '{{reincarnated}}'
+      age: '{{age}}',
+      isReincarnated: '{{reincarnated}}',
+      idea: '{{idea}}',
+      isClever: '{{clever}}'
     }, {
       age: '25',
-      reincarnated: 'true'
+      reincarnated: 'true',
+      clever: 'false',
+      idea: 'null'
     });
 
     assert.strictEqual(output.age, '25');
     assert.strictEqual(output.isReincarnated, 'true');
+    assert.strictEqual(output.isClever, 'false');
+    assert.strictEqual(output.idea, 'null');
   });
 
 

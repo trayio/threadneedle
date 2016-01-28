@@ -391,43 +391,7 @@ api.getLists({
 });
 ```
 
+## TODO
 
-## Known limitations
-
-### Typecasting: 
-
-When parameters are substituted into objects like `data`, they are automatically typecasted using [Mout](moutjs.com/docs/latest/string.html#typecast) when subtituted into the Mustache templates.
-
-This results in the following behaviour:
-
-```js
-// myMethod.js
-{
-  method: 'get',
-  url: 'http://mydomain.com/api'
-  data: {
-    age: '{{age}}'
-  },
-  options: {
-    json: true
-  }
-}
-
-// Running the method
-threadneedle.myMethod({
-  age: '25'
-})
-
-// The raw JSON body sent:
-{
-  age: 25 // should be '25'
-}
-```
-
-Usually this kind of behaviour is harmless, but occasionally you might accidentally send an ID as a number 
-instead of a string, for example.
-
-To get around this, use a function wrapper for the whole `data` object, or for the parameter individually.
-
-TODO - respect the type of the param inputted on single parameter substitutions.
+* Chaining of methods. Is there a way of cleaning this up to make it more declarative?
 
