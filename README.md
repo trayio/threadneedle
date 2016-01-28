@@ -48,7 +48,6 @@ threadneedle.getLists({
 
 * [addMethod](#addmethod)
 * [addMethodsInDirectory](#addmethodsindirectory)
-* [utils](#utils)
 
 
 ## addMethod
@@ -314,8 +313,10 @@ While this behaviour should be kept to a minimum, you can simply pass a function
 when calling `addMethod`, for you to run your own asynchronous logic:
 
 ```js
-threadneedle.addMethod('myWeirdMethod', function (params, utils) {
-  return utils.when.promise(function (resolve, reject) {
+var when = require('when');
+
+threadneedle.addMethod('myWeirdMethod', function (params) {
+  return when.promise(function (resolve, reject) {
 
     // random async logic
 
@@ -330,7 +331,7 @@ Because these methods are run in the context where `this` is `threadneedle`, you
 access the other methods you've declared:
 
 ```js
-threadneedle.addMethod('myChainedMethod', function (params, utils) {
+threadneedle.addMethod('myChainedMethod', function (params) {
   var self = this;
   return when.promise(function (resolve, reject) {
 
@@ -389,17 +390,6 @@ api.getLists({
   // ...
 });
 ```
-
-
-## utils
-
-The `utils` object is passed as the final argument to all `function` substitutions, and contains some modules that may be useful:
-
-* `_`: the Lodash module
-* `when`: the When.js module
-* `needle`: the raw Needle module
-
-Can use this instead of installing the modules separately.
 
 
 ## Known limitations

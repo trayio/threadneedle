@@ -556,14 +556,9 @@ describe('#addMethod', function () {
 
       var called = false;
 
-      threadneedle.addMethod('myCustomMethod', function (params, utils) {
+      threadneedle.addMethod('myCustomMethod', function (params) {
 
         assert(_.isObject(params));
-
-        // Validate the utils
-        assert(utils._.find);
-        assert(utils.needle.get);
-        assert(utils.when.promise);
 
         var self = this;
 
