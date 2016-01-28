@@ -242,7 +242,71 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 Like `expects`, `notExpects` can be specified shorthand, or as a function. 
 
 
-### Function input
+### before
+
+If you'd like to map or alter the `params` before running the main request, you can use
+the `before` function argument:
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  before: function (params) {
+    params.doAnExtraThing = true;
+    return params;
+
+    // You can also return a promise which should resolve with the params.
+  }
+}
+```
+
+
+### afterSuccess
+
+Sometimes you'll want to translate, format, or map the success response data in some way.
+You can use the `afterSuccess` function argument to do this:
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  afterSuccess: function (body) {
+    body.name = body.first_name + ' ' + body.last_name;
+    return body;
+
+    // You can also return a promise to do async logic. It must resolve
+    // with the body.
+  }
+}
+```
+
+
+### afterFailure
+
+Sometimes you'll want to handle the failure message in some way. You can do 
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  afterError: function (err) {
+    if (err.response.statusCode === 403) {
+      err.code = 'oauth_refresh';
+    } 
+    return err;
+
+    // You can also return a promise to do async logic. It should resolve
+    // with the error object.
+  }
+}
+```
+
+
+
+### Function inputs
 
 Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper. 
 
@@ -251,8 +315,7 @@ when calling `addMethod`, for you to run your own asynchronous logic:
 
 ```js
 threadneedle.addMethod('myWeirdMethod', function (params, utils) {
-
-  return when.promise(function (resolve, reject) {
+  return utils.when.promise(function (resolve, reject) {
 
     // random async logic
 
@@ -262,8 +325,29 @@ threadneedle.addMethod('myWeirdMethod', function (params, utils) {
 });
 ```
 
-Another good use-case here is to create a method that wraps around a chain of other methods. Because these methods
-are run in the context where `this` is `threadneedle`, you can easily access the other methods you've declared.
+Another good use-case here is to create a method that wraps around a chain of other methods. 
+Because these methods are run in the context where `this` is `threadneedle`, you can easily 
+access the other methods you've declared:
+
+```js
+threadneedle.addMethod('myChainedMethod', function (params, utils) {
+  var self = this;
+  return when.promise(function (resolve, reject) {
+
+    self.getMetaData(params)
+
+    .then(function (metaData) {
+      return self.getLists({
+        dc: metaData.dc,
+        apiKey: params.apiKey
+      });
+    })
+
+    .done(resolve, reject);
+
+  });
+});
+```
 
 
 ## addMethodsInDirectory
