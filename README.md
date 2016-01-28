@@ -1,12 +1,12 @@
 # threadneedle
-An opinionated abstraction layer for interacting with third party HTTP-based APIs. Built on top of the fantastic [Needle](https://github.com/tomas/needle) API to provide a more structured and declarative framework.
+An opinionated ORM-style abstraction layer for interacting with third party HTTP-based APIs. Built on top of the fantastic [Needle](https://github.com/tomas/needle) API to provide a more structured and declarative framework.
 
-Threadneedle works by allowing you to declare various API methods, providing you with a vastly simpler framework for running the actual requests in your core code.
+Threadneedle works by allowing you to declare and run various API methods, easily handle expected responses, and providing you with a vastly simpler framework for running requests in your core code.
 
 ## Installation
 
 ```
-npm install threadneedle
+npm install threadneedle --save
 ```
 
 
@@ -120,6 +120,7 @@ As with the URL, you can provide Mustache parameters here:
 Or if you'd prefer, as a function:
 
 ```js
+// On the `data` object level:
 {
   method: 'post',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
@@ -128,6 +129,18 @@ Or if you'd prefer, as a function:
       id: params.listId,
       apikey: params.apiKey
     };
+  }
+}
+
+// On the `data` key level: (recursive)
+{
+  method: 'post',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
+  data: {
+    apikey: '{{apiKey}}',
+    id: function (params) {
+      return String(params);
+    }
   }
 }
 ```
@@ -143,6 +156,8 @@ Templating is supported, as with the `endpoint` and `data` parameters.
 ### options
 
 Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+
+Also gets templated.
 
 For example, to send & receive the data as json, just declare the `json` option:
 
@@ -226,6 +241,116 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 Like `expects`, `notExpects` can be specified shorthand, or as a function. 
 
 
+### before
+
+If you'd like to map or alter the `params` before running the main request, you can use
+the `before` function argument:
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  before: function (params) {
+    params.dc = 'us5';
+    return params;
+
+    // You can also return a promise which should resolve with the params.
+  }
+}
+```
+
+
+### afterSuccess
+
+Sometimes you'll want to translate, format, or map the success response data in some way.
+You can use the `afterSuccess` function argument to do this:
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  afterSuccess: function (body) {
+    body.name = body.first_name + ' ' + body.last_name;
+    return body;
+
+    // You can also return a promise to do async logic. It must resolve
+    // with the body.
+  }
+}
+```
+
+
+### afterFailure
+
+Sometimes you'll want to handle the failure message in some way. You can do 
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  afterError: function (err) {
+    if (err.response.statusCode === 403) {
+      err.code = 'oauth_refresh';
+    } 
+    return err;
+
+    // You can also return a promise to do async logic. It should resolve
+    // with the error object.
+  }
+}
+```
+
+
+
+### Function inputs
+
+Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper. 
+
+While this behaviour should be kept to a minimum, you can simply pass a function (that should return a promise)
+when calling `addMethod`, for you to run your own asynchronous logic:
+
+```js
+var when = require('when');
+
+threadneedle.addMethod('myWeirdMethod', function (params) {
+  return when.promise(function (resolve, reject) {
+
+    // random async logic
+
+    resolve();
+
+  });
+});
+```
+
+Another good use-case here is to create a method that wraps around a chain of other methods. 
+Because these methods are run in the context where `this` is `threadneedle`, you can easily 
+access the other methods you've declared:
+
+```js
+threadneedle.addMethod('myChainedMethod', function (params) {
+  var self = this;
+  return when.promise(function (resolve, reject) {
+
+    self.getMetaData(params)
+
+    .then(function (metaData) {
+      return self.getLists({
+        dc: metaData.dc,
+        apiKey: params.apiKey
+      });
+    })
+
+    .done(resolve, reject);
+
+  });
+});
+```
+
+
 ## addMethodsInDirectory
 
 While using `addMethod` directly is useful, often it can be simpler and more declarative to place all your methods in a directory (one file per method), and then require the whole directory, running `addMethod` on each one:
@@ -265,3 +390,8 @@ api.getLists({
   // ...
 });
 ```
+
+## TODO
+
+* Chaining of methods. Is there a way of cleaning this up to make it more declarative?
+
