@@ -345,6 +345,71 @@ describe('#addMethod', function () {
     });
 
 
+    it('should run before on the params synchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        before: function (params) {
+          params.name = params.firstName + ' ' + params.lastName;
+          return params;
+        },
+        data: function (params) {
+          return params;
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris',
+        lastName: 'Houghton'
+      }).done(function(result) {
+        assert.deepEqual(result, {
+          firstName: 'Chris',
+          lastName: 'Houghton',
+          name: 'Chris Houghton'
+        });
+        done();
+      });
+    });
+
+    it('should run before on the params asynchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        before: function (params) {
+          return when.promise(function (resolve) {
+            params.name = params.firstName + ' ' + params.lastName;
+            resolve(params);
+          });
+        },
+        data: function (params) {
+          return params;
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris',
+        lastName: 'Houghton'
+      }).done(function(result) {
+        assert.deepEqual(result, {
+          firstName: 'Chris',
+          lastName: 'Houghton',
+          name: 'Chris Houghton'
+        });
+        done();
+      });
+    });
+
+
   });
 
 
