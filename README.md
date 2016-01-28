@@ -253,7 +253,7 @@ the `before` function argument:
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
   before: function (params) {
-    params.doAnExtraThing = true;
+    params.dc = 'us5';
     return params;
 
     // You can also return a promise which should resolve with the params.
