@@ -33,6 +33,7 @@ describe('#validateExpects', function () {
       statusCode: 202
     });
     assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_status_code');
     assert.equal(err.message, 'Invalid response status code');
 
     var err = validateExpects({
@@ -41,12 +42,14 @@ describe('#validateExpects', function () {
       statusCode: [202, 204]
     });
     assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_status_code');
     assert.equal(err.message, 'Invalid response status code');
 
     var err = validateExpects({
       statusCode: 201
     }, 204);
     assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_status_code');
     assert.equal(err.message, 'Invalid response status code');
   });
 
@@ -87,6 +90,7 @@ describe('#validateExpects', function () {
       body: 'christopher'
     });
     assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
 
     var err = validateExpects({
@@ -97,6 +101,7 @@ describe('#validateExpects', function () {
       body: ['chris', 'superresult']
     });
     assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
 
     var err = validateExpects({
@@ -105,6 +110,7 @@ describe('#validateExpects', function () {
       }
     }, 'christopher');
     assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
   });
   
