@@ -345,7 +345,7 @@ describe('#addMethod', function () {
     });
 
 
-    it('should run before on the params synchronously', function (done) {
+    it('should run `before` on the params synchronously', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
         method: 'post',
@@ -376,7 +376,7 @@ describe('#addMethod', function () {
       });
     });
 
-    it('should run before on the params asynchronously', function (done) {
+    it('should run `before` on the params asynchronously', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
         method: 'post',
@@ -404,6 +404,138 @@ describe('#addMethod', function () {
           firstName: 'Chris',
           lastName: 'Houghton',
           name: 'Chris Houghton'
+        });
+        done();
+      });
+    });
+
+    it('should run `afterSuccess` on the params synchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterSuccess: function (body) {
+          return {
+            age: 25
+          };
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result, { age: 25 });
+        done();
+      });
+    });
+
+    it('should run `afterSuccess` on the params asynchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterSuccess: function (body) {
+          return when({
+            age: 25
+          });
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result, { age: 25 });
+        done();
+      });
+    });
+
+    it('should run `afterFailure` on the params synchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterFailure: function (body) {
+          body.code = 'oauth_refresh';
+          return body;
+        },
+        expects: 201,
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function() {}, function (err) {
+        assert.deepEqual(err, {
+          message: 'Invalid response status code',
+          response: {
+            statusCode: 200,
+            body: {
+              firstName: 'Chris'
+            }
+          },
+          expects: {
+            statusCode: [201]
+          },
+          code: 'oauth_refresh'
+        });
+        done();
+      });
+    });
+
+    it('should run `afterFailure` on the params asynchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterFailure: function (body) {
+          body.code = 'oauth_refresh';
+          return when(body);
+        },
+        expects: 201,
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function() {}, function (err) {
+        assert.deepEqual(err, {
+          message: 'Invalid response status code',
+          response: {
+            statusCode: 200,
+            body: {
+              firstName: 'Chris'
+            }
+          },
+          expects: {
+            statusCode: [201]
+          },
+          code: 'oauth_refresh'
         });
         done();
       });
