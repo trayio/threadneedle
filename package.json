@@ -1,5 +1,5 @@
 {
-  "name": "threadneedle",
+  "name": "@trayio/threadneedle",
   "version": "1.0.0",
   "description": "A framework for simplifying working with HTTP-based APIs.",
   "main": "lib/index.js",
