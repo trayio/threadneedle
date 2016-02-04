@@ -380,9 +380,15 @@ A base level URL. Automatically gets **prepended** to the individual method URL 
 method URL starts with http(s)://. (In which case the global `url` field has no affect on the call)
 
 ```js
+// global config
 {
   url: 'https://{{dc}}.api.mailchimp.com/2.0'
 }
+
+// and then in `addMethod`:
+threadneedle.addMethod({
+  url: '/lists/subscribe'
+})
 ```
 
 If `url` is a function, it will get evaluated and prepended.
@@ -437,7 +443,7 @@ Rather than write the same code in every method, use this global method.
 {
   afterFailure: function (err) {
     if (err.response.statusCode === 429) {
-      err.code = call_limit_exceeded';
+      err.code = 'call_limit_exceeded';
     }
     return err;
 
