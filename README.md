@@ -47,7 +47,16 @@ threadneedle.getLists({
 # API
 
 * [addMethod](#addmethod)
+  * [method](#method)
   * [url](#url)
+  * [data](#data)
+  * [query](#query)
+  * [options](#options)
+  * [expects](#expects)
+  * [notExpects](#notExpects)
+  * [before](#before)
+  * [afterSuccess](#afterSuccess)
+  * [afterFailure](#afterFailure)
 * [global](#global)
 
 
