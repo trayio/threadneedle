@@ -58,7 +58,6 @@ threadneedle.getLists({
   * [afterSuccess](#afterSuccess)
   * [afterFailure](#afterFailure)
 * [global](#global)
-  * [method](#method-1)
   * [url](#url-1)
   * [data](#data-1)
   * [query](#query-1)
@@ -450,7 +449,19 @@ You can also run this as a function, which should return an object.
 
 ### options
 
-The options for the request.
+The options for the request. Gets deep extended into the `options` object. Great for things 
+like header based authentication.
+
+```js
+{
+  options: {
+    username: 'chris',
+    password: 'topher'
+  }
+}
+```
+
+You can also run this as a function, which should return an object.
 
 
 ### before
