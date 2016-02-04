@@ -444,6 +444,8 @@ Rather than write the same code in every method, use this global method.
       err.code = call_limit_exceeded';
     }
     return err;
+
+    // You can also return a promise which should resolve with the params.
   }
 }
 ```
