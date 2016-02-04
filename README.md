@@ -365,13 +365,13 @@ wouldn't it be nice to do this on a generic level?
 Example usage:
 
 ```js
-{
+threadneedle.global({
   url: 'https://{{dc}}.api.mailchimp.com/2.0',
   before: function (params) {
     params.dc = 'us5';
     return params;
   }
-}
+});
 ```
 
 ### url
