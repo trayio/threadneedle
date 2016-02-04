@@ -48,6 +48,7 @@ threadneedle.getLists({
 
 * [addMethod](#addmethod)
 * [addMethodsInDirectory](#addmethodsindirectory)
+* [global](#global)
 
 
 ## addMethod
@@ -291,7 +292,7 @@ Sometimes you'll want to handle the failure message in some way. You can do
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  afterError: function (err) {
+  afterFailure: function (err) {
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
     } 
@@ -390,6 +391,101 @@ api.getLists({
   // ...
 });
 ```
+
+
+## global
+
+Typically you'll be running one threadneedle instance for each third party API service 
+(MailChimp, Facebook etc) you're integrating with. Sometimes these services will have 
+generic response status codes and authentication criteria - and you'll want to write 
+the logic once, rather than add the same logic across every module.
+
+For example with MailChimp - you're provided with an access token, but not the data center. 
+You can use the access token to get the data center in the `addMethod` `before` argument, but 
+wouldn't it be nice to do this on a generic level? 
+
+Example usage:
+
+```js
+{
+  url: 'https://{{dc}}.api.mailchimp.com/2.0',
+  before: function (params) {
+    params.dc = 'us5';
+    return params;
+  }
+}
+```
+
+### url
+
+A base level URL. Automatically gets **prepended** to the individual method URL **unless** the 
+method URL starts with http(s)://. (In which case the global `url` field has no affect on the call)
+
+```js
+{
+  url: 'https://{{dc}}.api.mailchimp.com/2.0'
+}
+```
+
+If `url` is a function, it will get evaluated and prepended.
+
+
+### before
+
+A function to run before every query happens. Runs **before** the `before` function declared 
+in the model, if specified. 
+
+```js
+{
+  before: function (params) {
+    params.dc = 'us5';
+    return params;
+
+    // You can also return a promise which should resolve with the params.
+  }
+}
+```
+
+
+### afterSuccess
+
+Runs after a method runs successfully, immediately **before** the `afterSuccess` function 
+of the individual method.
+
+```js
+{
+  afterSuccess: function (body) {
+    body.errors = [];
+
+    // You can also return a promise which should resolve with the params.
+  }
+}
+```
+
+
+### afterFailure 
+
+Runs after a method runs successfully, immediately **before** the `afterFailure` function 
+of the individual method.
+
+A good example use-case here is a generic error handler for invalid status codes. For example: 
+
+* Campaign Monitor - a `121` status code means that an access token needs refreshing
+* Shopify - a `429` status code means the API limits have been exceeded
+
+Rather than write the same code in every method, use this global method.
+
+```js
+{
+  afterFailure: function (err) {
+    if (err.response.statusCode === 429) {
+      err.code = call_limit_exceeded';
+    }
+    return err;
+  }
+}
+```
+
 
 ## TODO
 
