@@ -47,7 +47,6 @@ threadneedle.getLists({
 # API
 
 * [addMethod](#addmethod)
-* [addMethodsInDirectory](#addmethodsindirectory)
 
 
 ## addMethod
@@ -347,47 +346,6 @@ threadneedle.addMethod('myChainedMethod', function (params) {
     .done(resolve, reject);
 
   });
-});
-```
-
-
-## addMethodsInDirectory
-
-While using `addMethod` directly is useful, often it can be simpler and more declarative to place all your methods in a directory (one file per method), and then require the whole directory, running `addMethod` on each one:
-
-```js
-threadneedle.addMethodsInDirectory(__dirname+'/methods');
-```
-
-This lends itself to a simple API module paradign, where the entire API is `export`ed:
-
-
-```js
-// mySampleMethod.js
-
-module.exports = {
-  method: 'get',
-  url: '...'
-};
-```
-
-```js
-// api.js
-var ThreadNeedle = require('threadneedle');
-var threadneedle = new ThreadNeedle();
-
-threadneedle.addMethodsInDirectory(__dirname+'/methods');
-
-module.exports = threadneedle;
-```
-
-
-```js
-// someconsumerfile.js
-var api = require('../api');
-
-api.getLists({
-  // ...
 });
 ```
 
