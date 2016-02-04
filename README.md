@@ -47,6 +47,7 @@ threadneedle.getLists({
 # API
 
 * [addMethod](#addmethod)
+  * [url](#url)
 * [global](#global)
 
 
@@ -392,6 +393,45 @@ threadneedle.addMethod({
 ```
 
 If `url` is a function, it will get evaluated and prepended.
+
+
+### data
+
+Data for POST, PUT etc that you want to send in every request. Gets extended by the `data` 
+config in the individual methods.
+
+```js
+{
+  data: {
+    id: '{{id}}'
+  }
+}
+```
+
+You can also run this as a function, which should return an object.
+
+
+### query 
+
+Query string data that you'd like to send in every request. Gets extended by the `query` object
+in each individual method before being encoded into a string.
+
+Useful for things like passing API keys in the query string:
+
+```js
+{
+  query: {
+    apikey: '{{apiKey}}'
+  }
+}
+```
+
+You can also run this as a function, which should return an object.
+
+
+### options
+
+The options for the request.
 
 
 ### before
