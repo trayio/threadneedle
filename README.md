@@ -47,11 +47,7 @@ threadneedle.getLists({
 # API
 
 * [addMethod](#addmethod)
-<<<<<<< HEAD
-* [addMethodsInDirectory](#addmethodsindirectory)
 * [global](#global)
-=======
->>>>>>> master
 
 
 ## addMethod
