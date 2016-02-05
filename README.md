@@ -366,6 +366,9 @@ Typically you'll be running one threadneedle instance for each third party API s
 generic response status codes and authentication criteria - and you'll want to write 
 the logic once, rather than add the same logic across every module.
 
+The philosophy of the `global` system is that the less you have to write in each method config, 
+the better.
+
 The parameters correspond directly to those for [addMethod](#addmethod):
 
 * [url](#url-1)
@@ -390,8 +393,6 @@ threadneedle.global({
 });
 ```
 
-The **philosophy** of the `global` system is that the less you have to write in each method config, 
-the better.
 
 ### url
 
