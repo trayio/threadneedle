@@ -407,7 +407,7 @@ method URL starts with http(s)://. (In which case the global `url` field has no 
 
 // and then in `addMethod`:
 threadneedle.addMethod({
-  url: '/lists/list',
+  url: '/lists/{{id}}',
   method: 'get'
 })
 ```
