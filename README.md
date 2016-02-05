@@ -415,7 +415,7 @@ If `url` is a function, it will get evaluated and prepended.
 
 ### data
 
-Data for POST, PUT etc that you want to send in every request. Gets extended by the `data` 
+Data for POST, PUT etc that you want to send in every request. Gets deep extended by the `data` 
 config in the individual methods.
 
 ```js
@@ -462,6 +462,38 @@ like header based authentication.
 ```
 
 You can also run this as a function, which should return an object.
+
+
+### expects
+
+Global [expects](#expects) config. Good for things like always expecting all calls to return with a 
+specific set of status codes:
+
+```js
+{
+  expects: {
+    statusCode: [200, 201]
+  }
+}
+```
+
+You can also run this as a function,
+
+
+### notExpects
+
+Global [notExpects](#notexpects) config. Good for things like specifically flagging certain status 
+codes as errors, or for automatically erroring when an `errors` field appears in the response.
+
+```js
+{
+  notExpects: {
+    body: 'errors'
+  }
+}
+```
+
+You can also run this as a function.
 
 
 ### before
