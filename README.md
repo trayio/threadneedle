@@ -557,8 +557,3 @@ Rather than write the same code in every method, use this global method.
 ```
 
 
-## TODO
-
-* Chaining of methods. Is there a way of cleaning this up to make it more declarative?
-* `2xx` response status codes in `expects` and `notExpects` 
-
