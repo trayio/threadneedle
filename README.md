@@ -378,7 +378,7 @@ The parameters correspond directly to those for [addMethod](#addmethod):
 * [expects](#expects-1)
 * [notExpects](#notexpects-1)
 * [before](#before-1)
-* [afterSuccess](#afterfuccess-1)
+* [afterSuccess](#aftersuccess-1)
 * [afterFailure](#afterfailure-1)
 
 Example usage:
