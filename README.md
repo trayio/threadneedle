@@ -6,7 +6,7 @@ Threadneedle works by allowing you to declare and run various API methods, easil
 ## Installation
 
 ```
-npm install threadneedle --save
+npm install @trayio/threadneedle --save
 ```
 
 
