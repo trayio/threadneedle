@@ -469,7 +469,9 @@ You can also run this as a function, which should return an object.
 ### expects
 
 Global [expects](#expects) config. Good for things like always expecting all calls to return with a 
-specific set of status codes:
+specific set of status codes.
+
+Gets extended if declared in the individual method config.
 
 ```js
 {
@@ -486,6 +488,8 @@ You can also run this as a function,
 
 Global [notExpects](#notexpects) config. Good for things like specifically flagging certain status 
 codes as errors, or for automatically erroring when an `errors` field appears in the response.
+
+Gets extended if declared in the individual method config.
 
 ```js
 {
