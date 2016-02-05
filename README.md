@@ -361,7 +361,7 @@ threadneedle.addMethod('myChainedMethod', function (params) {
 
 ## global
 
-Typically you'll be running one threadneedle instance for each third party API service 
+Typically you'll be creating one threadneedle instance for each third party API service 
 (MailChimp, Facebook etc) you're integrating with. Sometimes these services will have 
 generic response status codes and authentication criteria - and you'll want to write 
 the logic once, rather than add the same logic across every module.
