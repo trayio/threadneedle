@@ -47,26 +47,7 @@ threadneedle.getLists({
 # API
 
 * [addMethod](#addmethod)
-  * [method](#method)
-  * [url](#url)
-  * [data](#data)
-  * [query](#query)
-  * [options](#options)
-  * [expects](#expects)
-  * [notExpects](#notExpects)
-  * [before](#before)
-  * [afterSuccess](#afterSuccess)
-  * [afterFailure](#afterFailure)
 * [global](#global)
-  * [url](#url-1)
-  * [data](#data-1)
-  * [query](#query-1)
-  * [options](#options-1)
-  * [expects](#expects-1)
-  * [notExpects](#notExpects-1)
-  * [before](#before-1)
-  * [afterSuccess](#afterSuccess-1)
-  * [afterFailure](#afterFailure-1)
 
 
 ## addMethod
@@ -75,10 +56,18 @@ The vast majority of threadneedle focuses around this singular method. Whenever 
 
 You can declare template-style parameters to be passed into specific fields, using Mustache-style templating. 
 
-Required parameters are:
+Parameters are:
 
-* `url`
-* `method`
+* [method](#method) (required)
+* [url](#url) (required)
+* [data](#data)
+* [query](#query)
+* [options](#options)
+* [expects](#expects)
+* [notExpects](#notExpects)
+* [before](#before)
+* [afterSuccess](#afterSuccess)
+* [afterFailure](#afterFailure)
 
 `addMethod` uses JavaScript promises (using [When.js](https://github.com/cujojs/when)), which allows for the chaining of multiple API calls together, and smart error handling.
 
@@ -377,9 +366,17 @@ Typically you'll be running one threadneedle instance for each third party API s
 generic response status codes and authentication criteria - and you'll want to write 
 the logic once, rather than add the same logic across every module.
 
-For example with MailChimp - you're provided with an access token, but not the data center. 
-You can use the access token to get the data center in the `addMethod` `before` argument, but 
-wouldn't it be nice to do this on a generic level? 
+The parameters correspond directly to those for [addMethod](#addmethod):
+
+* [url](#url-1)
+* [data](#data-1)
+* [query](#query-1)
+* [options](#options-1)
+* [expects](#expects-1)
+* [notExpects](#notExpects-1)
+* [before](#before-1)
+* [afterSuccess](#afterSuccess-1)
+* [afterFailure](#afterFailure-1)
 
 Example usage:
 
@@ -392,6 +389,9 @@ threadneedle.global({
   }
 });
 ```
+
+The **philosophy** of the `global` system is that the less you have to write in each method config, 
+the better.
 
 ### url
 
