@@ -64,10 +64,10 @@ Parameters are:
 * [query](#query)
 * [options](#options)
 * [expects](#expects)
-* [notExpects](#notExpects)
+* [notExpects](#notexpects)
 * [before](#before)
-* [afterSuccess](#afterSuccess)
-* [afterFailure](#afterFailure)
+* [afterSuccess](#aftersuccess)
+* [afterFailure](#afterfailure)
 
 `addMethod` uses JavaScript promises (using [When.js](https://github.com/cujojs/when)), which allows for the chaining of multiple API calls together, and smart error handling.
 
@@ -373,10 +373,10 @@ The parameters correspond directly to those for [addMethod](#addmethod):
 * [query](#query-1)
 * [options](#options-1)
 * [expects](#expects-1)
-* [notExpects](#notExpects-1)
+* [notExpects](#notexpects-1)
 * [before](#before-1)
-* [afterSuccess](#afterSuccess-1)
-* [afterFailure](#afterFailure-1)
+* [afterSuccess](#afterfuccess-1)
+* [afterFailure](#afterfailure-1)
 
 Example usage:
 
