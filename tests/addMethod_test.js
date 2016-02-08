@@ -4,6 +4,7 @@ var express      = require('express');
 var bodyParser   = require('body-parser');
 var when         = require('when');
 var randString   = require('mout/random/randString');
+var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
@@ -542,6 +543,68 @@ describe('#addMethod', function () {
     });
 
 
+    describe('#globalize', function () {
+
+      describe('#url', function () {
+
+        it('should add the global url on the front unless it starts with http(s)://', function () {
+          var sample = {
+            _globalOptions: {
+              url: 'http://mydomain.com'
+            }
+          };
+
+          assert.strictEqual(
+            globalize.url.call(sample, '/mypath', {}),
+            'http://mydomain.com/mypath'
+          );
+
+          assert.strictEqual(
+            globalize.url.call(sample, 'http://yourdomain.com/mypath', {}),
+            'http://yourdomain.com/mypath'
+          );
+
+          assert.strictEqual(
+            globalize.url.call(sample, 'https://yourdomain.com/mypath', {}),
+            'https://yourdomain.com/mypath'
+          );
+        });
+
+        it('should substitute parameters to string urls', function () {
+          var sample = {
+            _globalOptions: {
+              url: 'http://{{dc}}.mydomain.com'
+            }
+          };
+
+          assert.strictEqual(
+            globalize.url.call(sample, '/mypath/{{id}}', { dc: 'us5', id: '123' }),
+            'http://us5.mydomain.com/mypath/123'
+          );
+        });
+
+        it('should substitute parameters to function urls', function () {
+          var sample = {
+            _globalOptions: {
+              url: function (params) {
+                return 'http://'+params.dc+'.mydomain.com';
+              }
+            }
+          };
+
+          assert.strictEqual(
+            globalize.url.call(sample, function (params) {
+              return '/mypath/'+params.id;
+            }, { dc: 'us5', id: '123' }),
+            'http://us5.mydomain.com/mypath/123'
+          );
+        });
+
+      });
+
+    });
+
+
   });
 
 
@@ -585,5 +648,7 @@ describe('#addMethod', function () {
     });
 
   });
+
+
 
 });
