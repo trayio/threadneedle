@@ -578,7 +578,10 @@ describe('#addMethod', function () {
           };
 
           assert.strictEqual(
-            globalize.url.call(sample, '/mypath/{{id}}', { dc: 'us5', id: '123' }),
+            globalize.url.call(sample, '/mypath/{{id}}', {
+              dc: 'us5',
+              id: '123'
+            }),
             'http://us5.mydomain.com/mypath/123'
           );
         });
@@ -593,12 +596,118 @@ describe('#addMethod', function () {
           };
 
           assert.strictEqual(
-            globalize.url.call(sample, function (params) {
-              return '/mypath/'+params.id;
-            }, { dc: 'us5', id: '123' }),
+            globalize.url.call(sample, function(params) {
+              return '/mypath/' + params.id;
+            }, {
+              dc: 'us5',
+              id: '123'
+            }),
             'http://us5.mydomain.com/mypath/123'
           );
         });
+
+      });
+
+      describe('#object', function () {
+
+        it('should globalize to an object on a shallow level', function () {
+          var sample = {
+            _globalOptions: {
+              data: {
+                id: '123',
+                name: 'Chris'
+              }
+            }
+          };
+
+          assert.deepEqual(
+            globalize.object.call(sample, 'data', {
+              age: 25,
+              height: 180
+            }, {}), {
+              id: '123',
+              name: 'Chris',
+              age: 25,
+              height: 180
+            }
+          );
+        });
+
+        it('should globalize to an object on a deep level', function () {
+          var sample = {
+            _globalOptions: {
+              data: {
+                id: '123',
+                name: 'Chris',
+                height: {
+                  m: 1.9
+                }
+              }
+            }
+          };
+
+          assert.deepEqual(
+            globalize.object.call(sample, 'data', {
+              age: 25,
+              height: {
+                cm: 180,
+                m: 1.8
+              }
+            }, {}), {
+              id: '123',
+              name: 'Chris',
+              age: 25,
+              height: {
+                cm: 180,
+                m: 1.8
+              }
+            }
+          );
+        });
+
+        it('should substitute to an global object on a deep level', function () {
+          var sample = {
+            _globalOptions: {
+              data: {
+                id: '123',
+                firstName: '{{firstName}}',
+                lastName: '{{lastName}}'
+              }
+            }
+          };
+
+          assert.deepEqual(
+            globalize.object.call(sample, 'data', {
+              name: '{{name}}'
+            }, {
+              name: 'Chris Houghton',
+              firstName: 'Chris',
+              lastName: 'Houghton'
+            }), {
+              id: '123',
+              name: 'Chris Houghton',
+              firstName: 'Chris',
+              lastName: 'Houghton'
+            }
+          );
+        });
+
+      });
+
+
+      describe.skip('#before', function () {
+
+      });
+
+      describe.skip('#expects', function () {
+
+      });
+
+      describe.skip('#afterSuccess', function () {
+
+      });
+
+      describe.skip('#afterFailure', function () {
 
       });
 
