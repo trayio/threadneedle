@@ -140,16 +140,18 @@ describe('#substitute', function () {
     assert.strictEqual(output.idea, 'null');
   });
 
-  it('should not set a variable which is undefined', function () {
+  it('should not set variables which are undefined', function () {
     var output = substitute({
       name: '{{name}}',
-      age: '{{age}}'
+      age: '{{age}}',
+      double: '{{first}}{{second}}'
     }, {
       name: 'Chris Houghton'
     });
 
     assert.strictEqual(output.name, 'Chris Houghton');
     assert(_.isUndefined(output.age));
+    assert(_.isUndefined(output.double));
   });
 
 
