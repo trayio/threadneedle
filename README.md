@@ -66,6 +66,7 @@ Parameters are:
 * [expects](#expects)
 * [notExpects](#notexpects)
 * [before](#before)
+* [beforeRequest](#beforeRequest)
 * [afterSuccess](#aftersuccess)
 * [afterFailure](#afterfailure)
 
@@ -252,7 +253,9 @@ Like `expects`, `notExpects` can be specified shorthand, or as a function.
 ### before
 
 If you'd like to map or alter the `params` before running the main request, you can use
-the `before` function argument:
+the `before` function argument. 
+
+Runs **before** any templating or requests.
 
 ```js
 {
@@ -267,6 +270,28 @@ the `before` function argument:
   }
 }
 ```
+
+## beforeRequest
+
+If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
+all parameters have been templated, use this method.
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  beforeRequest: function (request) {
+    // Parameters on the `request` are `url`, `data`, `options`.
+    // `data` will be undefined for get requests.
+
+    delete request.data.id; // modification
+
+    return request;
+  }
+}
+```
+
 
 
 ### afterSuccess
@@ -378,6 +403,7 @@ The parameters correspond directly to those for [addMethod](#addmethod):
 * [expects](#expects-1)
 * [notExpects](#notexpects-1)
 * [before](#before-1)
+* [beforeRequest](#beforerequest-1)
 * [afterSuccess](#aftersuccess-1)
 * [afterFailure](#afterfailure-1)
 
