@@ -13,7 +13,7 @@ describe('ThreadNeedle', function () {
     var threadneedle = new ThreadNeedle();
     assert(_.isObject(threadneedle));
     assert(_.isFunction(threadneedle.addMethod));
-    assert(_.isFunction(threadneedle.addMethodsInDirectory));
+    assert(_.isFunction(threadneedle.global));
   });
 
 });

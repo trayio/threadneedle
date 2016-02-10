@@ -6,7 +6,7 @@ Threadneedle works by allowing you to declare and run various API methods, easil
 ## Installation
 
 ```
-npm install threadneedle --save
+npm install @trayio/threadneedle --save
 ```
 
 
@@ -47,6 +47,7 @@ threadneedle.getLists({
 # API
 
 * [addMethod](#addmethod)
+* [global](#global)
 
 
 ## addMethod
@@ -55,10 +56,19 @@ The vast majority of threadneedle focuses around this singular method. Whenever 
 
 You can declare template-style parameters to be passed into specific fields, using Mustache-style templating. 
 
-Required parameters are:
+Parameters are:
 
-* `url`
-* `method`
+* [method](#method) (required)
+* [url](#url) (required)
+* [data](#data)
+* [query](#query)
+* [options](#options)
+* [expects](#expects)
+* [notExpects](#notexpects)
+* [before](#before)
+* [beforeRequest](#beforeRequest)
+* [afterSuccess](#aftersuccess)
+* [afterFailure](#afterfailure)
 
 `addMethod` uses JavaScript promises (using [When.js](https://github.com/cujojs/when)), which allows for the chaining of multiple API calls together, and smart error handling.
 
@@ -243,7 +253,9 @@ Like `expects`, `notExpects` can be specified shorthand, or as a function.
 ### before
 
 If you'd like to map or alter the `params` before running the main request, you can use
-the `before` function argument:
+the `before` function argument. 
+
+Runs **before** any templating or requests.
 
 ```js
 {
@@ -252,12 +264,32 @@ the `before` function argument:
   expects: 200,
   before: function (params) {
     params.dc = 'us5';
-    return params;
-
-    // You can also return a promise which should resolve with the params.
+    // You can also return a promise which should resolve having modified the params
   }
 }
 ```
+
+## beforeRequest
+
+If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
+all parameters have been templated, use this method.
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  beforeRequest: function (request) {
+    // Parameters on the `request` are `url`, `data`, `options`.
+    // `data` will be undefined for get requests.
+
+    delete request.data.id; // modification
+
+    // You can also return a promise which should resolve having modified the request
+  }
+}
+```
+
 
 
 ### afterSuccess
@@ -272,7 +304,6 @@ You can use the `afterSuccess` function argument to do this:
   expects: 200,
   afterSuccess: function (body) {
     body.name = body.first_name + ' ' + body.last_name;
-    return body;
 
     // You can also return a promise to do async logic. It must resolve
     // with the body.
@@ -283,18 +314,17 @@ You can use the `afterSuccess` function argument to do this:
 
 ### afterFailure
 
-Sometimes you'll want to handle the failure message in some way. You can do 
+Sometimes you'll want to modify the failure message in some way. You can do 
 
 ```js
 {
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  afterError: function (err) {
+  afterFailure: function (err) {
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
     } 
-    return err;
 
     // You can also return a promise to do async logic. It should resolve
     // with the error object.
@@ -349,7 +379,205 @@ threadneedle.addMethod('myChainedMethod', function (params) {
 });
 ```
 
-## TODO
 
-* Chaining of methods. Is there a way of cleaning this up to make it more declarative?
+## global
+
+Typically you'll be creating one threadneedle instance for each third party API service 
+(MailChimp, Facebook etc) you're integrating with. Sometimes these services will have 
+generic response status codes and authentication criteria - and you'll want to write 
+the logic once, rather than add the same logic across every method config.
+
+The philosophy of the `global` system is that the less you have to write in each method config, 
+the better.
+
+The parameters correspond directly to those for [addMethod](#addmethod):
+
+* [url](#url-1)
+* [data](#data-1)
+* [query](#query-1)
+* [options](#options-1)
+* [expects](#expects-1)
+* [notExpects](#notexpects-1)
+* [before](#before-1)
+* [beforeRequest](#beforerequest-1)
+* [afterSuccess](#aftersuccess-1)
+* [afterFailure](#afterfailure-1)
+
+Example usage:
+
+```js
+threadneedle.global({
+  url: 'https://{{dc}}.api.mailchimp.com/2.0',
+  before: function (params) {
+    params.dc = 'us5';
+  }
+});
+```
+
+
+### url
+
+A base level URL. Automatically gets **prepended** to the individual method URL **unless** the 
+method URL starts with http(s)://. (In which case the global `url` field has no affect on the call)
+
+```js
+// global config
+{
+  url: 'https://{{dc}}.api.mailchimp.com/2.0'
+}
+
+// and then in `addMethod`:
+threadneedle.addMethod({
+  url: '/lists/{{id}}',
+  method: 'get'
+})
+```
+
+If `url` is a function, it will get evaluated and prepended.
+
+
+### data
+
+Data for POST, PUT etc that you want to send in every request. Gets deep extended by the `data` 
+config in the individual methods.
+
+```js
+{
+  data: {
+    id: '{{id}}'
+  }
+}
+```
+
+You can also run this as a function, which should return an object.
+
+
+### query 
+
+Query string data that you'd like to send in every request. Gets extended by the `query` object
+in each individual method before being encoded into a string.
+
+Useful for things like passing API keys in the query string:
+
+```js
+{
+  query: {
+    apikey: '{{apiKey}}'
+  }
+}
+```
+
+You can also run this as a function, which should return an object.
+
+
+### options
+
+The options for the request. Gets deep extended into the `options` object. Great for things 
+like header based authentication.
+
+```js
+{
+  options: {
+    username: 'chris',
+    password: 'topher'
+  }
+}
+```
+
+You can also run this as a function, which should return an object.
+
+
+### expects
+
+Global [expects](#expects) config. Good for things like always expecting all calls to return with a 
+specific set of status codes.
+
+Gets extended if declared in the individual method config.
+
+```js
+{
+  expects: {
+    statusCode: [200, 201]
+  }
+}
+```
+
+You can also run this as a function,
+
+
+### notExpects
+
+Global [notExpects](#notexpects) config. Good for things like specifically flagging certain status 
+codes as errors, or for automatically erroring when an `errors` field appears in the response.
+
+Gets extended if declared in the individual method config.
+
+```js
+{
+  notExpects: {
+    body: 'errors'
+  }
+}
+```
+
+You can also run this as a function.
+
+
+### before
+
+A function to run before every query happens. Runs **before** the `before` function declared 
+in the model, if specified. 
+
+```js
+{
+  before: function (params) {
+    params.dc = 'us5';
+    return params;
+
+    // You can also return a promise which should resolve with the params.
+  }
+}
+```
+
+
+### afterSuccess
+
+Runs after a method runs successfully, immediately **before** the `afterSuccess` function 
+of the individual method.
+
+```js
+{
+  afterSuccess: function (body) {
+    body.errors = [];
+
+    // You can also return a promise which should resolve having modified the body
+  }
+}
+```
+
+
+### afterFailure 
+
+Runs after a method runs successfully, immediately **before** the `afterFailure` function 
+of the individual method.
+
+A good example use-case here is a generic error handler for invalid status codes. For example: 
+
+* Campaign Monitor - a `121` status code means that an access token needs refreshing
+* Shopify - a `429` status code means the API limits have been exceeded
+
+Rather than write the same code in every method, use this global method.
+
+```js
+{
+  afterFailure: function (err) {
+    if (err.response.statusCode === 429) {
+      err.code = 'call_limit_exceeded';
+    }
+
+    // You can also return a promise which should resolve having modified the error
+  }
+}
+```
+
 

@@ -9,7 +9,7 @@ describe('#validateNotExpects', function () {
     var err = validateNotExpects({
       statusCode: 201
     }, {
-      statusCode: 202
+      statusCode: [202]
     });
     assert(_.isUndefined(err));
 
@@ -19,18 +19,13 @@ describe('#validateNotExpects', function () {
       statusCode: [202, 204]
     });
     assert(_.isUndefined(err));
-
-    var err = validateNotExpects({
-      statusCode: 201
-    }, 202);
-    assert(_.isUndefined(err));
   });
 
   it('it should not be ok with invalid status codes', function () {
     var err = validateNotExpects({
       statusCode: 201
     }, {
-      statusCode: 201
+      statusCode: [201]
     });
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_status_code');
@@ -44,13 +39,6 @@ describe('#validateNotExpects', function () {
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_status_code');
     assert.equal(err.message, 'Invalid response status code');
-
-    var err = validateNotExpects({
-      statusCode: 201
-    }, 201);
-    assert(_.isObject(err));
-    assert.equal(err.code, 'invalid_response_status_code');
-    assert.equal(err.message, 'Invalid response status code');
   });
 
 
@@ -60,7 +48,7 @@ describe('#validateNotExpects', function () {
         result: 'chris'
       }
     }, {
-      body: 'christopher'
+      body: ['christopher']
     });
     assert(_.isUndefined(err));
 
@@ -72,13 +60,6 @@ describe('#validateNotExpects', function () {
       body: ['christopher', 'result2']
     });
     assert(_.isUndefined(err));
-
-    var err = validateNotExpects({
-      body: {
-        result: 'chris'
-      }
-    }, 'christopher');
-    assert(_.isUndefined(err));
   });
 
   it('it should not be ok with invalid bodies', function () {
@@ -87,7 +68,7 @@ describe('#validateNotExpects', function () {
         result: 'chris'
       }
     }, {
-      body: 'chris'
+      body: ['chris']
     });
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_body');
@@ -104,14 +85,6 @@ describe('#validateNotExpects', function () {
     assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
 
-    var err = validateNotExpects({
-      body: {
-        result: 'chris'
-      }
-    }, 'chris');
-    assert(_.isObject(err));
-    assert.equal(err.code, 'invalid_response_body');
-    assert.equal(err.message, 'Invalid response body');
   });
   
 
