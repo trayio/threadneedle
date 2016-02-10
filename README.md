@@ -264,9 +264,7 @@ Runs **before** any templating or requests.
   expects: 200,
   before: function (params) {
     params.dc = 'us5';
-    return params;
-
-    // You can also return a promise which should resolve with the params.
+    // You can also return a promise which should resolve having modified the params
   }
 }
 ```
@@ -287,7 +285,7 @@ all parameters have been templated, use this method.
 
     delete request.data.id; // modification
 
-    return request;
+    // You can also return a promise which should resolve having modified the request
   }
 }
 ```
@@ -306,7 +304,6 @@ You can use the `afterSuccess` function argument to do this:
   expects: 200,
   afterSuccess: function (body) {
     body.name = body.first_name + ' ' + body.last_name;
-    return body;
 
     // You can also return a promise to do async logic. It must resolve
     // with the body.
@@ -317,7 +314,7 @@ You can use the `afterSuccess` function argument to do this:
 
 ### afterFailure
 
-Sometimes you'll want to handle the failure message in some way. You can do 
+Sometimes you'll want to modify the failure message in some way. You can do 
 
 ```js
 {
@@ -328,7 +325,6 @@ Sometimes you'll want to handle the failure message in some way. You can do
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
     } 
-    return err;
 
     // You can also return a promise to do async logic. It should resolve
     // with the error object.
@@ -414,7 +410,6 @@ threadneedle.global({
   url: 'https://{{dc}}.api.mailchimp.com/2.0',
   before: function (params) {
     params.dc = 'us5';
-    return params;
   }
 });
 ```
@@ -555,7 +550,7 @@ of the individual method.
   afterSuccess: function (body) {
     body.errors = [];
 
-    // You can also return a promise which should resolve with the params.
+    // You can also return a promise which should resolve having modified the body
   }
 }
 ```
@@ -579,9 +574,8 @@ Rather than write the same code in every method, use this global method.
     if (err.response.statusCode === 429) {
       err.code = 'call_limit_exceeded';
     }
-    return err;
 
-    // You can also return a promise which should resolve with the params.
+    // You can also return a promise which should resolve having modified the error
   }
 }
 ```
