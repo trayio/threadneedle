@@ -416,9 +416,8 @@ describe('#addMethod', function () {
         method: 'post',
         url: host + '/' + name,
         afterSuccess: function (body) {
-          return {
-            age: 25
-          };
+          delete body.firstName;
+          body.age = 25;
         },
         data: {
           firstName: '{{firstName}}'
@@ -443,8 +442,9 @@ describe('#addMethod', function () {
         method: 'post',
         url: host + '/' + name,
         afterSuccess: function (body) {
-          return when({
-            age: 25
+          return when.promise(function (resolve) {
+            body.age = 25;
+            resolve();
           });
         },
         data: {
@@ -459,7 +459,7 @@ describe('#addMethod', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result, { age: 25 });
+        assert.deepEqual(result, { firstName: 'Chris', age: 25 });
         done();
       });
     });
@@ -846,11 +846,124 @@ describe('#addMethod', function () {
       });
 
 
-      describe.skip('#afterSuccess', function () {
+      describe('#afterSuccess', function () {
+
+        it('should run the global before method when declared', function (done) {
+          var sample = {
+            _globalOptions: {
+              afterSuccess: function (body) {
+                body.success = true;
+              }
+            }
+          };
+
+          globalize.afterSuccess.call(sample, undefined, {}).done(function (body) {
+            assert.deepEqual(body, { success: true });
+            done();
+          });
+        });
+
+        it('should allow for a global promise async', function (done) {
+          var sample = {
+            _globalOptions: {
+              afterSuccess: function (body) {
+                return when.promise(function (resolve, reject) {
+                  body.success = true;
+                  resolve();
+                });
+              }
+            }
+          };
+
+          globalize.afterSuccess.call(sample, undefined, {}).done(function (body) {
+            assert.deepEqual(body, { success: true });
+            done();
+          });
+        }); 
+
+        it('should call the global promise before the local one', function (done) {
+          var calledFirst;
+          var calls = 0;
+
+          var sample = {
+            _globalOptions: {
+              afterSuccess: function (params) {
+                if (!calledFirst) calledFirst = 'global';
+                calls++;
+              }
+            }
+          };
+
+          globalize.afterSuccess.call(sample, function () {
+            if (!calledFirst) calledFirst = 'local';
+            calls++
+          }, {}).done(function (params) {
+            assert.equal(calledFirst, 'global');
+            assert.equal(calls, 2);
+            done();
+          });
+        });
 
       });
 
-      describe.skip('#afterFailure', function () {
+      describe('#afterFailure', function () {
+
+        it('should run the global before method when declared', function (done) {
+          var sample = {
+            _globalOptions: {
+              afterFailure: function (err) {
+                err.code = 'oauth_refresh';
+              }
+            }
+          };
+
+          globalize.afterFailure.call(sample, undefined, {}).done(function (err) {
+            assert.deepEqual(err, { code: 'oauth_refresh' });
+            done();
+          });
+        });
+
+        it('should allow for a global promise async', function (done) {
+          var sample = {
+            _globalOptions: {
+              afterFailure: function (err) {
+                return when.promise(function (resolve, reject) {
+                  err.code = 'oauth_refresh';
+                  resolve();
+                });
+              }
+            }
+          };
+
+          globalize.afterFailure.call(sample, undefined, {}).done(function (err) {
+            assert.deepEqual(err, { code: 'oauth_refresh' });
+            done();
+          });
+        }); 
+
+        it('should call the global promise before the local one', function (done) {
+          var calledFirst;
+          var calls = 0;
+
+          var sample = {
+            _globalOptions: {
+              afterFailure: function () {
+                if (!calledFirst) calledFirst = 'global';
+                calls++;
+              }
+            }
+          };
+
+          globalize.afterFailure.call(sample, function () {
+            if (!calledFirst) calledFirst = 'local';
+            calls++
+          }, {}).done(function () {
+            assert.equal(calledFirst, 'global');
+            assert.equal(calls, 2);
+            done();
+          });
+        });
+
 
       });
 
