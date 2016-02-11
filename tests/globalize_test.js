@@ -69,6 +69,19 @@ describe('#globalize', function () {
       );
     });
 
+    it('should not run the global when globals is false', function () {
+      var sample = {
+        _globalOptions: {
+          url: 'http://mydomain.com'
+        }
+      };
+
+      assert.strictEqual(
+        globalize.url.call(sample, { url: '/mypath', globals: false }, {}),
+        '/mypath'
+      );
+    });
+
   });
 
   describe('#object', function () {
@@ -161,6 +174,31 @@ describe('#globalize', function () {
       );
     });
 
+    it('should not globalize when globals is false', function () {
+      var sample = {
+        _globalOptions: {
+          data: {
+            id: '123',
+            name: 'Chris'
+          }
+        }
+      };
+
+      assert.deepEqual(
+        globalize.object.call(sample, 'data', {
+          globals: false,
+          data: {
+            age: 25,
+            height: 180
+          }
+        }, {}), {
+          age: 25,
+          height: 180
+        }
+      );
+    });
+
+
   });
 
 
@@ -228,6 +266,26 @@ describe('#globalize', function () {
       });
     });
 
+    it('should not run global before when globals is false', function (done) {
+      var sample = {
+        _globalOptions: {
+          before: function (params) {
+            params.dc = 'us5';
+          }
+        }
+      };
+
+      globalize.before.call(sample, {
+        globals: false,
+        url: '/mydomain/{{id}}'
+      }, {
+        id: '123'
+      }).done(function (params) {
+        assert.deepEqual(params, { id: '123' });
+        done();
+      });
+    });
+
   });
 
   describe.skip('#beforeRequest', function () {
@@ -281,6 +339,27 @@ describe('#globalize', function () {
       });
     });
 
+    it('should not run global when globals is false', function () {
+      var sample = {
+        _globalOptions: {
+          expects: 200
+        }
+      };
+      assert.deepEqual(globalize.expects.call(sample, {}), { statusCode: [200] });
+
+      var sample = {
+        _globalOptions: {
+          expects: {
+            statusCode: [200, 201],
+            body: 'chris'
+          }
+        }
+      };
+      assert.deepEqual(globalize.expects.call(sample, {
+        globals: false
+      }), {});
+    });
+
   });
 
   describe('#notExpects', function () {
@@ -325,6 +404,26 @@ describe('#globalize', function () {
         notExpects: 202
       }), { 
         statusCode: [202] 
+      });
+    });
+
+
+    it('should not set the notExpects object when false is specified in globals', function () {
+      var sample = {
+        _globalOptions: {
+          notExpects: {
+            statusCode: [200, 201],
+            body: 'chris'
+          }
+        }
+      };
+      assert.deepEqual(globalize.notExpects.call(sample, {
+        notExpects: {
+          body: 'steve'  
+        },
+        globals: false
+      }), { 
+        body: ['steve']
       });
     });
 
@@ -391,6 +490,23 @@ describe('#globalize', function () {
       });
     });
 
+    it('should not run the globals when globals is false', function (done) {
+      var sample = {
+        _globalOptions: {
+          afterSuccess: function (body) {
+            body.success = true;
+          }
+        }
+      };
+
+      globalize.afterSuccess.call(sample, {
+        globals: false
+      }, {}).done(function (body) {
+        assert.deepEqual(body, {});
+        done();
+      });
+    });
+
   });
 
   describe('#afterFailure', function () {
@@ -449,6 +565,23 @@ describe('#globalize', function () {
       }, {}).done(function() {
         assert.equal(calledFirst, 'global');
         assert.equal(calls, 2);
+        done();
+      });
+    });
+
+    it('should not run the global when globals is false', function (done) {
+      var sample = {
+        _globalOptions: {
+          afterFailure: function (err) {
+            err.code = 'oauth_refresh';
+          }
+        }
+      };
+
+      globalize.afterFailure.call(sample, {
+        globals: false
+      }, {}).done(function (err) {
+        assert.deepEqual(err, {});
         done();
       });
     });
