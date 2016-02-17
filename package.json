@@ -1,6 +1,6 @@
 {
   "name": "@trayio/threadneedle",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A framework for simplifying working with HTTP-based APIs.",
   "main": "lib/index.js",
   "directories": {
