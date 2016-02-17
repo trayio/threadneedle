@@ -47,6 +47,23 @@ describe('#globalize', function () {
       );
     });
 
+    it('should substitute array parameters as comma separated', function () {
+      var sample = {
+        _globalOptions: {
+          url: 'http://{{dc}}.mydomain.com'
+        }
+      };
+
+      assert.strictEqual(
+        globalize.url.call(sample, { url: '/mypath/{{id}}?opt_fields={{fields}}' }, {
+          dc: 'us5',
+          id: '123',
+          fields: ['id', 'name', 'is_organization']
+        }),
+        'http://us5.mydomain.com/mypath/123?opt_fields=id,name,is_organization'
+      );
+    });
+
     it('should substitute parameters to function urls', function () {
       var sample = {
         _globalOptions: {

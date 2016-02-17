@@ -30,7 +30,8 @@
     "mout": "^0.11.1",
     "mustache": "^2.2.1",
     "needle": "^0.11.0",
-    "when": "^3.7.7"
+    "when": "^3.7.7",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "body-parser": "^1.14.2",

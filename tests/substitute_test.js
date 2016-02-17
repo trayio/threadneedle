@@ -33,6 +33,28 @@ describe('#substitute', function () {
     });
   });
 
+  it('should substitute fancy data like objects, arrays, and dates', function () {
+    var data = {
+      opt_fields: '{{fields}}',
+      newConfig: '{{config}}'
+    };
+
+    var output = substitute(data, {
+      fields: ['id', 'is_organization'],
+      config: {
+        name: 'Chris',
+        age: 25
+      }
+    });
+    assert.deepEqual(output, {
+      opt_fields: ['id', 'is_organization'],
+      newConfig: {
+        name: 'Chris',
+        age: 25
+      }
+    });
+  });
+
   it('should substitute into nested object templates', function () {
     var data = {
       nested: {
