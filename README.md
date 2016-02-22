@@ -82,6 +82,7 @@ The HTTP method you'd like to use. Valid values are:
 * `put`
 * `delete`
 * `get`
+* `patch`
 * `head`
 
 The values you declare here are case-insensitive.
