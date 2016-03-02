@@ -464,6 +464,33 @@ describe('#addMethod', function () {
       });
     });
 
+    it('Should override with returned value in `afterSuccess`', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterSuccess: function (body) {
+          return {
+            data: body
+          };
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json([ req.body ]);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.data, [{ firstName: 'Chris' }]);
+        done();
+      });
+    });
+
     it('should run `afterFailure` on the params synchronously', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
@@ -542,7 +569,33 @@ describe('#addMethod', function () {
       });
     });
 
+    it('Should override with returned value in `afterFailure`', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        expects: 201,
+        afterFailure: function (body) {
+          return {
+            meh: 'no error here'
+          };
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
 
+      app.post('/'+name, function (req, res) {
+        res.status(200).json([ req.body ]);
+      }); 
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function() {}, function (err) {
+        assert.equal(err.meh, 'no error here');
+        done();
+      });
+    });
 
 
   });
