@@ -26,11 +26,13 @@ describe('#substitute', function () {
       name: 'Chris',
       created: new Date(2016, 1, 5)
     });
-    assert.deepEqual(output, {
-      apikey: '123',
-      id: '6543',
-      name: 'The name is Chris, created at Fri Feb 05 2016 00:00:00 GMT+0000 (GMT)'
-    });
+
+    assert.equal(output.apikey, '123');
+    assert.equal(output.id, '6543');
+    assert.equal(
+      output.name.indexOf('The name is Chris, created at Fri Feb 05 2016 00:00:00'), 
+      0
+    );
   });
 
   it('should substitute fancy data like objects, arrays, and dates', function () {
@@ -67,13 +69,13 @@ describe('#substitute', function () {
       apiKey: '123',
       listId: '6543',
       name: 'Chris',
-      created: new Date(2016, 1, 5)
+      created: 1
     });
     assert.deepEqual(output, {
       nested: {
         apikey: '123',
         id: '6543',
-        name: 'The name is Chris, created at Fri Feb 05 2016 00:00:00 GMT+0000 (GMT)'
+        name: 'The name is Chris, created at 1'
       }
     });
   });
