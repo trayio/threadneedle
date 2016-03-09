@@ -20,14 +20,14 @@ describe('#addMethod', function () {
     it('should error when `methodName` isn\'t provided', function () {
       var caught = 0;
       try {
-        threadneedle.addMethod();  
+        threadneedle.addMethod();
       } catch (err) {
         assert.strictEqual(err.message, 'The first parameter passed to `addMethod` should be a string.');
         caught++;
       }
 
       try {
-        threadneedle.addMethod(true);  
+        threadneedle.addMethod(true);
       } catch (err) {
         assert(err.message, 'The first parameter passed to `addMethod` should be a string.');
         caught++;
@@ -110,7 +110,7 @@ describe('#addMethod', function () {
 
       app.get('/'+name, function (req, res) {
         res.status(200).send('ok');
-      }); 
+      });
 
       threadneedle[name]().done(function (result) {
         assert.equal(result, 'ok');
@@ -128,7 +128,7 @@ describe('#addMethod', function () {
 
       app.get('/'+name, function (req, res) {
         res.status(200).send(req.query.key);
-      }); 
+      });
 
       threadneedle[name]({
         apiKey: '123'
@@ -156,7 +156,7 @@ describe('#addMethod', function () {
           query: req.query,
           body: req.body
         });
-      }); 
+      });
 
       threadneedle[name]({
         apiKey: '123',
@@ -184,7 +184,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.headers);
-      }); 
+      });
 
       threadneedle[name]({
         apiKey: '123'
@@ -208,7 +208,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.headers);
-      }); 
+      });
 
       threadneedle[name]({
         username: 'chris',
@@ -229,7 +229,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.headers);
-      }); 
+      });
 
       threadneedle[name]().done(function (result) {}, function (err) {
         assert.equal(err.message, 'Invalid response status code');
@@ -247,7 +247,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.headers);
-      }); 
+      });
 
       threadneedle[name]().done(function (result) {}, function (err) {
         assert.equal(err.message, 'Invalid response status code');
@@ -265,7 +265,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json({ failure: true });
-      }); 
+      });
 
       threadneedle[name]().done(function (result) {}, function (err) {
         assert.equal(err.message, 'Invalid response body');
@@ -283,7 +283,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json({ result: true });
-      }); 
+      });
 
       threadneedle[name]().done(function (result) {
         assert.deepEqual(result, { result: true });
@@ -301,7 +301,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json({ result: true });
-      }); 
+      });
 
       threadneedle[name]().done(function() {}, function (err) {
         assert.equal(err.message, 'Invalid response status code');
@@ -319,7 +319,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json({ result: true });
-      }); 
+      });
 
       threadneedle[name]().done(function (result) {
         assert.deepEqual(result, { result: true });
@@ -337,7 +337,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json({ result: true });
-      }); 
+      });
 
       threadneedle[name]().done(function() {}, function (err) {
         assert.equal(err.message, 'Invalid response body');
@@ -362,7 +362,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.body);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris',
@@ -395,7 +395,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.body);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris',
@@ -426,7 +426,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.body);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris'
@@ -454,7 +454,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.body);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris'
@@ -481,7 +481,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json([ req.body ]);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris'
@@ -508,7 +508,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.body);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris'
@@ -547,7 +547,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json(req.body);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris'
@@ -587,7 +587,7 @@ describe('#addMethod', function () {
 
       app.post('/'+name, function (req, res) {
         res.status(200).json([ req.body ]);
-      }); 
+      });
 
       threadneedle[name]({
         firstName: 'Chris'
