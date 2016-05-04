@@ -30,7 +30,7 @@ describe('#substitute', function () {
     assert.equal(output.apikey, '123');
     assert.equal(output.id, '6543');
     assert.equal(
-      output.name.indexOf('The name is Chris, created at Fri Feb 05 2016 00:00:00'), 
+      output.name.indexOf('The name is Chris, created at Fri Feb 05 2016 00:00:00'),
       0
     );
   });
@@ -62,7 +62,7 @@ describe('#substitute', function () {
       nested: {
         apikey: '{{apiKey}}',
         id: '{{listId}}',
-        name: 'The name is {{name}}, created at {{created}}'  
+        name: 'The name is {{name}}, created at {{created}}'
       }
     };
     var output = substitute(data, {
@@ -176,6 +176,19 @@ describe('#substitute', function () {
     assert.strictEqual(output.name, 'Chris Houghton');
     assert(_.isUndefined(output.age));
     assert(_.isUndefined(output.double));
+  });
+
+  it('should not set variables which are blank strings', function () {
+    var output = substitute({
+      name: '{{name}}',
+      age: '{{age}}'
+    }, {
+      name: '',
+      age: 26
+    });
+
+    assert(_.isUndefined(output.name));
+    assert.strictEqual(output.age, 26);
   });
 
 
