@@ -16,17 +16,17 @@ describe('#globalize', function () {
       };
 
       assert.strictEqual(
-        globalize.url.call(sample, { url: '/mypath' }, {}),
+        globalize.baseUrl.call(sample, { url: '/mypath' }, {}),
         'http://mydomain.com/mypath'
       );
 
       assert.strictEqual(
-        globalize.url.call(sample, { url: 'http://yourdomain.com/mypath' }, {}),
+        globalize.baseUrl.call(sample, { url: 'http://yourdomain.com/mypath' }, {}),
         'http://yourdomain.com/mypath'
       );
 
       assert.strictEqual(
-        globalize.url.call(sample, { url: 'https://yourdomain.com/mypath' }, {}),
+        globalize.baseUrl.call(sample, { url: 'https://yourdomain.com/mypath' }, {}),
         'https://yourdomain.com/mypath'
       );
     });
@@ -39,7 +39,7 @@ describe('#globalize', function () {
       };
 
       assert.strictEqual(
-        globalize.url.call(sample, { url: '/mypath/{{id}}' }, {
+        globalize.baseUrl.call(sample, { url: '/mypath/{{id}}' }, {
           dc: 'us5',
           id: '123'
         }),
@@ -55,7 +55,7 @@ describe('#globalize', function () {
       };
 
       assert.strictEqual(
-        globalize.url.call(sample, { url: '/mypath/{{id}}?opt_fields={{fields}}' }, {
+        globalize.baseUrl.call(sample, { url: '/mypath/{{id}}?opt_fields={{fields}}' }, {
           dc: 'us5',
           id: '123',
           fields: ['id', 'name', 'is_organization']
@@ -74,7 +74,7 @@ describe('#globalize', function () {
       };
 
       assert.strictEqual(
-        globalize.url.call(sample, {
+        globalize.baseUrl.call(sample, {
           url: function(params) {
             return '/mypath/' + params.id;
           }
@@ -94,7 +94,7 @@ describe('#globalize', function () {
       };
 
       assert.strictEqual(
-        globalize.url.call(sample, { url: '/mypath', globals: false }, {}),
+        globalize.baseUrl.call(sample, { url: '/mypath', globals: false }, {}),
         '/mypath'
       );
     });
@@ -256,7 +256,7 @@ describe('#globalize', function () {
         assert.deepEqual(params, { url: '/mydomain', dc: 'us5' });
         done();
       });
-    }); 
+    });
 
     it('should call the global promise before the local one', function (done) {
       var calledFirst;
@@ -303,6 +303,26 @@ describe('#globalize', function () {
       });
     });
 
+    it('should use baseUrl rather than url, but still fall back to url', function () {
+      assert.strictEqual(
+        globalize.baseUrl.call({
+          _globalOptions: {
+            baseUrl: 'http://mydomain.com'
+          }
+        }, { url: '/mypath' }, {}),
+        'http://mydomain.com/mypath'
+      );
+
+      assert.strictEqual(
+        globalize.baseUrl.call({
+          _globalOptions: {
+            url: 'http://mydomain.com'
+          }
+        }, { url: '/mypath' }, {}),
+        'http://mydomain.com/mypath'
+      );
+    });
+
   });
 
   describe.skip('#beforeRequest', function () {
@@ -329,7 +349,7 @@ describe('#globalize', function () {
           }
         }
       };
-      assert.deepEqual(globalize.expects.call(sample, {}), { 
+      assert.deepEqual(globalize.expects.call(sample, {}), {
         statusCode: [200, 201],
         body: ['chris']
       });
@@ -343,16 +363,16 @@ describe('#globalize', function () {
       };
       assert.deepEqual(globalize.expects.call(sample, {
         expects: {
-          statusCode: 201  
+          statusCode: 201
         }
-      }), { 
-        statusCode: [201] 
+      }), {
+        statusCode: [201]
       });
 
       assert.deepEqual(globalize.expects.call(sample, {
         expects: 202
-      }), { 
-        statusCode: [202] 
+      }), {
+        statusCode: [202]
       });
     });
 
@@ -397,7 +417,7 @@ describe('#globalize', function () {
           }
         }
       };
-      assert.deepEqual(globalize.notExpects.call(sample, {}), { 
+      assert.deepEqual(globalize.notExpects.call(sample, {}), {
         statusCode: [200, 201],
         body: ['chris']
       });
@@ -411,16 +431,16 @@ describe('#globalize', function () {
       };
       assert.deepEqual(globalize.notExpects.call(sample, {
         notExpects: {
-          statusCode: 201  
+          statusCode: 201
         }
-      }), { 
-        statusCode: [201] 
+      }), {
+        statusCode: [201]
       });
 
       assert.deepEqual(globalize.notExpects.call(sample, {
         notExpects: 202
-      }), { 
-        statusCode: [202] 
+      }), {
+        statusCode: [202]
       });
     });
 
@@ -436,10 +456,10 @@ describe('#globalize', function () {
       };
       assert.deepEqual(globalize.notExpects.call(sample, {
         notExpects: {
-          body: 'steve'  
+          body: 'steve'
         },
         globals: false
-      }), { 
+      }), {
         body: ['steve']
       });
     });
@@ -480,7 +500,7 @@ describe('#globalize', function () {
         assert.deepEqual(body, { success: true });
         done();
       });
-    }); 
+    });
 
     it('should call the global promise before the local one', function (done) {
       var calledFirst;
@@ -559,7 +579,7 @@ describe('#globalize', function () {
         assert.deepEqual(err, { code: 'oauth_refresh' });
         done();
       });
-    }); 
+    });
 
     it('should call the global promise before the local one', function (done) {
       var calledFirst;
