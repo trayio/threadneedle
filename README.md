@@ -29,7 +29,7 @@ threadneedle.addMethod('getLists', {
 });
 ```
 
-And to actually run the method and get the MailChimp lists: 
+And to actually run the method and get the MailChimp lists:
 
 ```js
 threadneedle.getLists({
@@ -52,9 +52,9 @@ threadneedle.getLists({
 
 ## addMethod
 
-The vast majority of threadneedle focuses around this singular method. Whenever you run `addMethod`, you're adding another method to the core `threadneedle` object. 
+The vast majority of threadneedle focuses around this singular method. Whenever you run `addMethod`, you're adding another method to the core `threadneedle` object.
 
-You can declare template-style parameters to be passed into specific fields, using Mustache-style templating. 
+You can declare template-style parameters to be passed into specific fields, using Mustache-style templating.
 
 Parameters are:
 
@@ -110,7 +110,7 @@ You can also specify the URL as a function. In this case, the `params` that woul
 }
 ```
 
-### data 
+### data
 
 The payload you'd like to send to the third party. Relevant for `put`, `delete,` and `post` methods only.
 
@@ -243,18 +243,18 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
   notExpects: {
     statusCode: [401, 404, 403],
     body: 'error'
-  } 
-} 
+  }
+}
 ```
 
 
-Like `expects`, `notExpects` can be specified shorthand, or as a function. 
+Like `expects`, `notExpects` can be specified shorthand, or as a function.
 
 
 ### before
 
 If you'd like to map or alter the `params` before running the main request, you can use
-the `before` function argument. 
+the `before` function argument.
 
 Runs **before** any templating or requests.
 
@@ -315,7 +315,7 @@ You can use the `afterSuccess` function argument to do this:
 
 ### afterFailure
 
-Sometimes you'll want to modify the failure message in some way. You can do 
+Sometimes you'll want to modify the failure message in some way. You can do
 
 ```js
 {
@@ -325,7 +325,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
   afterFailure: function (err) {
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
-    } 
+    }
 
     // You can also return a promise to do async logic. It should resolve
     // with the error object.
@@ -337,7 +337,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
 
 ### Function inputs
 
-Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper. 
+Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper.
 
 While this behaviour should be kept to a minimum, you can simply pass a function (that should return a promise)
 when calling `addMethod`, for you to run your own asynchronous logic:
@@ -356,8 +356,8 @@ threadneedle.addMethod('myWeirdMethod', function (params) {
 });
 ```
 
-Another good use-case here is to create a method that wraps around a chain of other methods. 
-Because these methods are run in the context where `this` is `threadneedle`, you can easily 
+Another good use-case here is to create a method that wraps around a chain of other methods.
+Because these methods are run in the context where `this` is `threadneedle`, you can easily
 access the other methods you've declared:
 
 ```js
@@ -383,17 +383,17 @@ threadneedle.addMethod('myChainedMethod', function (params) {
 
 ## global
 
-Typically you'll be creating one threadneedle instance for each third party API service 
-(MailChimp, Facebook etc) you're integrating with. Sometimes these services will have 
-generic response status codes and authentication criteria - and you'll want to write 
+Typically you'll be creating one threadneedle instance for each third party API service
+(MailChimp, Facebook etc) you're integrating with. Sometimes these services will have
+generic response status codes and authentication criteria - and you'll want to write
 the logic once, rather than add the same logic across every method config.
 
-The philosophy of the `global` system is that the less you have to write in each method config, 
+The philosophy of the `global` system is that the less you have to write in each method config,
 the better.
 
 The parameters correspond directly to those for [addMethod](#addmethod):
 
-* [url](#url-1)
+* [baseUrl](#baseurl-1)
 * [data](#data-1)
 * [query](#query-1)
 * [options](#options-1)
@@ -416,15 +416,15 @@ threadneedle.global({
 ```
 
 
-### url
+### baseUrl
 
-A base level URL. Automatically gets **prepended** to the individual method URL **unless** the 
-method URL starts with http(s)://. (In which case the global `url` field has no affect on the call)
+A base level URL. (Previously `url`) Automatically gets **prepended** to the individual method URL **unless** the
+method URL starts with http(s)://. (In which case the global `baseUrl` field has no affect on the call)
 
 ```js
 // global config
 {
-  url: 'https://{{dc}}.api.mailchimp.com/2.0'
+  baseUrl: 'https://{{dc}}.api.mailchimp.com/2.0'
 }
 
 // and then in `addMethod`:
@@ -434,12 +434,12 @@ threadneedle.addMethod({
 })
 ```
 
-If `url` is a function, it will get evaluated and prepended.
+If `baseUrl` is a function, it will get evaluated and prepended.
 
 
 ### data
 
-Data for POST, PUT etc that you want to send in every request. Gets deep extended by the `data` 
+Data for POST, PUT etc that you want to send in every request. Gets deep extended by the `data`
 config in the individual methods.
 
 ```js
@@ -453,7 +453,7 @@ config in the individual methods.
 You can also run this as a function, which should return an object.
 
 
-### query 
+### query
 
 Query string data that you'd like to send in every request. Gets extended by the `query` object
 in each individual method before being encoded into a string.
@@ -473,7 +473,7 @@ You can also run this as a function, which should return an object.
 
 ### options
 
-The options for the request. Gets deep extended into the `options` object. Great for things 
+The options for the request. Gets deep extended into the `options` object. Great for things
 like header based authentication.
 
 ```js
@@ -490,7 +490,7 @@ You can also run this as a function, which should return an object.
 
 ### expects
 
-Global [expects](#expects) config. Good for things like always expecting all calls to return with a 
+Global [expects](#expects) config. Good for things like always expecting all calls to return with a
 specific set of status codes.
 
 Gets extended if declared in the individual method config.
@@ -508,7 +508,7 @@ You can also run this as a function,
 
 ### notExpects
 
-Global [notExpects](#notexpects) config. Good for things like specifically flagging certain status 
+Global [notExpects](#notexpects) config. Good for things like specifically flagging certain status
 codes as errors, or for automatically erroring when an `errors` field appears in the response.
 
 Gets extended if declared in the individual method config.
@@ -526,8 +526,8 @@ You can also run this as a function.
 
 ### before
 
-A function to run before every query happens. Runs **before** the `before` function declared 
-in the model, if specified. 
+A function to run before every query happens. Runs **before** the `before` function declared
+in the model, if specified.
 
 ```js
 {
@@ -543,7 +543,7 @@ in the model, if specified.
 
 ### afterSuccess
 
-Runs after a method runs successfully, immediately **before** the `afterSuccess` function 
+Runs after a method runs successfully, immediately **before** the `afterSuccess` function
 of the individual method.
 
 ```js
@@ -557,12 +557,12 @@ of the individual method.
 ```
 
 
-### afterFailure 
+### afterFailure
 
-Runs after a method runs successfully, immediately **before** the `afterFailure` function 
+Runs after a method runs successfully, immediately **before** the `afterFailure` function
 of the individual method.
 
-A good example use-case here is a generic error handler for invalid status codes. For example: 
+A good example use-case here is a generic error handler for invalid status codes. For example:
 
 * Campaign Monitor - a `121` status code means that an access token needs refreshing
 * Shopify - a `429` status code means the API limits have been exceeded
@@ -580,5 +580,3 @@ Rather than write the same code in every method, use this global method.
   }
 }
 ```
-
-
