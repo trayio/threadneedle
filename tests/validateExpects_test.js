@@ -35,6 +35,24 @@ describe('#validateExpects', function () {
   });
 
 
+  it('should make the errors nicely for certain invalid status codes', function () {
+    _.each([400, 401, 403, 404], function (statusCode) {
+
+      var err = validateExpects({
+        statusCode: statusCode
+      }, {
+        statusCode: [202]
+      });
+      assert(_.isObject(err));
+      assert(err.code.length);
+      assert(err.message.length);
+      assert.notEqual(err.code, 'invalid_response_status_code');
+      assert.notEqual(err.message, 'Invalid response status code');
+
+    });
+  });
+
+
   it('it should be ok with valid bodies', function () {
     var err = validateExpects({
       body: {
@@ -78,6 +96,6 @@ describe('#validateExpects', function () {
     assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
   });
-  
+
 
 });
