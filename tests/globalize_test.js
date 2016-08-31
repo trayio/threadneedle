@@ -339,7 +339,7 @@ describe('#globalize', function () {
           expects: 200
         }
       };
-      assert.deepEqual(globalize.expects.call(sample, {}), { statusCode: [200] });
+      assert.deepEqual(globalize.expects.call(sample, {}), [{ statusCode: [200] }]);
 
       var sample = {
         _globalOptions: {
@@ -349,10 +349,10 @@ describe('#globalize', function () {
           }
         }
       };
-      assert.deepEqual(globalize.expects.call(sample, {}), {
+      assert.deepEqual(globalize.expects.call(sample, {}), [{
         statusCode: [200, 201],
         body: ['chris']
-      });
+      }]);
     });
 
     it('should be overridden by the local config', function () {
@@ -365,15 +365,54 @@ describe('#globalize', function () {
         expects: {
           statusCode: 201
         }
-      }), {
+      }), [{
         statusCode: [201]
-      });
+      }]);
 
       assert.deepEqual(globalize.expects.call(sample, {
         expects: 202
-      }), {
+      }), [{
         statusCode: [202]
-      });
+      }]);
+    });
+
+    it('should not merge when there are functions on the global or local level', function () {
+      var sample = {
+        _globalOptions: {
+          expects: function () {
+            return 'Bad things';
+          }
+        }
+      };
+      assert.strictEqual(globalize.expects.call(sample, {
+        expects: {
+          body: 'steve'
+        }
+      }).length, 2);
+
+      var sample = {
+        _globalOptions: {
+          expects: function () {
+            return 'Bad things';
+          }
+        }
+      };
+      assert.strictEqual(globalize.expects.call(sample, {
+        expects: function () {
+          return 'Locally bad things';
+        }
+      }).length, 2);
+
+      var sample = {
+        _globalOptions: {
+          notExpects: [200]
+        }
+      };
+      assert.strictEqual(globalize.expects.call(sample, {
+        expects: function () {
+          return 'Locally bad things';
+        }
+      }).length, 2);
     });
 
     it('should not run global when globals is false', function () {
@@ -382,7 +421,7 @@ describe('#globalize', function () {
           expects: 200
         }
       };
-      assert.deepEqual(globalize.expects.call(sample, {}), { statusCode: [200] });
+      assert.deepEqual(globalize.expects.call(sample, {}), [{ statusCode: [200] }]);
 
       var sample = {
         _globalOptions: {
@@ -394,7 +433,7 @@ describe('#globalize', function () {
       };
       assert.deepEqual(globalize.expects.call(sample, {
         globals: false
-      }), {});
+      }), [{}]);
     });
 
   });
@@ -407,7 +446,7 @@ describe('#globalize', function () {
           notExpects: 200
         }
       };
-      assert.deepEqual(globalize.notExpects.call(sample, {}), { statusCode: [200] });
+      assert.deepEqual(globalize.notExpects.call(sample, {}), [{ statusCode: [200] }]);
 
       var sample = {
         _globalOptions: {
@@ -417,10 +456,10 @@ describe('#globalize', function () {
           }
         }
       };
-      assert.deepEqual(globalize.notExpects.call(sample, {}), {
+      assert.deepEqual(globalize.notExpects.call(sample, {}), [{
         statusCode: [200, 201],
         body: ['chris']
-      });
+      }]);
     });
 
     it('should be overridden by the local config', function () {
@@ -433,15 +472,15 @@ describe('#globalize', function () {
         notExpects: {
           statusCode: 201
         }
-      }), {
+      }), [{
         statusCode: [201]
-      });
+      }]);
 
       assert.deepEqual(globalize.notExpects.call(sample, {
         notExpects: 202
-      }), {
+      }), [{
         statusCode: [202]
-      });
+      }]);
     });
 
 
@@ -459,9 +498,48 @@ describe('#globalize', function () {
           body: 'steve'
         },
         globals: false
-      }), {
+      }), [{
         body: ['steve']
-      });
+      }]);
+    });
+
+    it('should not merge when there are functions on the global or local level', function () {
+      var sample = {
+        _globalOptions: {
+          notExpects: function () {
+            return 'Bad things';
+          }
+        }
+      };
+      assert.strictEqual(globalize.notExpects.call(sample, {
+        notExpects: {
+          body: 'steve'
+        }
+      }).length, 2);
+
+      var sample = {
+        _globalOptions: {
+          notExpects: function () {
+            return 'Bad things';
+          }
+        }
+      };
+      assert.strictEqual(globalize.notExpects.call(sample, {
+        notExpects: function () {
+          return 'Locally bad things';
+        }
+      }).length, 2);
+
+      var sample = {
+        _globalOptions: {
+          notExpects: [200]
+        }
+      };
+      assert.strictEqual(globalize.notExpects.call(sample, {
+        notExpects: function () {
+          return 'Locally bad things';
+        }
+      }).length, 2);
     });
 
   });
