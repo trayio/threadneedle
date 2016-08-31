@@ -8,27 +8,27 @@ describe('#validateExpects', function () {
   it('should be ok with valid status codes', function () {
     var err = validateExpects({
       statusCode: 201
-    }, {
+    }, [{
       statusCode: [201, 204]
-    });
+    }]);
     assert(_.isUndefined(err));
   });
 
   it('should not be ok with invalid status codes', function () {
     var err = validateExpects({
       statusCode: 201
-    }, {
+    }, [{
       statusCode: [202]
-    });
+    }]);
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_status_code');
     assert.equal(err.message, 'Invalid response status code');
 
     var err = validateExpects({
       statusCode: 201
-    }, {
+    }, [{
       statusCode: [202, 204]
-    });
+    }]);
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_status_code');
     assert.equal(err.message, 'Invalid response status code');
@@ -40,9 +40,9 @@ describe('#validateExpects', function () {
 
       var err = validateExpects({
         statusCode: statusCode
-      }, {
+      }, [{
         statusCode: [202]
-      });
+      }]);
       assert(_.isObject(err));
       assert(err.code.length);
       assert(err.message.length);
@@ -58,18 +58,18 @@ describe('#validateExpects', function () {
       body: {
         result: 'chris'
       }
-    }, {
+    }, [{
       body: ['chris']
-    });
+    }]);
     assert(_.isUndefined(err));
 
     var err = validateExpects({
       body: {
         result: 'chris'
       }
-    }, {
+    }, [{
       body: ['chris', 'result']
-    });
+    }]);
     assert(_.isUndefined(err));
   });
 
@@ -78,9 +78,9 @@ describe('#validateExpects', function () {
       body: {
         result: 'chris'
       }
-    }, {
+    }, [{
       body: ['christopher']
-    });
+    }]);
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
@@ -89,12 +89,36 @@ describe('#validateExpects', function () {
       body: {
         result: 'chris'
       }
-    }, {
+    }, [{
       body: ['chris', 'superresult']
-    });
+    }]);
     assert(_.isObject(err));
     assert.equal(err.code, 'invalid_response_body');
     assert.equal(err.message, 'Invalid response body');
+  });
+
+  it('should not be ok if a function returns an error', function () {
+    var err = validateExpects({
+      body: {
+        result: 'chris'
+      }
+    }, [function (res) {
+      return 'Bad things';
+    }]);
+    assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_function');
+    assert.equal(err.message, 'Bad things');
+
+    var err = validateExpects({
+      body: {
+        result: 'chris'
+      }
+    }, [function (res) {}, function () {
+      return 'Very bad things';
+    }]);
+    assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_function');
+    assert.equal(err.message, 'Very bad things');
   });
 
 
