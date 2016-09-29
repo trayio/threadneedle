@@ -303,7 +303,7 @@ You can use the `afterSuccess` function argument to do this:
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  afterSuccess: function (body) {
+  afterSuccess: function (body, params, res) {
     body.name = body.first_name + ' ' + body.last_name;
 
     // You can also return a promise to do async logic. It must resolve
@@ -548,7 +548,7 @@ of the individual method.
 
 ```js
 {
-  afterSuccess: function (body) {
+  afterSuccess: function (body, params, res) {
     body.errors = [];
 
     // You can also return a promise which should resolve having modified the body
