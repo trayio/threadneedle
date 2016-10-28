@@ -322,7 +322,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  afterFailure: function (err) {
+  afterFailure: function (err, params) {
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
     }
@@ -571,7 +571,7 @@ Rather than write the same code in every method, use this global method.
 
 ```js
 {
-  afterFailure: function (err) {
+  afterFailure: function (err, params) {
     if (err.response.statusCode === 429) {
       err.code = 'call_limit_exceeded';
     }
