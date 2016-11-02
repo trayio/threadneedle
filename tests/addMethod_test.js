@@ -607,6 +607,12 @@ describe('#addMethod', function () {
         data: {
           firstName: '{{firstName}}'
         },
+        options: {
+          output: function (input) {
+            // should be available pre substituations
+            assert(input.temp_file);
+          }
+        },
         afterSuccess: function (body, params) {
           assert(params.temp_file);
           assert.equal(params.temp_file.indexOf('/tmp/'), 0);
