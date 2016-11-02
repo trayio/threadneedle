@@ -3,6 +3,7 @@ var _            = require('lodash');
 var express      = require('express');
 var bodyParser   = require('body-parser');
 var when         = require('when');
+var fs           = require('fs');
 var randString   = require('mout/random/randString');
 var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
@@ -595,6 +596,40 @@ describe('#addMethod', function () {
         assert.equal(err.meh, 'no error here');
         done();
       });
+    });
+
+    it('should add a {{temp_file}} parameter when `fileHandler` is true', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'get',
+        url: host + '/' + name,
+        fileHandler: true,
+        data: {
+          firstName: '{{firstName}}'
+        },
+        afterSuccess: function (body, params) {
+          assert(params.temp_file);
+          assert.equal(params.temp_file.indexOf('/tmp/'), 0);
+          assert.equal(params.temp_file.length, 41);
+        }
+      });
+
+      app.get('/'+name, function (req, res) {
+        var filePath = __dirname+'/sample-file.png';
+        var stat = fs.statSync(filePath);
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': stat.size
+        });
+        var readStream = fs.createReadStream(filePath);
+        readStream.pipe(res);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(body) {
+        done();
+      })
     });
 
 
