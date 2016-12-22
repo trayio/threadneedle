@@ -3,7 +3,7 @@ var _                = require('lodash');
 var normalizeExpects = require('../lib/addMethod/normalizeExpects');
 
 
-describe('#normalizeExpects', function () {
+describe.only('#normalizeExpects', function () {
 
   it('should be ok for a single status code', function () {
     assert.deepEqual(normalizeExpects({ statusCode: 200 }), { statusCode: [200 ]});
@@ -35,6 +35,10 @@ describe('#normalizeExpects', function () {
 
   it('should be ok for shorthand body', function () {
     assert.deepEqual(normalizeExpects('chris'), { body: ['chris'] });
+  });
+
+  it('should be ok for shorthand statusCode string', function () {
+    assert.deepEqual(normalizeExpects('20x'), { statusCode: [200, 201, 202, 203, 204, 205, 206, 207, 208, 209] });
   });
 
   it('should be ok for shorthand status code list', function () {
