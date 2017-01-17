@@ -3,7 +3,7 @@ var _                = require('lodash');
 var normalizeExpects = require('../lib/addMethod/normalizeExpects');
 
 
-describe.only('#normalizeExpects', function () {
+describe('#normalizeExpects', function () {
 
   it('should be ok for a single status code', function () {
     assert.deepEqual(normalizeExpects({ statusCode: 200 }), { statusCode: [200 ]});
