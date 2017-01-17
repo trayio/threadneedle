@@ -98,6 +98,15 @@ describe('#substitute', function () {
     assert.deepEqual(output, [{ firstName: 'Chris', list: '123' }]);
   });
 
+  it('non-templates should remain as they are', function () {
+      var data = { x: '{{x}}', y: ['123'], z: '{{z}}' };
+      var output = substitute(data, {
+        x: 'hello',
+        z: 123
+      });
+      assert.deepEqual(output, { x: 'hello', y: ['123'], z: 123 });
+  });
+
   it('should substitute into function templates', function () {
     var url = function (params) {
       return 'https://'+params.dc+'.api.mailchimp.com/2.0/lists/list?apikey='+params.apiKey;
