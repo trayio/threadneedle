@@ -97,6 +97,11 @@ describe('#globalize', function () {
         globalize.baseUrl.call(sample, { url: '/mypath', globals: false }, {}),
         '/mypath'
       );
+
+      assert.strictEqual(
+        globalize.baseUrl.call(sample, { url: '/mypath', globals: { baseUrl: false } }, {}),
+        '/mypath'
+      );
     });
 
   });
@@ -213,6 +218,21 @@ describe('#globalize', function () {
           height: 180
         }
       );
+
+      assert.deepEqual(
+        globalize.object.call(sample, 'data', {
+          globals: {
+              data: false
+          },
+          data: {
+            age: 25,
+            height: 180
+          }
+        }, {}), {
+          age: 25,
+          height: 180
+        }
+      );
     });
 
 
@@ -294,6 +314,17 @@ describe('#globalize', function () {
 
       globalize.before.call(sample, {
         globals: false,
+        url: '/mydomain/{{id}}'
+      }, {
+        id: '123'
+      }).done(function (params) {
+        assert.deepEqual(params, { id: '123' });
+      });
+
+      globalize.before.call(sample, {
+        globals: {
+            before: false
+        },
         url: '/mydomain/{{id}}'
       }, {
         id: '123'
@@ -436,6 +467,29 @@ describe('#globalize', function () {
       }), [{}]);
     });
 
+    it('should not run global when globals.expects is false', function () {
+      var sample = {
+        _globalOptions: {
+          expects: 200
+        }
+      };
+      assert.deepEqual(globalize.expects.call(sample, {}), [{ statusCode: [200] }]);
+
+      var sample = {
+        _globalOptions: {
+          expects: {
+            statusCode: [200, 201],
+            body: 'chris'
+          }
+        }
+      };
+      assert.deepEqual(globalize.expects.call(sample, {
+        globals: {
+            expects: false
+        }
+      }), [{}]);
+    });
+
   });
 
   describe('#notExpects', function () {
@@ -493,11 +547,23 @@ describe('#globalize', function () {
           }
         }
       };
+
       assert.deepEqual(globalize.notExpects.call(sample, {
         notExpects: {
           body: 'steve'
         },
         globals: false
+      }), [{
+        body: ['steve']
+      }]);
+
+      assert.deepEqual(globalize.notExpects.call(sample, {
+        notExpects: {
+          body: 'steve'
+        },
+        globals: {
+            notExpects: false
+        }
       }), [{
         body: ['steve']
       }]);
@@ -618,6 +684,15 @@ describe('#globalize', function () {
         globals: false
       }, {}).done(function (body) {
         assert.deepEqual(body, {});
+        //done();
+      });
+
+      globalize.afterSuccess.call(sample, {
+        globals: {
+            afterSuccess: false
+        }
+      }, {}).done(function (body) {
+        assert.deepEqual(body, {});
         done();
       });
     });
@@ -695,6 +770,15 @@ describe('#globalize', function () {
 
       globalize.afterFailure.call(sample, {
         globals: false
+      }, {}).done(function (err) {
+        assert.deepEqual(err, {});
+        //done();
+      });
+
+      globalize.afterFailure.call(sample, {
+        globals: {
+            afterFailure: false
+        }
       }, {}).done(function (err) {
         assert.deepEqual(err, {});
         done();
