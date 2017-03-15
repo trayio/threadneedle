@@ -44,13 +44,13 @@ threadneedle.getLists({
 });
 ```
 
-# API
+# API
 
 * [addMethod](#addmethod)
 * [global](#global)
 
 
-## addMethod
+## addMethod
 
 The vast majority of threadneedle focuses around this singular method. Whenever you run `addMethod`, you're adding another method to the core `threadneedle` object.
 
@@ -155,7 +155,7 @@ Or if you'd prefer, as a function:
 }
 ```
 
-### query
+### query
 
 If you have to specify a lot of parameters in the query string for the URL, you can specify them here.
 The data will be URL encoded and appended at the end of the endpoint.
@@ -185,7 +185,7 @@ For example, to send & receive the data as json, just declare the `json` option:
 }
 ```
 
-### expects
+### expects
 
 Usually you'll want to do some kind of validation after you've made a request to a third party service. Typically validations will be one of the following:
 
@@ -234,7 +234,7 @@ You can also specify the above in shorthand, declaring the status codes OR body 
 }
 ```
 
-### notExpects
+### notExpects
 
 The counterpart to `expects`, except that if __ANY__ of the specified status codes / body strings are found, the method will fail:
 
@@ -251,7 +251,7 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 Like `expects`, `notExpects` can be specified shorthand, or as a function.
 
 
-### before
+### before
 
 If you'd like to map or alter the `params` before running the main request, you can use
 the `before` function argument.
@@ -335,7 +335,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
 
 
 
-### Function inputs
+### Function inputs
 
 Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper.
 
@@ -381,7 +381,7 @@ threadneedle.addMethod('myChainedMethod', function (params) {
 ```
 
 
-## global
+## global
 
 Typically you'll be creating one threadneedle instance for each third party API service
 (MailChimp, Facebook etc) you're integrating with. Sometimes these services will have
@@ -437,7 +437,7 @@ threadneedle.addMethod({
 If `baseUrl` is a function, it will get evaluated and prepended.
 
 
-### data
+### data
 
 Data for POST, PUT etc that you want to send in every request. Gets deep extended by the `data`
 config in the individual methods.
@@ -453,7 +453,7 @@ config in the individual methods.
 You can also run this as a function, which should return an object.
 
 
-### query
+### query
 
 Query string data that you'd like to send in every request. Gets extended by the `query` object
 in each individual method before being encoded into a string.
@@ -471,7 +471,7 @@ Useful for things like passing API keys in the query string:
 You can also run this as a function, which should return an object.
 
 
-### options
+### options
 
 The options for the request. Gets deep extended into the `options` object. Great for things
 like header based authentication.
@@ -488,7 +488,7 @@ like header based authentication.
 You can also run this as a function, which should return an object.
 
 
-### expects
+### expects
 
 Global [expects](#expects) config. Good for things like always expecting all calls to return with a
 specific set of status codes.
@@ -506,7 +506,7 @@ Gets extended if declared in the individual method config.
 You can also run this as a function,
 
 
-### notExpects
+### notExpects
 
 Global [notExpects](#notexpects) config. Good for things like specifically flagging certain status
 codes as errors, or for automatically erroring when an `errors` field appears in the response.
@@ -524,7 +524,7 @@ Gets extended if declared in the individual method config.
 You can also run this as a function.
 
 
-### before
+### before
 
 A function to run before every query happens. Runs **before** the `before` function declared
 in the model, if specified.
@@ -541,7 +541,7 @@ in the model, if specified.
 ```
 
 
-### afterSuccess
+### afterSuccess
 
 Runs after a method runs successfully, immediately **before** the `afterSuccess` function
 of the individual method.
@@ -557,7 +557,7 @@ of the individual method.
 ```
 
 
-### afterFailure
+### afterFailure
 
 Runs after a method runs successfully, immediately **before** the `afterFailure` function
 of the individual method.
