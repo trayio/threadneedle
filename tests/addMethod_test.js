@@ -88,7 +88,8 @@ describe('#addMethod', function () {
 
     before(function(done){
       app = express();
-      app.use(bodyParser());
+      app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded());
       server = app.listen(4000, done);
     });
 
