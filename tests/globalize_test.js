@@ -196,6 +196,27 @@ describe('#globalize', function () {
       );
     });
 
+    it('should return local string if data is a string', function () {
+      var sample = {
+        _globalOptions: {
+          data: {
+            id: '123',
+            name: 'Chris'
+          }
+        }
+      };
+
+      assert.deepEqual(
+        globalize.object.call(sample, 'data', {
+          globals: false,
+          data: "Lorem ipsum"
+        }, {}),
+        "Lorem ipsum"
+      );
+
+
+    });
+
     it('should not globalize when globals is false', function () {
       var sample = {
         _globalOptions: {
