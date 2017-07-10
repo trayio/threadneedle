@@ -35,6 +35,34 @@ describe('#substitute', function () {
     );
   });
 
+  it('should substitute for triple brackets', function () {
+    var data = {
+      id: '{{{listId}}}',
+    };
+    var output = substitute(data, {
+      listId: '6543'
+    });
+
+    assert.equal(output.id, '6543');
+  });
+
+  it('should not substitute for brackets numbers are not paired', function () {
+    var data = {
+      id: '{{{listId}}',
+    };
+
+    assert.throws(
+        function () {
+            output = substitute(data, {
+              listId: '6543'
+            })
+        },
+        function (err) {
+            return _.isError(err);
+        }
+    );
+  });
+
   it('should substitute fancy data like objects, arrays, and dates', function () {
     var data = {
       opt_fields: '{{fields}}',
