@@ -46,7 +46,7 @@ describe('#substitute', function () {
     assert.equal(output.id, '6543');
   });
 
-  it('should not substitute for brackets numbers are not paired', function () {
+  it('should not substitute for when brackets numbers are not paired', function () {
     var data = {
       id: '{{{listId}}',
     };
