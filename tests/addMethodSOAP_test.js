@@ -40,6 +40,7 @@ describe.only('#addMethodSOAP', function () {
     });
 
     it('dfsfw', function (done) {
+        this.timeout(10000);
         threadneedle.addMethod()
         .done(done, done);
     })
