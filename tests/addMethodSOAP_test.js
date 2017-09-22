@@ -1,5 +1,6 @@
 var assert       = require('assert');
 var _            = require('lodash');
+var when            = require('when');
 var express      = require('express');
 var bodyParser   = require('body-parser');
 var when         = require('when');
@@ -41,8 +42,49 @@ describe.only('#addMethodSOAP', function () {
 
     it('dfsfw', function (done) {
         this.timeout(10000);
-        threadneedle.addMethod()
+        threadneedle.addMethod(
+            'list_events',
+            {
+                method: 'GetEvents',
+
+                data: {
+                    orderBy: 'ID DESC',
+                }
+            }
+        )
+
+        .then(function (result) {
+            console.log('result');
+            console.log(result);
+        })
+
+        .catch(function (err) {
+            console.log('err');
+            console.log(err);
+        })
+
         .done(done, done);
+    })
+
+    it('dfsfw2', function (done) {
+        this.timeout(10000);
+
+        before((done) => {
+			setTimeout(() => {
+				done();
+			}, 10000);
+		});
+
+        console.log(threadneedle);
+        when(threadneedle['list_events'])
+
+        .then(function (results) {
+            console.log(results);
+        })
+
+        .done(done, done);
+
+
     })
 
 
