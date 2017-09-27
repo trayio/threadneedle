@@ -54,8 +54,9 @@ describe.only('#addMethodSOAP', function () {
         )
 
         .then(function (result) {
-            console.log('result');
+            console.log('result dfsfw');
             console.log(result);
+            console.log(threadneedle);
         })
 
         .catch(function (err) {
@@ -64,21 +65,31 @@ describe.only('#addMethodSOAP', function () {
         })
 
         .done(done, done);
+
+        after((done) => {
+			setTimeout(() => {
+				done();
+			}, 5000);
+		});
+
     })
 
     it('dfsfw2', function (done) {
-        this.timeout(10000);
+        this.timeout(20000);
 
         before((done) => {
 			setTimeout(() => {
 				done();
-			}, 10000);
+			}, 5000);
 		});
 
+        console.log('threadneedle in test');
         console.log(threadneedle);
+
         when(threadneedle['list_events'])
 
         .then(function (results) {
+            console.log('result dfsfw2');
             console.log(results);
         })
 
