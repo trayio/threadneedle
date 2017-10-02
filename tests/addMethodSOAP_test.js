@@ -15,7 +15,8 @@ describe.only('#addMethodSOAP', function () {
   describe('Validation', function () {
 
     var threadneedle;
-    beforeEach(function () {
+
+    before(function () {
         threadneedle = new ThreadNeedle(true);
         threadneedle.global({
 
@@ -40,61 +41,59 @@ describe.only('#addMethodSOAP', function () {
         });
     });
 
-    it('dfsfw', function (done) {
+    describe('dfsfw', function () {
         this.timeout(10000);
-        threadneedle.addMethod(
-            'list_events',
-            {
-                method: 'GetEvents',
 
-                data: {
-                    orderBy: 'ID DESC',
+        it('', function (done) {
+            when(
+                threadneedle.addMethod(
+                    'list_events',
+                    {
+                        method: 'GetEvents',
+
+                        data: {
+                            orderBy: 'ID DESC',
+                        }
+                    }
+                )
+            )
+
+            .done(
+                function (result) {
+                    console.log('result dfsfw');
+                    console.log(result);
+                    done();
+                },
+                function (err) {
+                    console.log('err');
+                    console.log(err);
+                    done();
                 }
-            }
-        )
+            );
 
-        .then(function (result) {
-            console.log('result dfsfw');
-            console.log(result);
+        });
+
+    });
+
+    describe('dfsfw2', function () {
+        this.timeout(10000);
+
+        it('', function (done) {
+            console.log('threadneedle in test');
             console.log(threadneedle);
-        })
 
-        .catch(function (err) {
-            console.log('err');
-            console.log(err);
-        })
+            when(
+                threadneedle['list_events']({})
+            )
 
-        .done(done, done);
+            .then(function (results) {
+                console.log('result dfsfw2');
+                console.log(results);
+            })
 
-        after((done) => {
-			setTimeout(() => {
-				done();
-			}, 5000);
-		});
+            .done(done, done);
 
-    })
-
-    it('dfsfw2', function (done) {
-        this.timeout(20000);
-
-        before((done) => {
-			setTimeout(() => {
-				done();
-			}, 5000);
-		});
-
-        console.log('threadneedle in test');
-        console.log(threadneedle);
-
-        when(threadneedle['list_events'])
-
-        .then(function (results) {
-            console.log('result dfsfw2');
-            console.log(results);
-        })
-
-        .done(done, done);
-
+        });
 
     })
 
