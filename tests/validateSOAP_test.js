@@ -3,7 +3,7 @@ var _            = require('lodash');
 var validateInput    = require('../lib/addMethod/validateSOAPInput');
 
 
-describe.only('validateSOAPInput', function () {
+describe('validateSOAPInput', function () {
 
     function throwTest (methodName, config, errMsg) {
         assert.throws(

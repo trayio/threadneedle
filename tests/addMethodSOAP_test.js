@@ -12,153 +12,148 @@ var ThreadNeedle = require('../');
 
 describe.only('#addMethodSOAP', function () {
 
-  describe('Running', function () {
-
-    var threadneedle;
-
-    before(function () {
-        threadneedle = new ThreadNeedle(true);
-        threadneedle.global({
-
-            soap: true,
-
-            wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
-
-            options: {
-                headers: [{
-                    value: {
-                        TokenHeader: {
-                            APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
-                        }
-                    },
-                    xmlns: 'http://www.regonline.com/api',
-                }]
-            },
-
-            data: {}
-
-
-        });
-    });
-
-    describe('dfsfw', function () {
-        this.timeout(10000);
-
-        it('', function (done) {
-            when(
-                threadneedle.addMethod(
-                    'list_events',
-                    {
-                        method: 'GetEvents',
-
-                        data: {
-                            orderBy: 'ID DESC',
-                        }
-                    }
-                )
-            )
-
-            .done(
-                function (result) {
-                    console.log('result dfsfw');
-                    console.log(result);
-                    done();
-                },
-                function (err) {
-                    console.log('err');
-                    console.log(err);
-                    done();
-                }
-            );
-
-        });
-
-    });
-
-    describe('dfsfw2', function () {
-        this.timeout(10000);
-
-        it('', function (done) {
-            console.log('threadneedle in test');
-            console.log(threadneedle);
-
-            when(
-                threadneedle['list_events']({})
-            )
-
-            .then(function (results) {
-                console.log('result dfsfw2');
-                console.log(results);
-            })
-
-            .done(done, done);
-
-        });
-
-    });
-
-  });
-
-
     describe('Running', function () {
 
-        var host = 'http://localhost:4000';
-        var server;
-        var app;
-
-        before(function(done){
-            app = express();
-            app.use(bodyParser.json());
-            app.use(bodyParser.urlencoded());
-            server = app.listen(4000, done);
-        });
-
-        after(function(done){
-            server.close(done);
-        });
-
         var threadneedle;
-        beforeEach(function () {
-            threadneedle = new ThreadNeedle();
-        });
 
-        it('should work with a basic example', function (done) {
-            var name = randString(10);
-            threadneedle.addMethod(name, {
-                method: 'get',
-                url: host + '/' + name,
-                expects: 200
-            });
+        before(function () {
+            threadneedle = new ThreadNeedle(true);
+            threadneedle.global({
 
-            app.get('/'+name, function (req, res) {
-                res.status(200).send('ok');
-            });
+                soap: true,
 
-            threadneedle[name]().done(function (result) {
-                assert.equal(result, 'ok');
-                done();
-            });
-        });
+                wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
 
-        it('should substitute to the url with a basic example', function (done) {
-            var name = randString(10);
-            threadneedle.addMethod(name, {
-                method: 'get',
-                url: host + '/' + name + '?key={{apiKey}}',
-                expects: 200
-            });
+                options: {
+                    headers: [{
+                        value: {
+                            TokenHeader: {
+                                APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                            }
+                        },
+                        xmlns: 'http://www.regonline.com/api',
+                    }]
+                },
 
-            app.get('/'+name, function (req, res) {
-                res.status(200).send(req.query.key);
-            });
+                data: {}
 
-            threadneedle[name]({
-                apiKey: '123'
-            }).done(function (result) {
-                assert.equal(result, '123');
-                done();
+
             });
         });
+
+        describe('dfsfw', function () {
+            this.timeout(10000);
+
+            it('', function (done) {
+                when(
+                    threadneedle.addMethod(
+                        'list_events',
+                        {
+                            method: 'GetEvents',
+
+                            data: {
+                                orderBy: 'ID DESC',
+                            }
+                        }
+                    )
+                )
+
+                .done(
+                    function (result) {
+                        console.log('result dfsfw');
+                        console.log(result);
+                        done();
+                    },
+                    function (err) {
+                        console.log('err');
+                        console.log(err);
+                        done();
+                    }
+                );
+
+            });
+
+        });
+
+        describe('dfsfw2', function () {
+            this.timeout(10000);
+
+            it('', function (done) {
+                console.log('threadneedle in test');
+                console.log(threadneedle);
+
+                when(
+                    threadneedle['list_events']({})
+                )
+
+                .then(function (results) {
+                    console.log('result dfsfw2');
+                    console.log(results);
+                })
+
+                .done(done, done);
+
+            });
+
+        });
+
+        // var host = 'http://localhost:4000';
+        // var server;
+        // var app;
+        //
+        // before(function(done){
+        //     app = express();
+        //     app.use(bodyParser.json());
+        //     app.use(bodyParser.urlencoded());
+        //     server = app.listen(4000, done);
+        // });
+        //
+        // after(function(done){
+        //     server.close(done);
+        // });
+        //
+        // var threadneedle;
+        // beforeEach(function () {
+        //     threadneedle = new ThreadNeedle();
+        // });
+        //
+        // it('should work with a basic example', function (done) {
+        //     var name = randString(10);
+        //     threadneedle.addMethod(name, {
+        //         method: 'get',
+        //         url: host + '/' + name,
+        //         expects: 200
+        //     });
+        //
+        //     app.get('/'+name, function (req, res) {
+        //         res.status(200).send('ok');
+        //     });
+        //
+        //     threadneedle[name]().done(function (result) {
+        //         assert.equal(result, 'ok');
+        //         done();
+        //     });
+        // });
+        //
+        // it('should substitute to the url with a basic example', function (done) {
+        //     var name = randString(10);
+        //     threadneedle.addMethod(name, {
+        //         method: 'get',
+        //         url: host + '/' + name + '?key={{apiKey}}',
+        //         expects: 200
+        //     });
+        //
+        //     app.get('/'+name, function (req, res) {
+        //         res.status(200).send(req.query.key);
+        //     });
+        //
+        //     threadneedle[name]({
+        //         apiKey: '123'
+        //     }).done(function (result) {
+        //         assert.equal(result, '123');
+        //         done();
+        //     });
+        // });
 
 
         // it('should substitute to the data', function (done) {
@@ -662,43 +657,91 @@ describe.only('#addMethodSOAP', function () {
 
     });
 
-    //TODO
     describe('Ad-hoc', function () {
-
-        var threadneedle;
-        beforeEach(function () {
-            threadneedle = new ThreadNeedle(true);
-        });
 
         it('should be fine with allowing the method config to be a function', function (done) {
 
-            var called = false;
+            var threadneedle = new ThreadNeedle(true);
 
-            threadneedle.addMethod('myCustomMethod', function (params) {
+            threadneedle.addMethod(
+                'myCustomMethod',
+                function (params) {
+                    return params.name;
+                }
+            );
 
-              assert(_.isObject(params));
+            threadneedle.myCustomMethod({ name: 'Chris' })
 
-              var self = this;
+            .done(
+                function (val) {
+                    assert(val === 'Chris');
+                    done();
+                },
+                function (err) {
+                    console.log(err);
+                    assert.fail(err);
+                }
+            );
 
-              return when.promise(function (resolve, reject) {
+        });
 
-                assert.equal(params.name, 'Chris');
-                assert.deepEqual(self, threadneedle); // context
-                called = true;
+    });
 
-                setTimeout(function () {
-                  resolve();
-                }, 200);
+    describe('Ad-hoc from REST mode', function () {
+        this.timeout(3000);
 
-              });
-            });
+        it('should be fine with allowing a single SOAP method config from REST mode', function (done) {
 
-            threadneedle.myCustomMethod({ name: 'Chris' }).done(function () {
-              assert(called);
-              done();
-            }, function (err) {
-              console.log(err);
-            });
+            var threadneedle = new ThreadNeedle();
+
+            threadneedle.addMethod(
+                'myCustomMethod',
+                function (params) {
+                    return params.name;
+                }
+            );
+
+            threadneedle.addMethod(
+                'mySOAPMethod',
+                {
+
+                    soap: true,
+
+                    wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+
+                    options: {
+                        headers: [{
+                            value: {
+                                TokenHeader: {
+                                    APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                                }
+                            },
+                            xmlns: 'http://www.regonline.com/api',
+                        }]
+                    },
+
+                    method: 'GetEvents',
+
+                    data: {
+                        orderBy: 'ID DESC',
+                    }
+
+                }
+            );
+
+            threadneedle['mySOAPMethod']({})
+
+            .done(
+                function (val) {
+                    console.log(val);
+                    assert(val['GetEventsResult']['Success']);
+                    done();
+                },
+                function (err) {
+                    console.log(err);
+                    assert.fail(err);
+                }
+            );
 
         });
 
