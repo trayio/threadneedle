@@ -12,6 +12,14 @@ var ThreadNeedle = require('../');
 
 describe.only('#addMethodSOAP', function () {
 
+    function promiseFailFunc (done) {
+        return function (err) {
+            console.log(err);
+            assert.fail(err);
+            done();
+        }
+    }
+
     describe('Running', function () {
 
         var threadneedle;
@@ -41,59 +49,143 @@ describe.only('#addMethodSOAP', function () {
             });
         });
 
-        describe('dfsfw', function () {
-            this.timeout(10000);
+        it('should error if wsdl is not provided (or not a string)', function (done) {
 
-            it('', function (done) {
-                when(
-                    threadneedle.addMethod(
-                        'list_events',
-                        {
-                            method: 'GetEvents',
+            var privateThreadneedle = new ThreadNeedle(true);
 
-                            data: {
-                                orderBy: 'ID DESC',
+            privateThreadneedle.global({
+
+                soap: true,
+
+                options: {
+                    headers: [{
+                        value: {
+                            TokenHeader: {
+                                APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
                             }
-                        }
-                    )
-                )
+                        },
+                        xmlns: 'http://www.regonline.com/api',
+                    }]
+                },
 
-                .done(
-                    function (result) {
-                        console.log('result dfsfw');
-                        console.log(result);
-                        done();
-                    },
-                    function (err) {
-                        console.log('err');
-                        console.log(err);
-                        done();
-                    }
-                );
+                data: {}
+
 
             });
+
+            when(
+                privateThreadneedle.addMethod(
+                    'list_events',
+                    {
+                        method: 'GetEvents',
+
+                        data: {
+                            orderBy: 'ID DESC',
+                        }
+                    }
+                )
+            )
+
+            .done(
+                function () {
+
+                    when(
+                        privateThreadneedle['list_events']({})
+                    )
+
+                    .done(
+                        promiseFailFunc(done),
+                        function (err) {
+                            assert.strictEqual(err, '`wsdl` field (string) must be provided to create a client instance.');
+                            done();
+                        }
+                    );
+
+                },
+                promiseFailFunc(done)
+            );
 
         });
 
-        describe('dfsfw2', function () {
-            this.timeout(10000);
+        it('should be able to add a standard SOAP method', function (done) {
 
-            it('', function (done) {
-                console.log('threadneedle in test');
-                console.log(threadneedle);
+            when(
+                threadneedle.addMethod(
+                    'list_events',
+                    {
+                        method: 'GetEvents',
 
-                when(
-                    threadneedle['list_events']({})
+                        data: {
+                            orderBy: 'ID DESC',
+                        }
+                    }
                 )
+            )
 
-                .then(function (results) {
-                    console.log('result dfsfw2');
-                    console.log(results);
-                })
+            .done(
+                function () {
+                    assert(_.isFunction(threadneedle['list_events']));
+                    done();
+                },
+                promiseFailFunc(done)
+            );
 
-                .done(done, done);
+        });
 
-            });
+
+
+        it('should be able to execute a standard SOAP method', function (done) {
+            this.timeout(5000);
+
+            when(
+                threadneedle['list_events']({})
+            )
+
+            .then(function (results) {
+                console.log(results);
+                assert(results['GetEventsResult']['Success']);
+            })
+
+            .done(done, promiseFailFunc(done));
+
+        });
+
+        it('should substitute to the url and data with a basic example', function (done) {
+            this.timeout(5000);
+
+            when(
+                threadneedle.addMethod(
+                    'list_events2',
+                    {
+                        method: 'Get{{event_type}}',
+
+                        data: {
+                            orderBy: '{{order_by}}',
+                        }
+                    }
+                )
+            )
+
+            .done(
+                function (result) {
+
+                    when(
+                        threadneedle['list_events2']({
+                            event_type: 'Events',
+                            order_by: 'ID DESC'
+                        })
+                    )
+
+                    .then(function (results) {
+                        console.log(results);
+                        assert(results['GetEventsResult']['Success']);
+                    })
+
+                    .done(done, promiseFailFunc(done));
+
+                },
+                promiseFailFunc(done)
+            );
 
         });
 
@@ -117,74 +209,8 @@ describe.only('#addMethodSOAP', function () {
         //     threadneedle = new ThreadNeedle();
         // });
         //
-        // it('should work with a basic example', function (done) {
-        //     var name = randString(10);
-        //     threadneedle.addMethod(name, {
-        //         method: 'get',
-        //         url: host + '/' + name,
-        //         expects: 200
-        //     });
-        //
-        //     app.get('/'+name, function (req, res) {
-        //         res.status(200).send('ok');
-        //     });
-        //
-        //     threadneedle[name]().done(function (result) {
-        //         assert.equal(result, 'ok');
-        //         done();
-        //     });
-        // });
-        //
-        // it('should substitute to the url with a basic example', function (done) {
-        //     var name = randString(10);
-        //     threadneedle.addMethod(name, {
-        //         method: 'get',
-        //         url: host + '/' + name + '?key={{apiKey}}',
-        //         expects: 200
-        //     });
-        //
-        //     app.get('/'+name, function (req, res) {
-        //         res.status(200).send(req.query.key);
-        //     });
-        //
-        //     threadneedle[name]({
-        //         apiKey: '123'
-        //     }).done(function (result) {
-        //         assert.equal(result, '123');
-        //         done();
-        //     });
-        // });
 
 
-        // it('should substitute to the data', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name + '?key={{apiKey}}',
-        // data: {
-        //   name: '{{name}}',
-        //   age: '{{age}}'
-        // },
-        // expects: 200
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json({
-        //   query: req.query,
-        //   body: req.body
-        // });
-        // });
-        //
-        // threadneedle[name]({
-        // apiKey: '123',
-        // name: 'Chris',
-        // age: 25
-        // }).done(function (result) {
-        // assert.deepEqual(result.query, { key: '123' });
-        // assert.deepEqual(result.body, { name: 'Chris', age: 25 });
-        // done();
-        // });
-        // });
         //
         // it('should substitute to the headers', function (done) {
         // var name = randString(10);
@@ -614,45 +640,7 @@ describe.only('#addMethodSOAP', function () {
         // });
         // });
         //
-        // it('should add a {{temp_file}} parameter when `fileHandler` is true', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'get',
-        // url: host + '/' + name,
-        // fileHandler: true,
-        // data: {
-        //   firstName: '{{firstName}}'
-        // },
-        // options: {
-        //   output: function (input) {
-        //     // should be available pre substituations
-        //     assert(input.temp_file);
-        //   }
-        // },
-        // afterSuccess: function (body, params) {
-        //   assert(params.temp_file);
-        //   assert.equal(params.temp_file.indexOf('/tmp/'), 0);
-        //   assert.equal(params.temp_file.length, 41);
-        // }
-        // });
-        //
-        // app.get('/'+name, function (req, res) {
-        // var filePath = __dirname+'/sample-file.png';
-        // var stat = fs.statSync(filePath);
-        // res.writeHead(200, {
-        //   'Content-Type': 'image/png',
-        //   'Content-Length': stat.size
-        // });
-        // var readStream = fs.createReadStream(filePath);
-        // readStream.pipe(res);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function(body) {
-        // done();
-        // })
-        // });
+
 
 
     });
@@ -746,7 +734,5 @@ describe.only('#addMethodSOAP', function () {
         });
 
     });
-
-
 
 });
