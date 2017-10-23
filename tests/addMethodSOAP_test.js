@@ -10,7 +10,7 @@ var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
-describe.only('#addMethodSOAP', function () {
+describe('#addMethodSOAP', function () {
 
     function promiseFailFunc (done) {
         return function (err) {
@@ -107,6 +107,7 @@ describe.only('#addMethodSOAP', function () {
 
         });
 
+
         it('should be able to add a standard SOAP method', function (done) {
 
             when(
@@ -132,8 +133,6 @@ describe.only('#addMethodSOAP', function () {
 
         });
 
-
-
         it('should be able to execute a standard SOAP method', function (done) {
             this.timeout(5000);
 
@@ -142,13 +141,13 @@ describe.only('#addMethodSOAP', function () {
             )
 
             .then(function (results) {
-                console.log(results);
                 assert(results['GetEventsResult']['Success']);
             })
 
             .done(done, promiseFailFunc(done));
 
         });
+
 
         it('should substitute to the url and data with a basic example', function (done) {
             this.timeout(5000);
@@ -177,7 +176,6 @@ describe.only('#addMethodSOAP', function () {
                     )
 
                     .then(function (results) {
-                        console.log(results);
                         assert(results['GetEventsResult']['Success']);
                     })
 
@@ -189,458 +187,153 @@ describe.only('#addMethodSOAP', function () {
 
         });
 
-        // var host = 'http://localhost:4000';
-        // var server;
-        // var app;
-        //
-        // before(function(done){
-        //     app = express();
-        //     app.use(bodyParser.json());
-        //     app.use(bodyParser.urlencoded());
-        //     server = app.listen(4000, done);
-        // });
-        //
-        // after(function(done){
-        //     server.close(done);
-        // });
-        //
-        // var threadneedle;
-        // beforeEach(function () {
-        //     threadneedle = new ThreadNeedle();
-        // });
-        //
+
+        it('should substitute to the options with a basic example', function (done) {
+
+            var privateThreadneedle = new ThreadNeedle(true);
+
+            privateThreadneedle.global({
+
+                soap: true,
+
+                wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+
+                options: {
+                    headers: [{
+                        value: {
+                            TokenHeader: {
+                                APIToken: '{{access_token}}'
+                            }
+                        },
+                        xmlns: 'http://www.regonline.com/api',
+                    }]
+                },
+
+                data: {}
 
 
-        //
-        // it('should substitute to the headers', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // options: {
-        //   headers: {
-        //     'Authorization': 'Basic {{apiKey}}'
-        //   }
-        // },
-        // expects: 200
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.headers);
-        // });
-        //
-        // threadneedle[name]({
-        // apiKey: '123'
-        // }).done(function (result) {
-        // assert.equal(result.authorization, 'Basic 123');
-        // done();
-        // });
-        // });
-        //
-        // it('should substitute to the auth', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // options: {
-        //   username: '{{username}}',
-        //   password: '{{password}}'
-        // },
-        // expects: 200
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.headers);
-        // });
-        //
-        // threadneedle[name]({
-        // username: 'chris',
-        // password: 'hello'
-        // }).done(function (result) {
-        // assert.equal(result.authorization, 'Basic Y2hyaXM6aGVsbG8=');
-        // done();
-        // });
-        // });
-        //
-        // it('should reject on invalid status code', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // expects: 201
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.headers);
-        // });
-        //
-        // threadneedle[name]().done(function (result) {}, function (err) {
-        // assert.equal(err.message, 'Invalid response status code');
-        // done();
-        // });
-        // });
-        //
-        // it('should reject on invalid status codes', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // expects: [202, 201]
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.headers);
-        // });
-        //
-        // threadneedle[name]().done(function (result) {}, function (err) {
-        // assert.equal(err.message, 'Invalid response status code');
-        // done();
-        // });
-        // });
-        //
-        // it('should reject on invalid body', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // expects: 'success'
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json({ failure: true });
-        // });
-        //
-        // threadneedle[name]().done(function (result) {}, function (err) {
-        // assert.equal(err.message, 'Invalid response body');
-        // done();
-        // });
-        // });
-        //
-        // it('should be ok when notExpect status code is fine', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // notExpects: 201
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json({ result: true });
-        // });
-        //
-        // threadneedle[name]().done(function (result) {
-        // assert.deepEqual(result, { result: true });
-        // done();
-        // });
-        // });
-        //
-        // it('should reject when notExpect status code is bad', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // notExpects: 200
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json({ result: true });
-        // });
-        //
-        // threadneedle[name]().done(function() {}, function (err) {
-        // assert.equal(err.message, 'Invalid response status code');
-        // done();
-        // });
-        // });
-        //
-        // it('should be ok when notExpect body is fine', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // notExpects: 'success'
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json({ result: true });
-        // });
-        //
-        // threadneedle[name]().done(function (result) {
-        // assert.deepEqual(result, { result: true });
-        // done();
-        // });
-        // });
-        //
-        // it('should reject when notExpect body is bad', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // notExpects: 'result'
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json({ result: true });
-        // });
-        //
-        // threadneedle[name]().done(function() {}, function (err) {
-        // assert.equal(err.message, 'Invalid response body');
-        // done();
-        // });
-        // });
-        //
-        //
-        // it('should run `before` on the params synchronously', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // before: function (params) {
-        //   params.name = params.firstName + ' ' + params.lastName;
-        //   return params;
-        // },
-        // data: function (params) {
-        //   return params;
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.body);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris',
-        // lastName: 'Houghton'
-        // }).done(function(result) {
-        // assert.deepEqual(result, {
-        //   firstName: 'Chris',
-        //   lastName: 'Houghton',
-        //   name: 'Chris Houghton'
-        // });
-        // done();
-        // });
-        // });
-        //
-        // it('should run `before` on the params asynchronously', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // before: function (params) {
-        //   return when.promise(function (resolve) {
-        //     params.name = params.firstName + ' ' + params.lastName;
-        //     resolve(params);
-        //   });
-        // },
-        // data: function (params) {
-        //   return params;
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.body);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris',
-        // lastName: 'Houghton'
-        // }).done(function(result) {
-        // assert.deepEqual(result, {
-        //   firstName: 'Chris',
-        //   lastName: 'Houghton',
-        //   name: 'Chris Houghton'
-        // });
-        // done();
-        // });
-        // });
-        //
-        // it('should run `afterSuccess` on the params synchronously', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // afterSuccess: function (body) {
-        //   delete body.firstName;
-        //   body.age = 25;
-        // },
-        // data: {
-        //   firstName: '{{firstName}}'
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.body);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function(result) {
-        // assert.deepEqual(result, { age: 25 });
-        // done();
-        // });
-        // });
-        //
-        // it('should run `afterSuccess` on the params asynchronously', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // afterSuccess: function (body) {
-        //   return when.promise(function (resolve) {
-        //     body.age = 25;
-        //     resolve();
-        //   });
-        // },
-        // data: {
-        //   firstName: '{{firstName}}'
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.body);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function(result) {
-        // assert.deepEqual(result, { firstName: 'Chris', age: 25 });
-        // done();
-        // });
-        // });
-        //
-        // it('Should override with returned value in `afterSuccess`', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // afterSuccess: function (body) {
-        //   return {
-        //     data: body
-        //   };
-        // },
-        // data: {
-        //   firstName: '{{firstName}}'
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json([ req.body ]);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function(result) {
-        // assert.deepEqual(result.data, [{ firstName: 'Chris' }]);
-        // done();
-        // });
-        // });
-        //
-        // it('should run `afterFailure` on the params synchronously', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // afterFailure: function (body) {
-        //   body.code = 'oauth_refresh';
-        //   return body;
-        // },
-        // expects: 201,
-        // data: {
-        //   firstName: '{{firstName}}'
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.body);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function() {}, function (err) {
-        // assert.deepEqual(err, {
-        //   message: 'Invalid response status code',
-        //   response: {
-        //     statusCode: 200,
-        //     body: {
-        //       firstName: 'Chris'
-        //     }
-        //   },
-        //   expects: {
-        //     statusCode: [201]
-        //   },
-        //   code: 'oauth_refresh'
-        // });
-        // done();
-        // });
-        // });
-        //
-        // it('should run `afterFailure` on the params asynchronously', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // afterFailure: function (body) {
-        //   body.code = 'oauth_refresh';
-        //   return when(body);
-        // },
-        // expects: 201,
-        // data: {
-        //   firstName: '{{firstName}}'
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json(req.body);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function() {}, function (err) {
-        // assert.deepEqual(err, {
-        //   message: 'Invalid response status code',
-        //   response: {
-        //     statusCode: 200,
-        //     body: {
-        //       firstName: 'Chris'
-        //     }
-        //   },
-        //   expects: {
-        //     statusCode: [201]
-        //   },
-        //   code: 'oauth_refresh'
-        // });
-        // done();
-        // });
-        // });
-        //
-        // it('Should override with returned value in `afterFailure`', function (done) {
-        // var name = randString(10);
-        // threadneedle.addMethod(name, {
-        // method: 'post',
-        // url: host + '/' + name,
-        // expects: 201,
-        // afterFailure: function (body) {
-        //   return {
-        //     meh: 'no error here'
-        //   };
-        // },
-        // data: {
-        //   firstName: '{{firstName}}'
-        // }
-        // });
-        //
-        // app.post('/'+name, function (req, res) {
-        // res.status(200).json([ req.body ]);
-        // });
-        //
-        // threadneedle[name]({
-        // firstName: 'Chris'
-        // }).done(function() {}, function (err) {
-        // assert.equal(err.meh, 'no error here');
-        // done();
-        // });
-        // });
-        //
+            });
 
+            when(
+                privateThreadneedle.addMethod(
+                    'list_events',
+                    {
+                        method: 'GetEvents',
+
+                        data: {
+                            orderBy: 'ID DESC',
+                        }
+                    }
+                )
+            )
+
+            .done(
+                function () {
+
+                    when(
+                        privateThreadneedle['list_events']({
+                            access_token: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                        })
+                    )
+
+                    .then(function (results) {
+                        assert(results['GetEventsResult']['Success']);
+                    })
+
+                    .done(done, promiseFailFunc(done));
+
+                },
+                promiseFailFunc(done)
+            );
+
+        });
+
+
+        it('should reject if expects function returns error', function (done) {
+            this.timeout(5000);
+
+            when(
+                threadneedle.addMethod(
+                    'list_events3',
+                    {
+                        method: 'GetEvents',
+
+                        data: {
+                            orderBy: 'ID DESC',
+                        },
+
+                        expects: function (results) {
+                            if (results.body['GetEventsResult']['Success'] === true) {
+                                return 'Test Error';
+                            }
+                        }
+                    }
+                )
+            )
+
+            .done(
+                function (result) {
+
+                    when(
+                        threadneedle['list_events3']({})
+                    )
+
+                    .done(
+                        promiseFailFunc(done),
+                        function (err) {
+                            assert(err.message === 'Test Error');
+                            done();
+                        }
+                    );
+
+                },
+                promiseFailFunc(done)
+            );
+
+        });
+
+        it('should reject if notExpects function returns error', function (done) {
+            this.timeout(5000);
+
+            when(
+                threadneedle.addMethod(
+                    'list_events4',
+                    {
+                        method: 'GetEvents',
+
+                        data: {
+                            orderBy: 'ID DESC',
+                        },
+
+                        notExpects: function (results) {
+                            if (results.body['GetEventsResult']['Success'] === true) {
+                                return 'Test Error';
+                            }
+                        }
+                    }
+                )
+            )
+
+            .done(
+                function (result) {
+
+                    when(
+                        threadneedle['list_events4']({})
+                    )
+
+                    .done(
+                        promiseFailFunc(done),
+                        function (err) {
+                            assert(err.message === 'Test Error');
+                            done();
+                        }
+                    );
+
+                },
+                promiseFailFunc(done)
+            );
+
+        });
 
 
     });
@@ -666,7 +359,6 @@ describe.only('#addMethodSOAP', function () {
                     done();
                 },
                 function (err) {
-                    console.log(err);
                     assert.fail(err);
                 }
             );
@@ -721,12 +413,10 @@ describe.only('#addMethodSOAP', function () {
 
             .done(
                 function (val) {
-                    console.log(val);
                     assert(val['GetEventsResult']['Success']);
                     done();
                 },
                 function (err) {
-                    console.log(err);
                     assert.fail(err);
                 }
             );
