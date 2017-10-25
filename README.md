@@ -48,6 +48,7 @@ threadneedle.getLists({
 
 * [addMethod](#addmethod)
 * [global](#global)
+* [SOAP Mode](#SOAP Mode)
 
 
 ## addMethod
@@ -580,3 +581,47 @@ Rather than write the same code in every method, use this global method.
   }
 }
 ```
+
+
+<br/>
+<br/>
+
+## SOAP mode
+As of v1.3.0, threadneedle has added support for SOAP, on both a global and method level.
+The library used is [node-soap](https://github.com/vpulim/node-soap)
+
+This mode can be initialised by adding the following flag to the (global) model: `soap: true`.
+If the flag is set on the global level, then threadneedle will only accept valid SOAP objects and functions as methods (and REST will not be supported). However, if the flag is only used by a method, then only the method will be in SOAP mode, but will expect all required fields to be provided.
+
+### Global fields
+The only required field here is:
+- `wsdl` (string)
+
+An optional field unique to globals is:
+- `baseMethod` (string)
+
+
+
+### Method fields
+The only required field here is:
+- `method` (**note**: this is different from the REST `method`, as this now expects the name of the actual SOAP method to execute)
+
+
+**Note**: `url` is not supported in SOAP mode (and therefore ignored).
+
+### Optional fields (global and methods)
+The following fields are pretty much the same as the REST versions, unless explicitly stated otherwise:
+- `before`
+- `options`  (different - this allows setting the SOAP client up - see the library for valid fields)
+    - `headers`  (different - this is an extra field recognised by threadneedle which adds headers to the client using the library's `client.addSoapHeader`)
+- `data`
+- `expects` / `notExpects` (functions only, REST shortcuts will error)
+- `beforeRequest`
+- `afterSuccess`
+- `afterFailure`
+
+
+**Note**: The following are not supported and will be ignored:
+- `baseUrl`
+- `url`
+- `query`
