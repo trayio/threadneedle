@@ -10,7 +10,9 @@ var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
-describe('#addMethodSOAP', function () {
+describe.only('#addMethodSOAP', function () {
+
+    var regonline_token = require('./dummycredentials.json').regonline;
 
     function promiseFailFunc (done) {
         return function (err) {
@@ -36,7 +38,7 @@ describe('#addMethodSOAP', function () {
                     headers: [{
                         value: {
                             TokenHeader: {
-                                APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                                APIToken: regonline_token
                             }
                         },
                         xmlns: 'http://www.regonline.com/api',
@@ -61,7 +63,7 @@ describe('#addMethodSOAP', function () {
                     headers: [{
                         value: {
                             TokenHeader: {
-                                APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                                APIToken: regonline_token
                             }
                         },
                         xmlns: 'http://www.regonline.com/api',
@@ -134,7 +136,7 @@ describe('#addMethodSOAP', function () {
         });
 
         it('should be able to execute a standard SOAP method', function (done) {
-            this.timeout(5000);
+            this.timeout(20000);
 
             when(
                 threadneedle['list_events']({})
@@ -150,7 +152,7 @@ describe('#addMethodSOAP', function () {
 
 
         it('should substitute to the url and data with a basic example', function (done) {
-            this.timeout(5000);
+            this.timeout(10000);
 
             when(
                 threadneedle.addMethod(
@@ -232,7 +234,7 @@ describe('#addMethodSOAP', function () {
 
                     when(
                         privateThreadneedle['list_events']({
-                            access_token: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                            access_token: regonline_token
                         })
                     )
 
@@ -250,7 +252,7 @@ describe('#addMethodSOAP', function () {
 
 
         it('should reject if expects function returns error', function (done) {
-            this.timeout(5000);
+            this.timeout(10000);
 
             when(
                 threadneedle.addMethod(
@@ -293,7 +295,7 @@ describe('#addMethodSOAP', function () {
         });
 
         it('should reject if notExpects function returns error', function (done) {
-            this.timeout(5000);
+            this.timeout(10000);
 
             when(
                 threadneedle.addMethod(
@@ -393,7 +395,7 @@ describe('#addMethodSOAP', function () {
                         headers: [{
                             value: {
                                 TokenHeader: {
-                                    APIToken: 'lO29j0in23WRCF9s3b6LvqARu1FCIhohPTVP4Pu1yom2y2h005KRAQ=='
+                                    APIToken: regonline_token
                                 }
                             },
                             xmlns: 'http://www.regonline.com/api',
