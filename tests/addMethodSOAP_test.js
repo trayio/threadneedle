@@ -10,7 +10,7 @@ var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
-describe.only('#addMethodSOAP', function () {
+describe('#addMethodSOAP', function () {
 
     var regonline_token = require('./dummycredentials.json').regonline;
 
