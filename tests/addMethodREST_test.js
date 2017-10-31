@@ -9,7 +9,7 @@ var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
-describe('#addMethod', function () {
+describe('#addMethodREST', function () {
 
   describe('Validation', function () {
 
@@ -683,7 +683,6 @@ describe('#addMethod', function () {
     });
 
   });
-
 
 
 });
