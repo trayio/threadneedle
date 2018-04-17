@@ -115,7 +115,7 @@ describe('#addMethodREST', function () {
       });
 
       threadneedle[name]().done(function (result) {
-        assert.equal(result, 'ok');
+        assert.equal(result.body, 'ok');
         done();
       });
     });
@@ -135,7 +135,7 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         apiKey: '123'
       }).done(function (result) {
-        assert.equal(result, '123');
+        assert.equal(result.body, '123');
         done();
       });
     });
@@ -165,8 +165,8 @@ describe('#addMethodREST', function () {
         name: 'Chris',
         age: 25
       }).done(function (result) {
-        assert.deepEqual(result.query, { key: '123' });
-        assert.deepEqual(result.body, { name: 'Chris', age: 25 });
+        assert.deepEqual(result.body.query, { key: '123' });
+        assert.deepEqual(result.body.body, { name: 'Chris', age: 25 });
         done();
       });
     });
@@ -191,7 +191,7 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         apiKey: '123'
       }).done(function (result) {
-        assert.equal(result.authorization, 'Basic 123');
+        assert.equal(result.body.authorization, 'Basic 123');
         done();
       });
     });
@@ -216,7 +216,7 @@ describe('#addMethodREST', function () {
         username: 'chris',
         password: 'hello'
       }).done(function (result) {
-        assert.equal(result.authorization, 'Basic Y2hyaXM6aGVsbG8=');
+        assert.equal(result.body.authorization, 'Basic Y2hyaXM6aGVsbG8=');
         done();
       });
     });
@@ -288,7 +288,7 @@ describe('#addMethodREST', function () {
       });
 
       threadneedle[name]().done(function (result) {
-        assert.deepEqual(result, { result: true });
+        assert.deepEqual(result.body, { result: true });
         done();
       });
     });
@@ -324,7 +324,7 @@ describe('#addMethodREST', function () {
       });
 
       threadneedle[name]().done(function (result) {
-        assert.deepEqual(result, { result: true });
+        assert.deepEqual(result.body, { result: true });
         done();
       });
     });
@@ -370,7 +370,7 @@ describe('#addMethodREST', function () {
         firstName: 'Chris',
         lastName: 'Houghton'
       }).done(function(result) {
-        assert.deepEqual(result, {
+        assert.deepEqual(result.body, {
           firstName: 'Chris',
           lastName: 'Houghton',
           name: 'Chris Houghton'
@@ -403,7 +403,7 @@ describe('#addMethodREST', function () {
         firstName: 'Chris',
         lastName: 'Houghton'
       }).done(function(result) {
-        assert.deepEqual(result, {
+        assert.deepEqual(result.body, {
           firstName: 'Chris',
           lastName: 'Houghton',
           name: 'Chris Houghton'
@@ -433,7 +433,7 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result, { age: 25 });
+        assert.deepEqual(result.body, { age: 25 });
         done();
       });
     });
@@ -461,7 +461,7 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result, { firstName: 'Chris', age: 25 });
+        assert.deepEqual(result.body, { firstName: 'Chris', age: 25 });
         done();
       });
     });
@@ -488,7 +488,86 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result.data, [{ firstName: 'Chris' }]);
+        assert.deepEqual(result.body.data, [{ firstName: 'Chris' }]);
+        done();
+      });
+    });
+
+    it('should run `afterHeader` on the params synchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeader: function (headers, params, body, res) {
+          headers.metaData = 'ABC';
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.header, { metaData: 'ABC' });
+        done();
+      });
+    });
+
+    it('should run `afterHeader` on the params asynchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeader: function (headers, params, body, res) {
+          return when.promise(function (resolve) {
+            headers.metaData = 'XYZ';
+            resolve();
+          });
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.header, { metaData: 'XYZ' });
+        done();
+      });
+    });
+
+    it('Should override with returned value in `afterHeader`', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeader: function (headers, params, body, res) {
+          headers.metaData = '123';
+          return headers;
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json([ req.body ]);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.header, { metaData: '123' });
         done();
       });
     });
