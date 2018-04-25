@@ -498,7 +498,7 @@ describe('#addMethodREST', function () {
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeader: function (headers, params, body, res) {
+        afterHeader: function (error, headers, params, body, res) {
           headers.metaData = 'ABC';
         },
         data: {
@@ -523,7 +523,7 @@ describe('#addMethodREST', function () {
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeader: function (headers, params, body, res) {
+        afterHeader: function (error, headers, params, body, res) {
           return when.promise(function (resolve) {
             headers.metaData = 'XYZ';
             resolve();
@@ -551,7 +551,7 @@ describe('#addMethodREST', function () {
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeader: function (headers, params, body, res) {
+        afterHeader: function (error, headers, params, body, res) {
           headers.metaData = '123';
           return headers;
         },
