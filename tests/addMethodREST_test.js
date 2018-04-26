@@ -233,8 +233,8 @@ describe('#addMethodREST', function () {
         res.status(200).json(req.headers);
       });
 
-      threadneedle[name]().done(function (result) {}, function (err) {
-        assert.equal(err.message, 'Invalid response status code');
+      threadneedle[name]().done(function (result) {}, function (result) {
+        assert.equal(result.body.message, 'Invalid response status code');
         done();
       });
     });
@@ -251,8 +251,8 @@ describe('#addMethodREST', function () {
         res.status(200).json(req.headers);
       });
 
-      threadneedle[name]().done(function (result) {}, function (err) {
-        assert.equal(err.message, 'Invalid response status code');
+      threadneedle[name]().done(function (result) {}, function (result) {
+        assert.equal(result.body.message, 'Invalid response status code');
         done();
       });
     });
@@ -269,8 +269,8 @@ describe('#addMethodREST', function () {
         res.status(200).json({ failure: true });
       });
 
-      threadneedle[name]().done(function (result) {}, function (err) {
-        assert.equal(err.message, 'Invalid response body');
+      threadneedle[name]().done(function (result) {}, function (result) {
+        assert.equal(result.body.message, 'Invalid response body');
         done();
       });
     });
@@ -305,8 +305,8 @@ describe('#addMethodREST', function () {
         res.status(200).json({ result: true });
       });
 
-      threadneedle[name]().done(function() {}, function (err) {
-        assert.equal(err.message, 'Invalid response status code');
+      threadneedle[name]().done(function() {}, function (result) {
+        assert.equal(result.body.message, 'Invalid response status code');
         done();
       });
     });
@@ -341,8 +341,8 @@ describe('#addMethodREST', function () {
         res.status(200).json({ result: true });
       });
 
-      threadneedle[name]().done(function() {}, function (err) {
-        assert.equal(err.message, 'Invalid response body');
+      threadneedle[name]().done(function() {}, function (result) {
+        assert.equal(result.body.message, 'Invalid response body');
         done();
       });
     });
@@ -593,8 +593,8 @@ describe('#addMethodREST', function () {
 
       threadneedle[name]({
         firstName: 'Chris'
-      }).done(function() {}, function (err) {
-        assert.deepEqual(err, {
+      }).done(function() {}, function (result) {
+        assert.deepEqual(result.body, {
           message: 'Invalid response status code',
           response: {
             statusCode: 200,
@@ -632,8 +632,8 @@ describe('#addMethodREST', function () {
 
       threadneedle[name]({
         firstName: 'Chris'
-      }).done(function() {}, function (err) {
-        assert.deepEqual(err, {
+      }).done(function() {}, function (result) {
+        assert.deepEqual(result.body, {
           message: 'Invalid response status code',
           response: {
             statusCode: 200,
@@ -672,8 +672,8 @@ describe('#addMethodREST', function () {
 
       threadneedle[name]({
         firstName: 'Chris'
-      }).done(function() {}, function (err) {
-        assert.equal(err.meh, 'no error here');
+      }).done(function() {}, function (result) {
+        assert.equal(result.body.meh, 'no error here');
         done();
       });
     });
