@@ -493,12 +493,12 @@ describe('#addMethodREST', function () {
       });
     });
 
-    it('should run `afterHeader` on the params synchronously', function (done) {
+    it('should run `afterHeaders` on the params synchronously', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeader: function (error, headers, params, body, res) {
+        afterHeaders: function (error, headers, params, body, res) {
           headers.metaData = 'ABC';
         },
         data: {
@@ -513,17 +513,17 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result.header, { metaData: 'ABC' });
+        assert.deepEqual(result.headers, { metaData: 'ABC' });
         done();
       });
     });
 
-    it('should run `afterHeader` on the params asynchronously', function (done) {
+    it('should run `afterHeaders` on the params asynchronously', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeader: function (error, headers, params, body, res) {
+        afterHeaders: function (error, headers, params, body, res) {
           return when.promise(function (resolve) {
             headers.metaData = 'XYZ';
             resolve();
@@ -541,17 +541,17 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result.header, { metaData: 'XYZ' });
+        assert.deepEqual(result.headers, { metaData: 'XYZ' });
         done();
       });
     });
 
-    it('Should override with returned value in `afterHeader`', function (done) {
+    it('Should override with returned value in `afterHeaders`', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeader: function (error, headers, params, body, res) {
+        afterHeaders: function (error, headers, params, body, res) {
           headers.metaData = '123';
           return headers;
         },
@@ -567,7 +567,7 @@ describe('#addMethodREST', function () {
       threadneedle[name]({
         firstName: 'Chris'
       }).done(function(result) {
-        assert.deepEqual(result.header, { metaData: '123' });
+        assert.deepEqual(result.headers, { metaData: '123' });
         done();
       });
     });
