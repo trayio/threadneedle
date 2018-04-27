@@ -412,6 +412,7 @@ describe('#addMethodREST', function () {
       });
     });
 
+
     it('should run `afterSuccess` on the params synchronously', function (done) {
       var name = randString(10);
       threadneedle.addMethod(name, {
@@ -493,84 +494,6 @@ describe('#addMethodREST', function () {
       });
     });
 
-    it('should run `afterHeaders` on the params synchronously', function (done) {
-      var name = randString(10);
-      threadneedle.addMethod(name, {
-        method: 'post',
-        url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
-          headers.metaData = 'ABC';
-        },
-        data: {
-          firstName: '{{firstName}}'
-        }
-      });
-
-      app.post('/'+name, function (req, res) {
-        res.status(200).json(req.body);
-      });
-
-      threadneedle[name]({
-        firstName: 'Chris'
-      }).done(function(result) {
-        assert.deepEqual(result.headers, { metaData: 'ABC' });
-        done();
-      });
-    });
-
-    it('should run `afterHeaders` on the params asynchronously', function (done) {
-      var name = randString(10);
-      threadneedle.addMethod(name, {
-        method: 'post',
-        url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
-          return when.promise(function (resolve) {
-            headers.metaData = 'XYZ';
-            resolve();
-          });
-        },
-        data: {
-          firstName: '{{firstName}}'
-        }
-      });
-
-      app.post('/'+name, function (req, res) {
-        res.status(200).json(req.body);
-      });
-
-      threadneedle[name]({
-        firstName: 'Chris'
-      }).done(function(result) {
-        assert.deepEqual(result.headers, { metaData: 'XYZ' });
-        done();
-      });
-    });
-
-    it('Should override with returned value in `afterHeaders`', function (done) {
-      var name = randString(10);
-      threadneedle.addMethod(name, {
-        method: 'post',
-        url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
-          headers.metaData = '123';
-          return headers;
-        },
-        data: {
-          firstName: '{{firstName}}'
-        }
-      });
-
-      app.post('/'+name, function (req, res) {
-        res.status(200).json([ req.body ]);
-      });
-
-      threadneedle[name]({
-        firstName: 'Chris'
-      }).done(function(result) {
-        assert.deepEqual(result.headers, { metaData: '123' });
-        done();
-      });
-    });
 
     it('should run `afterFailure` on the params synchronously', function (done) {
       var name = randString(10);
@@ -677,6 +600,142 @@ describe('#addMethodREST', function () {
         done();
       });
     });
+
+
+    it('should run `afterHeaders` on the params synchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeaders: function (error, headers, params, body, res) {
+          headers.metaData = 'ABC';
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.headers, { metaData: 'ABC' });
+        done();
+      });
+    });
+
+    it('should run `afterHeaders` on the params asynchronously', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeaders: function (error, headers, params, body, res) {
+          return when.promise(function (resolve) {
+            headers.metaData = 'XYZ';
+            resolve();
+          });
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json(req.body);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.headers, { metaData: 'XYZ' });
+        done();
+      });
+    });
+
+    it('Should override with returned value in `afterHeaders`', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeaders: function (error, headers, params, body, res) {
+          headers.metaData = '123';
+          return headers;
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json([ req.body ]);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(function(result) {
+        assert.deepEqual(result.headers, { metaData: '123' });
+        done();
+      });
+    });
+
+    //TODO: 6 versions of test for all possibilities
+    // afterHeaderTestModel = {
+    //     method: 'post',
+    //     url: host + '/' + name,
+    //     afterSuccess: function (body, params, res) {
+    //         if (params.asFlag) {
+    //             throw new Error('afterSuccess Error');
+    //         }
+    //     },
+    //     afterFailure: function (body, params, res) {
+    //
+    //     },
+    //     afterHeaders: function (error, headers, params, body, res) {
+    //         if (params.ahFlag) {
+    //             throw new Error('afterHeaders Error');
+    //         } else {
+    //             return {
+    //                 gotError: !!error
+    //             }
+    //         }
+    //     }
+    // };
+
+
+    it('Should place `afterHeaders` errors in body and reject', function (done) {
+      var name = randString(10);
+      threadneedle.addMethod(name, {
+        method: 'post',
+        url: host + '/' + name,
+        afterHeaders: function (error, headers, params, body, res) {
+          throw new Error('Test Error');
+        },
+        data: {
+          firstName: '{{firstName}}'
+        }
+      });
+
+      app.post('/'+name, function (req, res) {
+        res.status(200).json([ req.body ]);
+      });
+
+      threadneedle[name]({
+        firstName: 'Chris'
+      }).done(
+          function () {
+            assert.fail('Wrong clause');
+            done();
+          },
+          function(result) {
+            assert.deepEqual(result.body.message, 'Test Error');
+            done();
+          }
+      );
+    });
+
 
     it('should add a {{temp_file}} parameter when `fileHandler` is true', function (done) {
       var name = randString(10);
