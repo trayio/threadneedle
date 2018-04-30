@@ -681,59 +681,240 @@ describe('#addMethodREST', function () {
       });
     });
 
-    //TODO: 6 versions of test for all possibilities
-    // afterHeaderTestModel = {
-    //     method: 'post',
-    //     url: host + '/' + name,
-    //     afterSuccess: function (body, params, res) {
-    //         if (params.asFlag) {
-    //             throw new Error('afterSuccess Error');
-    //         }
-    //     },
-    //     afterFailure: function (body, params, res) {
-    //
-    //     },
-    //     afterHeaders: function (error, headers, params, body, res) {
-    //         if (params.ahFlag) {
-    //             throw new Error('afterHeaders Error');
-    //         } else {
-    //             return {
-    //                 gotError: !!error
-    //             }
-    //         }
-    //     }
-    // };
 
+     function afterHeaderTestModel (name) {
+        return {
+            method: 'post',
+            url: host + '/' + name,
+            expects: 200,
+            afterSuccess: function (body, params, res) {
+                if (params.asFlag) {
+                    throw new Error('afterSuccess Error');
+                }
+            },
+            afterFailure: function (body, params, res) {
+                if (params.afFlag) {
+                    throw new Error('afterFailure Error');
+                }
+            },
+            afterHeaders: function (error, headers, params, body, res) {
+                if (params.ahFlag) {
+                    throw new Error('afterHeaders Error');
+                } else {
+                    return {
+                        gotError: !!error
+                    }
+                }
+            }
+        };
+    };
 
-    it('Should place `afterHeaders` errors in body and reject', function (done) {
-      var name = randString(10);
-      threadneedle.addMethod(name, {
-        method: 'post',
-        url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
-          throw new Error('Test Error');
-        },
-        data: {
-          firstName: '{{firstName}}'
-        }
-      });
+    it('Should place `afterHeaders` object in header after afterSuccess resolve', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
 
-      app.post('/'+name, function (req, res) {
-        res.status(200).json([ req.body ]);
-      });
+        app.post('/' + name, function (req, res) {
+        	res.status(200).json({ success: true });
+        });
 
-      threadneedle[name]({
-        firstName: 'Chris'
-      }).done(
-          function () {
-            assert.fail('Wrong clause');
-            done();
-          },
-          function(result) {
-            assert.deepEqual(result.body.message, 'Test Error');
-            done();
-          }
-      );
+        threadneedle[name]({
+        	asFlag: false,
+        	afFlag: false,
+        	ahFlag: false
+        })
+        .done(
+        	function (result) {
+                assert.deepEqual(result.headers.gotError, false);
+                assert.deepEqual(result.body.success, true);
+        		done();
+        	},
+        	function (result) {
+                assert.fail('Wrong clause - failing');
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` error in body after afterSuccess resolve', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(200).json({ success: true });
+        });
+
+        threadneedle[name]({
+        	asFlag: false,
+        	afFlag: false,
+        	ahFlag: true
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers, {});
+                assert.deepEqual(result.body.message, 'afterHeaders Error');
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` object in header after afterSuccess reject', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(200).json({ success: true });
+        });
+
+        threadneedle[name]({
+        	asFlag: true,
+        	afFlag: false,
+        	ahFlag: false
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers.gotError, true);
+                assert.deepEqual(result.body.message, 'afterSuccess Error');
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` error in body after afterSuccess reject', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(200).json({ success: true });
+        });
+
+        threadneedle[name]({
+        	asFlag: true,
+        	afFlag: false,
+        	ahFlag: true
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers, {});
+                assert.deepEqual(result.body.message, 'afterHeaders Error');
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` object in header after afterFailure resolve', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(400).json({ success: false });
+        });
+
+        threadneedle[name]({
+        	asFlag: false,
+        	afFlag: false,
+        	ahFlag: false
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers.gotError, true);
+                assert.deepEqual(result.body.response.body.success, false);
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` error in body after afterFailure resolve', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(400).json({ success: false });
+        });
+
+        threadneedle[name]({
+        	asFlag: false,
+        	afFlag: false,
+        	ahFlag: true
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers, {});
+                assert.deepEqual(result.body.message, 'afterHeaders Error');
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` object in header after afterFailure reject', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(400).json({ success: false });
+        });
+
+        threadneedle[name]({
+        	asFlag: false,
+        	afFlag: true,
+        	ahFlag: false
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers.gotError, true);
+                assert.deepEqual(result.body.message, 'afterFailure Error');
+        		done();
+        	}
+        );
+    });
+
+    it('Should place `afterHeaders` error in body after afterFailure reject', function (done) {
+        var name = randString(10);
+        threadneedle.addMethod(name, afterHeaderTestModel(name));
+
+        app.post('/' + name, function (req, res) {
+        	res.status(400).json({ success: false });
+        });
+
+        threadneedle[name]({
+        	asFlag: false,
+        	afFlag: true,
+        	ahFlag: true
+        })
+        .done(
+        	function (result) {
+                assert.fail('Wrong clause - succeeding');
+        		done();
+        	},
+        	function (result) {
+                assert.deepEqual(result.headers, {});
+                assert.deepEqual(result.body.message, 'afterHeaders Error');
+        		done();
+        	}
+        );
     });
 
 
