@@ -682,7 +682,7 @@ describe('#addMethodREST', function () {
     });
 
 
-     function afterHeaderTestModel (name) {
+    function afterHeaderTestModel (name) {
         return {
             method: 'post',
             url: host + '/' + name,
