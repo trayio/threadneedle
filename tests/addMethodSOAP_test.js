@@ -10,7 +10,7 @@ var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
-describe.only('#addMethodSOAP', function () {
+describe('#addMethodSOAP', function () {
 
     var regonline_token = require('./dummycredentials.json').regonline;
 
@@ -143,6 +143,7 @@ describe.only('#addMethodSOAP', function () {
             )
 
             .then(function (results) {
+                assert.deepEqual(results.headers, {});
                 assert(results.body['GetEventsResult']['Success']);
             })
 
@@ -239,6 +240,7 @@ describe.only('#addMethodSOAP', function () {
                     )
 
                     .then(function (results) {
+                        assert.deepEqual(results.headers, {});
                         assert(results.body['GetEventsResult']['Success']);
                     })
 
@@ -283,6 +285,7 @@ describe.only('#addMethodSOAP', function () {
                     .done(
                         promiseFailFunc(done),
                         function (err) {
+                            assert.deepEqual(err.headers, {});
                             assert(err.body.message === 'Test Error');
                             done();
                         }
@@ -406,6 +409,12 @@ describe.only('#addMethodSOAP', function () {
 
                     data: {
                         orderBy: 'ID DESC',
+                    },
+
+                    afterHeaders: function () {
+                        return {
+                            success: true
+                        }
                     }
 
                 }
@@ -415,6 +424,7 @@ describe.only('#addMethodSOAP', function () {
 
             .done(
                 function (val) {
+                    assert.deepEqual(val.headers.success, true);
                     assert(val.body['GetEventsResult']['Success']);
                     done();
                 },
