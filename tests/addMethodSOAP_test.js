@@ -10,7 +10,7 @@ var globalize    = require('../lib/addMethod/globalize');
 var ThreadNeedle = require('../');
 
 
-describe('#addMethodSOAP', function () {
+describe.only('#addMethodSOAP', function () {
 
     var regonline_token = require('./dummycredentials.json').regonline;
 
@@ -143,7 +143,7 @@ describe('#addMethodSOAP', function () {
             )
 
             .then(function (results) {
-                assert(results['GetEventsResult']['Success']);
+                assert(results.body['GetEventsResult']['Success']);
             })
 
             .done(done, promiseFailFunc(done));
@@ -178,7 +178,7 @@ describe('#addMethodSOAP', function () {
                     )
 
                     .then(function (results) {
-                        assert(results['GetEventsResult']['Success']);
+                        assert(results.body['GetEventsResult']['Success']);
                     })
 
                     .done(done, promiseFailFunc(done));
@@ -239,7 +239,7 @@ describe('#addMethodSOAP', function () {
                     )
 
                     .then(function (results) {
-                        assert(results['GetEventsResult']['Success']);
+                        assert(results.body['GetEventsResult']['Success']);
                     })
 
                     .done(done, promiseFailFunc(done));
@@ -283,7 +283,7 @@ describe('#addMethodSOAP', function () {
                     .done(
                         promiseFailFunc(done),
                         function (err) {
-                            assert(err.message === 'Test Error');
+                            assert(err.body.message === 'Test Error');
                             done();
                         }
                     );
@@ -326,7 +326,7 @@ describe('#addMethodSOAP', function () {
                     .done(
                         promiseFailFunc(done),
                         function (err) {
-                            assert(err.message === 'Test Error');
+                            assert(err.body.message === 'Test Error');
                             done();
                         }
                     );
@@ -415,7 +415,7 @@ describe('#addMethodSOAP', function () {
 
             .done(
                 function (val) {
-                    assert(val['GetEventsResult']['Success']);
+                    assert(val.body['GetEventsResult']['Success']);
                     done();
                 },
                 function (err) {
