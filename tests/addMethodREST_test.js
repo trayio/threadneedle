@@ -607,8 +607,10 @@ describe('#addMethodREST', function () {
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
-          headers.metaData = 'ABC';
+        afterHeaders: function (error, params, body, res) {
+          return {
+              metaData: 'ABC'
+          };
         },
         data: {
           firstName: '{{firstName}}'
@@ -632,10 +634,11 @@ describe('#addMethodREST', function () {
       threadneedle.addMethod(name, {
         method: 'post',
         url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
+        afterHeaders: function (error, params, body, res) {
           return when.promise(function (resolve) {
-            headers.metaData = 'XYZ';
-            resolve();
+            resolve({
+                metaData: 'XYZ'
+            });
           });
         },
         data: {
@@ -655,33 +658,6 @@ describe('#addMethodREST', function () {
       });
     });
 
-    it('Should override with returned value in `afterHeaders`', function (done) {
-      var name = randString(10);
-      threadneedle.addMethod(name, {
-        method: 'post',
-        url: host + '/' + name,
-        afterHeaders: function (error, headers, params, body, res) {
-          headers.metaData = '123';
-          return headers;
-        },
-        data: {
-          firstName: '{{firstName}}'
-        }
-      });
-
-      app.post('/'+name, function (req, res) {
-        res.status(200).json([ req.body ]);
-      });
-
-      threadneedle[name]({
-        firstName: 'Chris'
-      }).done(function(result) {
-        assert.deepEqual(result.headers, { metaData: '123' });
-        done();
-      });
-    });
-
-
     function afterHeaderTestModel (name) {
         return {
             method: 'post',
@@ -697,13 +673,13 @@ describe('#addMethodREST', function () {
                     throw new Error('afterFailure Error');
                 }
             },
-            afterHeaders: function (error, headers, params, body, res) {
+            afterHeaders: function (error, params, body, res) {
                 if (params.ahFlag) {
                     throw new Error('afterHeaders Error');
                 } else {
                     return {
                         gotError: !!error
-                    }
+                    };
                 }
             }
         };
