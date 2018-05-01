@@ -448,6 +448,7 @@ The parameters correspond directly to those for [addMethod](#addmethod):
 * [beforeRequest](#beforerequest-1)
 * [afterSuccess](#aftersuccess-1)
 * [afterFailure](#afterfailure-1)
+* [afterHeaders](#afterHeaders-1)
 
 Example usage:
 
@@ -682,6 +683,7 @@ The following fields are pretty much the same as the REST versions, unless expli
 - `beforeRequest`
 - `afterSuccess`
 - `afterFailure`
+- `afterHeaders`
 
 
 **Note**: The following are not supported and will be ignored:
