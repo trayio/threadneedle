@@ -360,7 +360,7 @@ describe('#addMethodSOAP', function () {
 
             .done(
                 function (val) {
-                    assert(val === 'Chris');
+                    assert.deepEqual(val.body, 'Chris');
                     done();
                 },
                 function (err) {
