@@ -690,3 +690,6 @@ The following fields are pretty much the same as the REST versions, unless expli
 - `baseUrl`
 - `url`
 - `query`
+
+### addMethod - SOAP template - response
+The response format is identical to the REST template response. 
