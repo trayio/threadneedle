@@ -636,12 +636,19 @@ If there is meta data that needs to be specified with every `REST template` meth
 
 ```js
 {
-  afterFailure: function (err, params) {
-    if (err.response.statusCode === 429) {
-      err.code = 'call_limit_exceeded';
-    }
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  afterHeaders: function (error, params, body, res) {
+    return {
+        operation: 'cleanup_op',
+        data: {
+            abc: '123'
+        }
+    };
 
-    // You can also return a promise which should resolve having modified the error
+    // You can also return a promise to do async logic. It should resolve
+    // with the header object.
   }
 }
 ```
@@ -692,4 +699,4 @@ The following fields are pretty much the same as the REST versions, unless expli
 - `query`
 
 ### addMethod - SOAP template - response
-The response format is identical to the REST template response. 
+The response format is identical to the REST template response.
