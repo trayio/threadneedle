@@ -48,12 +48,14 @@ threadneedle.getLists({
 
 * [addMethod](#addmethod)
 * [global](#global)
-* [SOAP Mode](#SOAP Mode)
+* [SOAP Mode](#soap-mode)
 
 
 ## addMethod
 
 The vast majority of threadneedle focuses around this singular method. Whenever you run `addMethod`, you're adding another method to the core `threadneedle` object.
+
+### addMethod - REST template
 
 You can declare template-style parameters to be passed into specific fields, using Mustache-style templating.
 
@@ -67,9 +69,10 @@ Parameters are:
 * [expects](#expects)
 * [notExpects](#notexpects)
 * [before](#before)
-* [beforeRequest](#beforeRequest)
+* [beforeRequest](#beforerequest)
 * [afterSuccess](#aftersuccess)
 * [afterFailure](#afterfailure)
+* [afterHeaders](#afterheaders)
 
 `addMethod` uses JavaScript promises (using [When.js](https://github.com/cujojs/when)), which allows for the chaining of multiple API calls together, and smart error handling.
 
@@ -271,7 +274,7 @@ Runs **before** any templating or requests.
 }
 ```
 
-## beforeRequest
+### beforeRequest
 
 If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
 all parameters have been templated, use this method.
@@ -334,9 +337,50 @@ Sometimes you'll want to modify the failure message in some way. You can do
 }
 ```
 
+### afterHeaders
+
+Sometimes you'll want to modify the response headers in some way. You can do
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  afterHeaders: function (error, params, body, res) {
+    return {
+        operation: 'cleanup_op',
+        data: {
+            abc: '123'
+        }
+    };
+
+    // You can also return a promise to do async logic. It should resolve
+    // with the header object.
+  }
+}
+```
+`afterHeaders` must always return an object, else it will be ignored.
+
+The parameters are:
+- error - this will be null for a resolving afterSuccess, else it will contain the error
+- params
+- body
+- res
+
+**Note:** if afterHeaders rejects/errors, this error will take precedence over any other error and will form the `body` part of the response. Also, the local `afterHeaders` will merge with the global one if provided, with local object taking precedence.
 
 
-### Function inputs
+### addMethod - REST template - response
+A method which runs a `REST template` will always return the response in a particular format:
+```json
+{
+    "headers": {},
+    "body":  {}
+}
+```
+The `body` will contain the main response or error, while `headers` is available for specifying additional meta data via `afterHeaders`.
+
+### addMethod - function
 
 Sometimes you'll have a method which isn't REST-based, or you'd like to use a third-party wrapper.
 
@@ -404,6 +448,7 @@ The parameters correspond directly to those for [addMethod](#addmethod):
 * [beforeRequest](#beforerequest-1)
 * [afterSuccess](#aftersuccess-1)
 * [afterFailure](#afterfailure-1)
+* [afterHeaders](#afterHeaders-1)
 
 Example usage:
 
@@ -582,6 +627,25 @@ Rather than write the same code in every method, use this global method.
 }
 ```
 
+### afterHeaders
+
+Runs after a method runs successfully, immediately **before** the `afterHeaders` function
+of the individual method.
+
+If there is meta data that needs to be specified with every `REST template` method, this is a good place to set it.
+
+```js
+{
+  afterFailure: function (err, params) {
+    if (err.response.statusCode === 429) {
+      err.code = 'call_limit_exceeded';
+    }
+
+    // You can also return a promise which should resolve having modified the error
+  }
+}
+```
+
 
 <br/>
 <br/>
@@ -619,9 +683,13 @@ The following fields are pretty much the same as the REST versions, unless expli
 - `beforeRequest`
 - `afterSuccess`
 - `afterFailure`
+- `afterHeaders`
 
 
 **Note**: The following are not supported and will be ignored:
 - `baseUrl`
 - `url`
 - `query`
+
+### addMethod - SOAP template - response
+The response format is identical to the REST template response. 

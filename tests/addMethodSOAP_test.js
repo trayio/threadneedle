@@ -143,7 +143,8 @@ describe('#addMethodSOAP', function () {
             )
 
             .then(function (results) {
-                assert(results['GetEventsResult']['Success']);
+                assert.deepEqual(results.headers, {});
+                assert(results.body['GetEventsResult']['Success']);
             })
 
             .done(done, promiseFailFunc(done));
@@ -178,7 +179,7 @@ describe('#addMethodSOAP', function () {
                     )
 
                     .then(function (results) {
-                        assert(results['GetEventsResult']['Success']);
+                        assert(results.body['GetEventsResult']['Success']);
                     })
 
                     .done(done, promiseFailFunc(done));
@@ -239,7 +240,8 @@ describe('#addMethodSOAP', function () {
                     )
 
                     .then(function (results) {
-                        assert(results['GetEventsResult']['Success']);
+                        assert.deepEqual(results.headers, {});
+                        assert(results.body['GetEventsResult']['Success']);
                     })
 
                     .done(done, promiseFailFunc(done));
@@ -283,7 +285,8 @@ describe('#addMethodSOAP', function () {
                     .done(
                         promiseFailFunc(done),
                         function (err) {
-                            assert(err.message === 'Test Error');
+                            assert.deepEqual(err.headers, {});
+                            assert(err.body.message === 'Test Error');
                             done();
                         }
                     );
@@ -326,7 +329,7 @@ describe('#addMethodSOAP', function () {
                     .done(
                         promiseFailFunc(done),
                         function (err) {
-                            assert(err.message === 'Test Error');
+                            assert(err.body.message === 'Test Error');
                             done();
                         }
                     );
@@ -357,7 +360,7 @@ describe('#addMethodSOAP', function () {
 
             .done(
                 function (val) {
-                    assert(val === 'Chris');
+                    assert.deepEqual(val.body, 'Chris');
                     done();
                 },
                 function (err) {
@@ -406,6 +409,12 @@ describe('#addMethodSOAP', function () {
 
                     data: {
                         orderBy: 'ID DESC',
+                    },
+
+                    afterHeaders: function () {
+                        return {
+                            success: true
+                        }
                     }
 
                 }
@@ -415,7 +424,8 @@ describe('#addMethodSOAP', function () {
 
             .done(
                 function (val) {
-                    assert(val['GetEventsResult']['Success']);
+                    assert.deepEqual(val.headers.success, true);
+                    assert(val.body['GetEventsResult']['Success']);
                     done();
                 },
                 function (err) {
