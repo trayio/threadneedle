@@ -454,7 +454,7 @@ Example usage:
 
 ```js
 threadneedle.global({
-  url: 'https://{{dc}}.api.mailchimp.com/2.0',
+  baseUrl: 'https://{{dc}}.api.mailchimp.com/2.0',
   before: function (params) {
     params.dc = 'us5';
   }
