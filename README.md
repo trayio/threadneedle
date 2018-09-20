@@ -59,20 +59,21 @@ The vast majority of threadneedle focuses around this singular method. Whenever 
 
 You can declare template-style parameters to be passed into specific fields, using Mustache-style templating.
 
-Parameters are:
+Parameters are (in the prefered order):
 
+* globals (advanced flag)
+* [before](#before)
 * [method](#method) (required)
-* [url](#url) (required)
-* [data](#data)
-* [query](#query)
 * [options](#options)
+* [url](#url) (required)
+* [query](#query)
+* [data](#data)
+* [beforeRequest](#beforerequest)
 * [expects](#expects)
 * [notExpects](#notexpects)
-* [before](#before)
-* [beforeRequest](#beforerequest)
 * [afterSuccess](#aftersuccess)
 * [afterFailure](#afterfailure)
-* [afterHeaders](#afterheaders)
+* [afterHeaders](#afterheaders) (advanced)
 
 `addMethod` uses JavaScript promises (using [When.js](https://github.com/cujojs/when)), which allows for the chaining of multiple API calls together, and smart error handling.
 
