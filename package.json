@@ -1,6 +1,6 @@
 {
   "name": "@trayio/threadneedle",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "A framework for simplifying working with HTTP-based APIs.",
   "main": "lib/index.js",
   "directories": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrisjhoughton/threadneedle.git"
+    "url": "git+https://github.com/trayio/threadneedle.git"
   },
   "keywords": [
     "needle",
@@ -19,29 +19,30 @@
     "http",
     "api"
   ],
-  "author": "Chris Houghton",
+  "author": "tray.io",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chrisjhoughton/threadneedle/issues"
+    "url": "https://github.com/trayio/threadneedle/issues"
   },
-  "homepage": "https://github.com/chrisjhoughton/threadneedle#readme",
+  "homepage": "https://github.com/trayio/threadneedle#readme",
   "dependencies": {
-    "lodash": "^4.0.0",
+    "body-parser": "^1.18.3",
+    "lodash": "^4.17.11",
     "mout": "^0.11.1",
-    "mustache": "^2.2.1",
-    "needle": "^1.4.2",
+    "mustache": "^2.3.2",
+    "needle": "^1.6.0",
     "soap": "^0.21.0",
-    "when": "^3.7.7",
-    "winston": "^2.1.1"
+    "when": "^3.7.8",
+    "winston": "^2.4.4"
   },
   "devDependencies": {
-    "body-parser": "^1.14.2",
-    "express": "^4.13.4",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-test": "^0.12.7",
-    "mocha": "^2.3.4",
+    "mocha": "^2.5.3",
     "mocha-unfunk-reporter": "^0.4.0"
   }
 }
