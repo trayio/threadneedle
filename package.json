@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/trayio/threadneedle#readme",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "lodash": "^4.17.11",
     "mout": "^0.11.1",
     "mustache": "^2.3.2",
