@@ -219,7 +219,7 @@ You can also declare `expects` as a function, where you can run your own custom 
 
 ```js
 {
-  expects: function (res, body) {
+  expects: function (res) {
     if (res.statusCode !== 201) {
       return 'Invalid status code';
     }
