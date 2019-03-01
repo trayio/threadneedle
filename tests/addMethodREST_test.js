@@ -1,5 +1,4 @@
 var assert       = require('assert');
-var assert       = require('assert');
 var _            = require('lodash');
 var express      = require('express');
 var bodyParser   = require('body-parser');
@@ -1127,6 +1126,26 @@ describe('#addMethodREST', function () {
 				function(result) {
 					assert.deepEqual(result.headers, {});
 					assert.deepEqual(result.body.message, 'afterHeaders Error');
+					done();
+				}
+			);
+		});
+
+		it('Should throw error if `afterHeaders` is not a function', function(done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, functionModel, {});
+
+			threadneedle[name]({
+				passFlag: true,
+				ahFlag: true
+			})
+			.done(
+				function(result) {
+					assert.fail(result);
+					done();
+				},
+				function(ahError) {
+					assert.strictEqual(ahError.message, 'afterHeaders must be a function.');
 					done();
 				}
 			);
