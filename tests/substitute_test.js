@@ -85,6 +85,28 @@ describe('#substitute', function () {
     });
   });
 
+  it('should substitute by dot notation via _.get', function () {
+    var data = {
+      newConfig: {
+		  name: '{{config.name}}',
+		  age: '{{config.age}}'
+	  }
+    };
+
+    var output = substitute(data, {
+      config: {
+        name: 'Chris',
+        age: 25
+      }
+    });
+    assert.deepEqual(output, {
+      newConfig: {
+        name: 'Chris',
+        age: 25
+      }
+    });
+  });
+
   it('should substitute into nested object templates', function () {
     var data = {
       nested: {
