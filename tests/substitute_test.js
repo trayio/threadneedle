@@ -14,6 +14,37 @@ describe('#substitute', function () {
     assert.strictEqual(output, 'https://us5.api.mailchimp.com/2.0/lists/list?apikey=123');
   });
 
+  it('should substitute into string templates with hash variables', function () {
+    var options = {
+        headers: {
+            Authorization: 'Bearer {{#auth.access_token}}'
+        }
+    };
+    var output = substitute(options, {
+      '#auth': {
+          access_token: '1234567'
+      }
+    });
+    assert.deepEqual(output, {
+        headers: {
+            Authorization: 'Bearer 1234567'
+        }
+    });
+    var templateString = 'Basic {{{#auth.username}}}{{{#auth.password}}}{{signature}}{{#auth.region}}';
+    var output2 = substitute(templateString, {
+      '#auth': {
+          username: 'abcdefg',
+          password: '1234567',
+          region: 'us'
+      },
+      signature: 'something'
+    });
+    assert.strictEqual(
+        output2,
+        'Basic abcdefg1234567somethingus'
+    );
+  });
+
   it('should substitute into object templates', function () {
     var data = {
       apikey: '{{apiKey}}',
