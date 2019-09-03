@@ -260,43 +260,70 @@ describe('#globalize', function () {
     });
 
 
-    describe('#before', function () {
+    describe.only('#before', function () {
 
-        it('should run the global before method when declared', function (done) {
-          var sample = {
-            _globalOptions: {
-              before: function (params) {
-                params.dc = 'us5';
-              }
-            }
-          };
+        it('should run the global before method when declared', function(done) {
+        	var sample = {
+        		_globalOptions: {
+        			before: function(params) {
+        				params.dc = 'us5';
+        				return params;
+        			}
+        		}
+        	};
 
-          globalize.before.call(sample, {}, {
-            url: '/mydomain'
-          }).done(function (params) {
-            assert.deepEqual(params, { url: '/mydomain', dc: 'us5' });
-            done();
-          });
+        	globalize.before.call(sample, {}, {
+        		url: '/mydomain'
+        	}).done(function(params) {
+        		assert.deepEqual(params, {
+        			url: '/mydomain',
+        			dc: 'us5'
+        		});
+        		done();
+        	});
         });
 
-        it('should allow for a global promise async', function (done) {
-          var sample = {
-            _globalOptions: {
-              before: function (params) {
-                return when.promise(function (resolve, reject) {
-                  params.dc = 'us5';
-                  resolve();
-                });
-              }
-            }
-          };
+        it('should allow for a global promise async', function(done) {
+			var sample = {
+				_globalOptions: {
+					before: function(params) {
+						return when.promise(function(resolve, reject) {
+							params.dc = 'us5';
+							resolve(params);
+						});
+					}
+				}
+			};
 
-          globalize.before.call(sample, {}, {
-            url: '/mydomain'
-          }).done(function (params) {
-            assert.deepEqual(params, { url: '/mydomain', dc: 'us5' });
-            done();
-          });
+			globalize.before.call(sample, {}, {
+				url: '/mydomain'
+			}).done(function(params) {
+				assert.deepEqual(params, {
+					url: '/mydomain',
+					dc: 'us5'
+				});
+				done();
+			});
+        });
+
+        it('should use original params if modified but not returned', function(done) {
+			var sample = {
+				_globalOptions: {
+                    before: function(params) {
+        				params.dc = 'us5';
+        			}
+				}
+			};
+
+            const originalParams = {
+				url: '/mydomain'
+			};
+
+			globalize.before.call(sample, {}, _.cloneDeep(originalParams))
+            .done(function(params) {
+				assert.deepEqual(params, originalParams);
+				done();
+			});
         });
 
         it('should call the global promise before the local one', function (done) {
