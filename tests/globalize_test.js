@@ -404,8 +404,28 @@ describe('#globalize', function () {
 
     });
 
-    describe.skip('#beforeRequest', function () {
+    describe.only('#beforeRequest', function () {
 
+        it('should use original request if modified but not returned', function(done) {
+			var sample = {
+				_globalOptions: {
+                    beforeRequest: function(request) {
+        				request.url += '?hello=world';
+        			}
+				}
+			};
+
+            const originalRequest = {
+                method: 'get',
+				url: 'test.com'
+			};
+
+			globalize.beforeRequest.call(sample, {}, _.cloneDeep(originalRequest))
+            .done(function(request) {
+				assert.deepEqual(request, originalRequest);
+				done();
+			});
+        });
 
     });
 
