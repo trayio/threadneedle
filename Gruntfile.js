@@ -4,7 +4,10 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     jshint: {
-      all: ['Gruntfile.js', 'lib/**/*.js', 'test/*.js']
+      all: ['Gruntfile.js', 'lib/**/*.js', 'test/*.js'],
+      options: {
+          esversion: 7
+      }
     },
 
     // Configure a mochaTest task
