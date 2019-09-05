@@ -2,7 +2,6 @@ var assert       = require('assert');
 var _            = require('lodash');
 var when            = require('when');
 var express      = require('express');
-var bodyParser   = require('body-parser');
 var when         = require('when');
 var fs           = require('fs');
 var randString   = require('mout/random/randString');
