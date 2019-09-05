@@ -22,7 +22,7 @@ describe('#addMethodSOAP', function () {
     }
 
     describe('Running', function () {
-
+        this.timeout(30000);
         var threadneedle;
 
         before(function () {
@@ -135,7 +135,7 @@ describe('#addMethodSOAP', function () {
         });
 
         it('should be able to execute a standard SOAP method', function (done) {
-            this.timeout(20000);
+
 
             when(
                 threadneedle['list_events']({})
@@ -152,7 +152,6 @@ describe('#addMethodSOAP', function () {
 
 
         it('should substitute to the url and data with a basic example', function (done) {
-            this.timeout(10000);
 
             when(
                 threadneedle.addMethod(
@@ -297,7 +296,6 @@ describe('#addMethodSOAP', function () {
         });
 
         it('should reject if notExpects function returns error', function (done) {
-            this.timeout(10000);
 
             when(
                 threadneedle.addMethod(
@@ -504,7 +502,7 @@ describe('#addMethodSOAP', function () {
     });
 
     describe('Ad-hoc from REST mode', function () {
-        this.timeout(3000);
+        this.timeout(10000);
 
         it('should be fine with allowing a single SOAP method config from REST mode', function (done) {
 
