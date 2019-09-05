@@ -260,7 +260,7 @@ describe('#globalize', function () {
     });
 
 
-    describe.only('#before', function () {
+    describe('#before', function () {
 
         it('should run the global before method when declared', function(done) {
         	var sample = {
@@ -306,7 +306,7 @@ describe('#globalize', function () {
 			});
         });
 
-        it('should use original params if modified but not returned', function(done) {
+        it('should use original params if modified but not returned (and console warn)', function(done) {
 			var sample = {
 				_globalOptions: {
                     before: function(params) {
@@ -324,6 +324,33 @@ describe('#globalize', function () {
 				assert.deepEqual(params, originalParams);
 				done();
 			});
+        });
+
+        it('should throw an error if params is modified but not returned in development mode', function(done) {
+
+            process.env.NODE_ENV = 'development';
+
+            const sample = {
+				_globalOptions: {
+                    before: function(params) {
+        				params.dc = 'us5';
+        			}
+				}
+			};
+
+            const originalParams = {
+				url: '/mydomain'
+			};
+
+			globalize.before.call(sample, {}, _.cloneDeep(originalParams))
+            .then(assert.fail)
+            .catch((modError) => {
+				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+			})
+            .finally(() => {
+                delete process.env.NODE_ENV;
+                done();
+            });
         });
 
         it('should call the global promise before the local one', function (done) {
@@ -404,10 +431,10 @@ describe('#globalize', function () {
 
     });
 
-    describe.only('#beforeRequest', function () {
+    describe('#beforeRequest', function () {
 
         it('should use original request if modified but not returned', function(done) {
-			var sample = {
+			const sample = {
 				_globalOptions: {
                     beforeRequest: function(request) {
         				request.url += '?hello=world';
@@ -425,6 +452,34 @@ describe('#globalize', function () {
 				assert.deepEqual(request, originalRequest);
 				done();
 			});
+        });
+
+        it('should throw an error if request is modified but not returned in development mode', function(done) {
+
+            process.env.NODE_ENV = 'development';
+
+            const sample = {
+				_globalOptions: {
+                    beforeRequest: function(request) {
+        				request.url += '?hello=world';
+        			}
+				}
+			};
+
+            const originalRequest = {
+                method: 'get',
+				url: 'test.com'
+			};
+
+			globalize.beforeRequest.call(sample, {}, _.cloneDeep(originalRequest))
+            .then(assert.fail)
+            .catch((modError) => {
+				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
+			})
+            .finally(() => {
+                delete process.env.NODE_ENV;
+                done();
+            });
         });
 
     });
