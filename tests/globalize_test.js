@@ -265,7 +265,7 @@ describe('#globalize', function () {
 	});
 
 
-	describe.only('#before', function () {
+	describe('#before', function () {
 
 		it('should run the global before method when declared', function (done) {
 			var sample = {
@@ -432,34 +432,56 @@ describe('#globalize', function () {
 
 	describe.only('#beforeRequest', function () {
 
-		it('should use original request if modified but not returned', function (done) {
-			const sample = {
+		it('should run normally with global before method', function (done) {
+			const sampleGlobal = {
 				_globalOptions: {
 					beforeRequest: function (request) {
 						request.url += '?hello=world';
+						return request;
 					}
 				}
 			};
 
-			const originalRequest = {
-				method: 'get',
-				url: 'test.com'
+			const sampleMethodConfig = {
+				beforeRequest: function (request) {
+					request.url += '&test=123';
+					return request;
+				}
 			};
 
-			globalize.beforeRequest.call(sample, {}, _.cloneDeep(originalRequest))
+			globalize.beforeRequest.call(
+				sampleGlobal,
+				sampleMethodConfig,
+				{
+					method: 'get',
+					url: 'test.com'
+				}
+			)
 			.then(function (request) {
-				assert.deepEqual(request, originalRequest);
+				assert.deepEqual(
+					request,
+					{
+						method: 'get',
+						url: 'test.com?hello=world&test=123'
+					}
+				);
 			})
 			.then(done, done);
 		});
 
-		handleDevFlagTest('should throw an error if request is modified but not returned in development mode', function (done) {
+		describe('should use original request if modified but not returned', function () {
 
-			const sample = {
+			const sampleGlobal = {
 				_globalOptions: {
 					beforeRequest: function (request) {
 						request.url += '?hello=world';
 					}
+				}
+			};
+
+			const sampleMethodConfig = {
+				beforeRequest: function (request) {
+					request.url += '&test=123';
 				}
 			};
 
@@ -468,12 +490,107 @@ describe('#globalize', function () {
 				url: 'test.com'
 			};
 
-			globalize.beforeRequest.call(sample, {}, _.cloneDeep(originalRequest))
-			.then(assert.fail)
-			.catch((modError) => {
-				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
-			})
-			.then(done, done);
+			it('global', function (done) {
+				globalize.beforeRequest.call(sampleGlobal, {}, _.cloneDeep(originalRequest))
+				.then(function (request) {
+					assert.deepEqual(request, originalRequest);
+				})
+				.then(done, done);
+			});
+
+			it('method', function (done) {
+				globalize.beforeRequest.call(
+					{ _globalOptions: {} },
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(function (request) {
+					assert.deepEqual(request, originalRequest);
+				})
+				.then(done, done);
+			});
+
+
+			it('both', function (done) {
+				globalize.beforeRequest.call(
+					sampleGlobal,
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(function (request) {
+					assert.deepEqual(request, originalRequest);
+				})
+				.then(done, done);
+			});
+
+		});
+
+		describe('should throw an error if request is modified but not returned in development mode', function () {
+
+			const sampleMethodConfig = {
+				beforeRequest: function (request) {
+					request.url += '&test=123';
+				}
+			};
+
+			const originalRequest = {
+				method: 'get',
+				url: 'test.com'
+			};
+
+			handleDevFlagTest('global', function (done) {
+				globalize.beforeRequest.call(
+					{
+						_globalOptions: {
+							beforeRequest: function (request) {
+								request.url += '?hello=world';
+							}
+						}
+					},
+					{},
+					_.cloneDeep(originalRequest)
+				)
+				.then(assert.fail)
+				.catch((modError) => {
+					assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
+				})
+				.then(done, done);
+			});
+
+			handleDevFlagTest('method', function (done) {
+				globalize.beforeRequest.call(
+					{ _globalOptions: {} },
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(assert.fail)
+				.catch((modError) => {
+					assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
+				})
+				.then(done, done);
+			});
+
+
+			handleDevFlagTest('ok global but invalid method', function (done) {
+				globalize.beforeRequest.call(
+					{
+						_globalOptions: {
+							beforeRequest: function (request) {
+								request.url += '?hello=world';
+								return request;
+							}
+						}
+					},
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(assert.fail)
+				.catch((modError) => {
+					assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
+				})
+				.then(done, done);
+			});
+
 		});
 
 	});
