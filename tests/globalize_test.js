@@ -118,6 +118,26 @@ describe('#globalize', function () {
 			);
 		});
 
+		it('should use baseUrl rather than url, but still fall back to url', function () {
+			assert.strictEqual(
+				globalize.baseUrl.call({
+					_globalOptions: {
+						baseUrl: 'http://mydomain.com'
+					}
+				}, { url: '/mypath' }, {}),
+				'http://mydomain.com/mypath'
+			);
+
+			assert.strictEqual(
+				globalize.baseUrl.call({
+					_globalOptions: {
+						url: 'http://mydomain.com'
+					}
+				}, { url: '/mypath' }, {}),
+				'http://mydomain.com/mypath'
+			);
+		});
+
 	});
 
 
@@ -265,174 +285,257 @@ describe('#globalize', function () {
 	});
 
 
-	describe('#before', function () {
+	describe.only('#before', function () {
 
-		it('should run the global before method when declared', function (done) {
-			var sample = {
+		it('should run normally with global first and then method', function (done) {
+			globalize.before.call(
+				{
+					_globalOptions: {
+						before: function (params) {
+							params.notes = 'Hello';
+							return params;
+						}
+					}
+				},
+				{
+					before: function (params) {
+						params.notes += ' World';
+						return params;
+					}
+				},
+				{
+					id: 'abc123'
+				}
+			)
+			.then(function (params) {
+				assert.deepEqual(params, {
+					id: 'abc123',
+					notes: 'Hello World'
+				});
+			})
+			.then(done, done);
+		});
+
+		it('should run async normally with global first and then method', function (done) {
+			globalize.before.call(
+				{
+					_globalOptions: {
+						before: function (params) {
+							params.notes = 'Hello';
+							return when.resolve(params);
+						}
+					}
+				},
+				{
+					before: function (params) {
+						params.notes += ' World';
+						return when.resolve(params);
+					}
+				},
+				{
+					id: 'abc123'
+				}
+			)
+			.then(function (params) {
+				assert.deepEqual(params, {
+					id: 'abc123',
+					notes: 'Hello World'
+				});
+			})
+			.then(done, done);
+		});
+
+		describe('should use original params if modified but not returned (and console warn)', function () {
+
+			const sampleGlobal = {
 				_globalOptions: {
 					before: function (params) {
-						params.dc = 'us5';
+						params.notes = 'Hello';
+					}
+				}
+			};
+
+			const sampleMethodConfig = {
+				before: function (params) {
+					params.notes += ' World';
+				}
+			};
+
+			const originalParams = {
+				id: 'abc123',
+				notes: ''
+			};
+
+			it('global', function (done) {
+				globalize.before.call(sampleGlobal, {}, _.cloneDeep(originalParams))
+				.then(function (params) {
+					assert.deepEqual(params, originalParams);
+				})
+				.then(done, done);
+			});
+
+			it('method', function (done) {
+				globalize.before.call(
+					{ _globalOptions: {} },
+					sampleMethodConfig,
+					_.cloneDeep(originalParams)
+				)
+				.then(function (params) {
+					assert.deepEqual(params, originalParams);
+				})
+				.then(done, done);
+			});
+
+			it('both', function (done) {
+				globalize.before.call(
+					sampleGlobal,
+					sampleMethodConfig,
+					_.cloneDeep(originalParams)
+				)
+				.then(function (params) {
+					assert.deepEqual(params, originalParams);
+				})
+				.then(done, done);
+			});
+
+		});
+
+		describe('should throw an error if params is modified but not returned in development mode', function () {
+
+			const sampleMethodConfig = {
+				before: function (params) {
+					params.notes += ' World';
+				}
+			};
+
+			const originalParams = {
+				id: 'abc123',
+				notes: ''
+			};
+
+			handleDevFlagTest('global', function (done) {
+				globalize.before.call(
+					{
+						_globalOptions: {
+							before: function (params) {
+								params.notes = 'Hello';
+							}
+						}
+					},
+					{},
+					_.cloneDeep(originalParams)
+				)
+				.then(function (params) {
+					assert.deepEqual(params, originalParams);
+				})
+				.then(assert.fail)
+				.catch((modError) => {
+					assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+				})
+				.then(done, done);
+			});
+
+			handleDevFlagTest('method', function (done) {
+				globalize.before.call(
+					{ _globalOptions: {} },
+					sampleMethodConfig,
+					_.cloneDeep(originalParams)
+				)
+				.then(assert.fail)
+				.catch((modError) => {
+					assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+				})
+				.then(done, done);
+			});
+
+			handleDevFlagTest('ok global but invalid method', function (done) {
+				globalize.before.call(
+					{
+						_globalOptions: {
+							before: function (params) {
+								params.notes = 'Hello';
+								return params;
+							}
+						}
+					},
+					sampleMethodConfig,
+					_.cloneDeep(originalParams)
+				)
+				.then(assert.fail)
+				.catch((modError) => {
+					assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+				})
+				.then(done, done);
+			});
+
+		});
+
+		describe('should not run global before when globals is false', function (done) {
+			const sampleGlobal = {
+				_globalOptions: {
+					before: function (params) {
+						params.notes = 'Hello';
 						return params;
 					}
 				}
 			};
 
-			globalize.before.call(sample, {}, {
-				url: '/mydomain'
-			}).done(function (params) {
-				assert.deepEqual(params, {
-					url: '/mydomain',
-					dc: 'us5'
-				});
-				done();
-			});
-		});
-
-		it('should allow for a global promise async', function (done) {
-			var sample = {
-				_globalOptions: {
-					before: function (params) {
-						return when.promise(function (resolve, reject) {
-							params.dc = 'us5';
-							resolve(params);
-						});
+			it('all globals false', function (done) {
+				globalize.before.call(
+					sampleGlobal,
+					{
+						globals: false,
+						before: function (params) {
+							params.notes += ' World';
+							return params;
+						}
+					},
+					{
+						id: 'abc123',
+						notes: ''
 					}
-				}
-			};
-
-			globalize.before.call(sample, {}, {
-				url: '/mydomain'
-			}).done(function (params) {
-				assert.deepEqual(params, {
-					url: '/mydomain',
-					dc: 'us5'
-				});
-				done();
-			});
-		});
-
-		it('should use original params if modified but not returned (and console warn)', function (done) {
-			var sample = {
-				_globalOptions: {
-					before: function (params) {
-						params.dc = 'us5';
-					}
-				}
-			};
-
-			const originalParams = {
-				url: '/mydomain'
-			};
-
-			globalize.before.call(sample, {}, _.cloneDeep(originalParams))
-			.then((params) => {
-				assert.deepEqual(params, originalParams);
-			})
-			.then(done, done);
-		});
-
-		handleDevFlagTest('should throw an error if params is modified but not returned in development mode', function (done) {
-			const sample = {
-				_globalOptions: {
-					before: function (params) {
-						params.dc = 'us5';
-					}
-				}
-			};
-
-			const originalParams = {
-				url: '/mydomain'
-			};
-
-			globalize.before.call(sample, {}, _.cloneDeep(originalParams))
-			.then(assert.fail)
-			.catch((modError) => {
-				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
-			})
-			.then(done, done);
-		});
-
-		it('should call the global promise before the local one', function (done) {
-			var calledFirst;
-			var calls = 0;
-
-			var sample = {
-				_globalOptions: {
-					before: function (params) {
-						if (!calledFirst) calledFirst = 'global';
-						calls++;
-					}
-				}
-			};
-
-			globalize.before.call(sample, {
-				before: function () {
-					if (!calledFirst) calledFirst = 'local';
-					calls++;
-				}
-			}, {}).done(function (params) {
-				assert.equal(calledFirst, 'global');
-				assert.equal(calls, 2);
-				done();
-			});
-		});
-
-		it('should not run global before when globals is false', function (done) {
-			var sample = {
-				_globalOptions: {
-					before: function (params) {
-						params.dc = 'us5';
-					}
-				}
-			};
-
-			globalize.before.call(sample, {
-				globals: false,
-				url: '/mydomain/{{id}}'
-			}, {
-				id: '123'
-			}).done(function (params) {
-				assert.deepEqual(params, { id: '123' });
+				)
+				.then(function (params) {
+					assert.deepEqual(params, {
+						id: 'abc123',
+						notes: ' World'
+					});
+				})
+				.then(done, done);
 			});
 
-			globalize.before.call(sample, {
-				globals: {
-					before: false
-				},
-				url: '/mydomain/{{id}}'
-			}, {
-				id: '123'
-			}).done(function (params) {
-				assert.deepEqual(params, { id: '123' });
-				done();
+			it('only before globals false', function (done) {
+				globalize.before.call(
+					sampleGlobal,
+					{
+						globals: {
+							before: false
+						},
+						before: function (params) {
+							params.notes += ' World';
+							return params;
+						}
+					},
+					{
+						id: 'abc123',
+						notes: ''
+					}
+				)
+				.then(function (params) {
+					assert.deepEqual(params, {
+						id: 'abc123',
+						notes: ' World'
+					});
+				})
+				.then(done, done);
 			});
-		});
-
-		it('should use baseUrl rather than url, but still fall back to url', function () {
-			assert.strictEqual(
-				globalize.baseUrl.call({
-					_globalOptions: {
-						baseUrl: 'http://mydomain.com'
-					}
-				}, { url: '/mypath' }, {}),
-				'http://mydomain.com/mypath'
-			);
-
-			assert.strictEqual(
-				globalize.baseUrl.call({
-					_globalOptions: {
-						url: 'http://mydomain.com'
-					}
-				}, { url: '/mypath' }, {}),
-				'http://mydomain.com/mypath'
-			);
 		});
 
 	});
 
-	describe.only('#beforeRequest', function () {
+	describe('#beforeRequest', function () {
 
-		it('should run normally with global before method', function (done) {
+		it('should run normally with global first and then method', function (done) {
 			const sampleGlobal = {
 				_globalOptions: {
 					beforeRequest: function (request) {
@@ -469,7 +572,44 @@ describe('#globalize', function () {
 			.then(done, done);
 		});
 
-		describe('should use original request if modified but not returned', function () {
+		it('should run async normally with  global first and then method', function (done) {
+			const sampleGlobal = {
+				_globalOptions: {
+					beforeRequest: function (request) {
+						request.url += '?hello=world';
+						return when.resolve(request);
+					}
+				}
+			};
+
+			const sampleMethodConfig = {
+				beforeRequest: function (request) {
+					request.url += '&test=123';
+					return when.resolve(request);
+				}
+			};
+
+			globalize.beforeRequest.call(
+				sampleGlobal,
+				sampleMethodConfig,
+				{
+					method: 'get',
+					url: 'test.com'
+				}
+			)
+			.then(function (request) {
+				assert.deepEqual(
+					request,
+					{
+						method: 'get',
+						url: 'test.com?hello=world&test=123'
+					}
+				);
+			})
+			.then(done, done);
+		});
+
+		describe('should use original request if modified but not returned (and console warn)', function () {
 
 			const sampleGlobal = {
 				_globalOptions: {
@@ -509,7 +649,6 @@ describe('#globalize', function () {
 				})
 				.then(done, done);
 			});
-
 
 			it('both', function (done) {
 				globalize.beforeRequest.call(
@@ -570,7 +709,6 @@ describe('#globalize', function () {
 				.then(done, done);
 			});
 
-
 			handleDevFlagTest('ok global but invalid method', function (done) {
 				globalize.beforeRequest.call(
 					{
@@ -590,6 +728,70 @@ describe('#globalize', function () {
 				})
 				.then(done, done);
 			});
+
+		});
+
+		describe('should not run global before when globals is false', function () {
+			const sampleGlobal = {
+				_globalOptions: {
+					beforeRequest: function (request) {
+						request.url += '?hello=world';
+						return request;
+					}
+				}
+			};
+
+			const originalRequest = {
+				method: 'get',
+				url: 'test.com'
+			};
+
+			it('all globals false', function (done) {
+				const sampleMethodConfig = {
+					globals: false,
+					beforeRequest: function (request) {
+						request.url += '&test=123';
+						return request;
+					}
+				};
+				globalize.beforeRequest.call(
+					sampleGlobal,
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(function (request) {
+					assert.deepEqual(request, {
+						method: 'get',
+						url: 'test.com&test=123'
+					});
+				})
+				.then(done, done);
+			});
+
+			it('only beforeRequest globals false', function (done) {
+				const sampleMethodConfig = {
+					globals: {
+						beforeRequest: false
+					},
+					beforeRequest: function (request) {
+						request.url += '&test=123';
+						return request;
+					}
+				};
+				globalize.beforeRequest.call(
+					sampleGlobal,
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(function (request) {
+					assert.deepEqual(request, {
+						method: 'get',
+						url: 'test.com&test=123'
+					});
+				})
+				.then(done, done);
+			});
+
 
 		});
 
