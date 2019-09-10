@@ -18,9 +18,9 @@ function handleDevFlagTest (testMessage, testFunction) {
 	});
 }
 
-describe.only('#globalize', function () {
+describe('#globalize', function () {
 
-	describe.only('#url', function () {
+	describe('#url', function () {
 
 		it('should add the global baseUrl on the front unless it starts with http(s)://', function () {
 			var sample = {
@@ -367,6 +367,27 @@ describe.only('#globalize', function () {
 			.then(done, done);
 		});
 
+		it('should error when non-object is returned (except undefined)', function (done) {
+			globalize.before.call(
+				{
+					_globalOptions: {
+						before: function (params) {
+							return null;
+						}
+					}
+				},
+				{},
+				{
+					id: 'abc123'
+				}
+			)
+			.then(assert.fail)
+			.catch((returnError) => {
+				assert.strictEqual(returnError.message, '`before` must return an object.');
+			})
+			.then(done, done);
+		});
+
 		describe('should use original params if modified but not returned (and console warn)', function () {
 
 			const sampleGlobal = {
@@ -627,6 +648,28 @@ describe.only('#globalize', function () {
 						url: 'test.com?hello=world&test=123'
 					}
 				);
+			})
+			.then(done, done);
+		});
+
+		it('should error when non-object is returned (except undefined)', function (done) {
+			globalize.beforeRequest.call(
+				{
+					_globalOptions: {
+						beforeRequest: function (request) {
+							return null;
+						}
+					}
+				},
+				{},
+				{
+					method: 'get',
+					url: 'test.com'
+				}
+			)
+			.then(assert.fail)
+			.catch((returnError) => {
+				assert.strictEqual(returnError.message, '`beforeRequest` must return an object.');
 			})
 			.then(done, done);
 		});
