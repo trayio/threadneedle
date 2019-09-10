@@ -285,7 +285,7 @@ describe('#globalize', function () {
 	});
 
 
-	describe.only('#before', function () {
+	describe('#before', function () {
 
 		it('should run normally with global first and then method', function (done) {
 			globalize.before.call(
