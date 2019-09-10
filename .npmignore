@@ -4,5 +4,6 @@ dummycredentials.json
 #Test Files
 tests*
 
-#Config
+#Config and testing
 .eslint*
+Grunt*
