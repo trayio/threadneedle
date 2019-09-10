@@ -1,7 +1,9 @@
-var assert       = require('assert');
-var _            = require('lodash');
-var when         = require('when');
-var globalize    = require('../lib/addMethod/globalize');
+const assert = require('assert');
+
+const _ = require('lodash');
+const when = require('when');
+
+const globalize    = require('../lib/addMethod/globalize');
 
 let devMode = process.env.NODE_ENV === 'development';
 function handleDevFlagTest (testMessage, testFunction) {
