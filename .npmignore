@@ -3,3 +3,6 @@ dummycredentials.json
 
 #Test Files
 tests*
+
+#Config
+.eslint*
