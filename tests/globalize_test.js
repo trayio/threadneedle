@@ -3,6 +3,20 @@ var _            = require('lodash');
 var when         = require('when');
 var globalize    = require('../lib/addMethod/globalize');
 
+let devMode = process.env.NODE_ENV === 'development';
+function handleDevFlagTest (testMessage, testFunction) {
+	it(testMessage, function (done) {
+		if (devMode) {
+			testFunction(done);
+		} else {
+			process.env.NODE_ENV = 'development';
+			testFunction(() => {
+				delete process.env.NODE_ENV;
+				done();
+			});
+		}
+	});
+}
 
 describe('#globalize', function () {
 
@@ -317,9 +331,7 @@ describe('#globalize', function () {
 			});
 		});
 
-		it('should throw an error if params is modified but not returned in development mode', function (done) {
-
-			process.env.NODE_ENV = 'development';
+		handleDevFlagTest('should throw an error if params is modified but not returned in development mode', function (done) {
 
 			const sample = {
 				_globalOptions: {
@@ -338,10 +350,7 @@ describe('#globalize', function () {
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
 			})
-			.finally(() => {
-				delete process.env.NODE_ENV;
-				done();
-			});
+			.finally(done);
 		});
 
 		it('should call the global promise before the local one', function (done) {
@@ -439,15 +448,14 @@ describe('#globalize', function () {
 			};
 
 			globalize.beforeRequest.call(sample, {}, _.cloneDeep(originalRequest))
-			.done(function (request) {
+			.then(function (request) {
 				assert.deepEqual(request, originalRequest);
-				done();
-			});
+			})
+			.catch(assert.fail)
+			.finally(done);
 		});
 
-		it('should throw an error if request is modified but not returned in development mode', function (done) {
-
-			process.env.NODE_ENV = 'development';
+		handleDevFlagTest('should throw an error if request is modified but not returned in development mode', function (done) {
 
 			const sample = {
 				_globalOptions: {
@@ -467,10 +475,7 @@ describe('#globalize', function () {
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
 			})
-			.finally(() => {
-				delete process.env.NODE_ENV;
-				done();
-			});
+			.finally(done);
 		});
 
 	});
