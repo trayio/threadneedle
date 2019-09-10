@@ -10,9 +10,9 @@ function handleDevFlagTest (testMessage, testFunction) {
 			testFunction(done);
 		} else {
 			process.env.NODE_ENV = 'development';
-			testFunction(() => {
+			testFunction((...doneArgs) => {
 				delete process.env.NODE_ENV;
-				done();
+				done(...doneArgs);
 			});
 		}
 	});
@@ -325,14 +325,13 @@ describe('#globalize', function () {
 			};
 
 			globalize.before.call(sample, {}, _.cloneDeep(originalParams))
-			.done(function (params) {
+			.then((params) => {
 				assert.deepEqual(params, originalParams);
-				done();
-			});
+			})
+			.then(done, done);
 		});
 
 		handleDevFlagTest('should throw an error if params is modified but not returned in development mode', function (done) {
-
 			const sample = {
 				_globalOptions: {
 					before: function (params) {
@@ -350,7 +349,7 @@ describe('#globalize', function () {
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
 			})
-			.finally(done);
+			.then(done, done);
 		});
 
 		it('should call the global promise before the local one', function (done) {
@@ -451,8 +450,7 @@ describe('#globalize', function () {
 			.then(function (request) {
 				assert.deepEqual(request, originalRequest);
 			})
-			.catch(assert.fail)
-			.finally(done);
+			.then(done, done);
 		});
 
 		handleDevFlagTest('should throw an error if request is modified but not returned in development mode', function (done) {
@@ -475,7 +473,7 @@ describe('#globalize', function () {
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
 			})
-			.finally(done);
+			.then(done, done);
 		});
 
 	});
