@@ -18,14 +18,14 @@ function handleDevFlagTest (testMessage, testFunction) {
 	});
 }
 
-describe('#globalize', function () {
+describe.only('#globalize', function () {
 
-	describe('#url', function () {
+	describe.only('#url', function () {
 
-		it('should add the global url on the front unless it starts with http(s)://', function () {
+		it('should add the global baseUrl on the front unless it starts with http(s)://', function () {
 			var sample = {
 				_globalOptions: {
-					url: 'http://mydomain.com'
+					baseUrl: 'http://mydomain.com'
 				}
 			};
 
@@ -48,7 +48,7 @@ describe('#globalize', function () {
 		it('should substitute parameters to string urls', function () {
 			var sample = {
 				_globalOptions: {
-					url: 'http://{{dc}}.mydomain.com'
+					baseUrl: 'http://{{dc}}.mydomain.com'
 				}
 			};
 
@@ -64,7 +64,7 @@ describe('#globalize', function () {
 		it('should substitute array parameters as comma separated', function () {
 			var sample = {
 				_globalOptions: {
-					url: 'http://{{dc}}.mydomain.com'
+					baseUrl: 'http://{{dc}}.mydomain.com'
 				}
 			};
 
@@ -81,7 +81,7 @@ describe('#globalize', function () {
 		it('should substitute parameters to function urls', function () {
 			var sample = {
 				_globalOptions: {
-					url: function (params) {
+					baseUrl: function (params) {
 						return 'http://'+params.dc+'.mydomain.com';
 					}
 				}
@@ -103,7 +103,7 @@ describe('#globalize', function () {
 		it('should not run the global when globals is false', function () {
 			var sample = {
 				_globalOptions: {
-					url: 'http://mydomain.com'
+					baseUrl: 'http://mydomain.com'
 				}
 			};
 
@@ -118,24 +118,46 @@ describe('#globalize', function () {
 			);
 		});
 
-		it('should use baseUrl rather than url, but still fall back to url', function () {
-			assert.strictEqual(
-				globalize.baseUrl.call({
-					_globalOptions: {
-						baseUrl: 'http://mydomain.com'
-					}
-				}, { url: '/mypath' }, {}),
-				'http://mydomain.com/mypath'
-			);
+		describe('should use baseUrl in global configuration instead of url; throw error in development mode', function () {
 
-			assert.strictEqual(
-				globalize.baseUrl.call({
-					_globalOptions: {
-						url: 'http://mydomain.com'
-					}
-				}, { url: '/mypath' }, {}),
-				'http://mydomain.com/mypath'
-			);
+			it('uses baseUrl', function () {
+				assert.strictEqual(
+					globalize.baseUrl.call({
+						_globalOptions: {
+							baseUrl: 'http://mydomain.com'
+						}
+					}, { url: '/mypath' }, {}),
+					'http://mydomain.com/mypath'
+				);
+			});
+
+			it('uses url in global configuration (console only)', function () {
+				assert.strictEqual(
+					globalize.baseUrl.call({
+						_globalOptions: {
+							url: 'http://mydomain.com'
+						}
+					}, { url: '/mypath' }, {}),
+					'http://mydomain.com/mypath'
+				);
+			});
+
+			handleDevFlagTest('uses url in global configuration and errors (development mode)', function (done) {
+				try {
+					assert.strictEqual(
+						globalize.baseUrl.call({
+							_globalOptions: {
+								url: 'http://mydomain.com'
+							}
+						}, { url: '/mypath' }, {}),
+						'http://mydomain.com/mypath'
+					);
+					done(assert.fail('Error expected'));
+				} catch (urlError) {
+					assert.strictEqual(urlError.message, '`url` in global configuration is deprecated. Use `baseUrl` instead.');
+					done();
+				}
+			});
 		});
 
 	});
