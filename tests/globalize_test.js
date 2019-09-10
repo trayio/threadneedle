@@ -581,9 +581,15 @@ describe('#globalize', function () {
 	describe('#beforeRequest', function () {
 
 		it('should run normally with global first and then method', function (done) {
+
+			const sampleParams = {
+				user_id: 123
+			};
+
 			const sampleGlobal = {
 				_globalOptions: {
-					beforeRequest: function (request) {
+					beforeRequest: function (request, params) {
+						assert.deepEqual(params, sampleParams);
 						request.url += '?hello=world';
 						return request;
 					}
@@ -591,7 +597,8 @@ describe('#globalize', function () {
 			};
 
 			const sampleMethodConfig = {
-				beforeRequest: function (request) {
+				beforeRequest: function (request, params) {
+					assert.deepEqual(params, sampleParams);
 					request.url += '&test=123';
 					return request;
 				}
@@ -603,7 +610,8 @@ describe('#globalize', function () {
 				{
 					method: 'get',
 					url: 'test.com'
-				}
+				},
+				sampleParams
 			)
 			.then(function (request) {
 				assert.deepEqual(
