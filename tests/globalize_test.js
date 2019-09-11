@@ -1316,7 +1316,7 @@ describe('#globalize', function () {
 	});
 
 
-	describe.only('#afterHeaders', function () {
+	describe('#afterHeaders', function () {
 
 		it('should run the global before method when declared', function (done) {
 			const sampleThread = {
