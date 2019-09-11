@@ -1316,10 +1316,10 @@ describe('#globalize', function () {
 	});
 
 
-	describe('#afterHeaders', function () {
+	describe.only('#afterHeaders', function () {
 
 		it('should run the global before method when declared', function (done) {
-			var sampleThread = {
+			const sampleThread = {
 				_globalOptions: {
 					afterHeaders: function (error, params, body, res) {
 						return {
@@ -1329,16 +1329,17 @@ describe('#globalize', function () {
 				}
 			};
 
-			globalize.afterHeaders.call(sampleThread, {}, null, {}, {}, {}).done(function (header) {
+			globalize.afterHeaders.call(sampleThread, {}, null, {}, {}, {})
+			.then(function (header) {
 				assert.deepEqual(header, {
 					success: true
 				});
-				done();
-			});
+			})
+			.then(done, done);
 		});
 
 		it('should allow for a global promise async', function (done) {
-			var sampleThread = {
+			const sampleThread = {
 				_globalOptions: {
 					afterHeaders: function (error, params, body, res) {
 						return when.promise(function (resolve, reject) {
@@ -1350,19 +1351,20 @@ describe('#globalize', function () {
 				}
 			};
 
-			globalize.afterHeaders.call(sampleThread, {}, {}).done(function (header) {
+			globalize.afterHeaders.call(sampleThread, {}, {})
+			.then(function (header) {
 				assert.deepEqual(header, {
 					success: true
 				});
-				done();
-			});
+			})
+			.then(done, done);
 		});
 
 		it('should call the global promise before the local one', function (done) {
-			var calledFirst;
-			var calls = 0;
+			let calledFirst;
+			let calls = 0;
 
-			var sampleThread = {
+			const sampleThread = {
 				_globalOptions: {
 					afterHeaders: function (error, params, body, res) {
 						calledFirst = calledFirst || 'global';
@@ -1376,15 +1378,16 @@ describe('#globalize', function () {
 					calledFirst = calledFirst || 'local';
 					calls++;
 				}
-			}, {}).done(function (params) {
+			}, {})
+			.then(function (params) {
 				assert.equal(calledFirst, 'global');
 				assert.equal(calls, 2);
-				done();
-			});
+			})
+			.then(done, done);
 		});
 
 		it('should make local take precedence over global via defaultsDeep', function (done) {
-			var sampleThread = {
+			const sampleThread = {
 				_globalOptions: {
 					afterHeaders: function (error, params, body, res) {
 						return {
@@ -1400,14 +1403,92 @@ describe('#globalize', function () {
 						test: 456
 					};
 				}
-			}, {}).done(function (headers) {
+			}, {})
+			.then(function (headers) {
 				assert.equal(headers.test, 456);
-				done();
-			});
+			})
+			.then(done, done);
 		});
 
-		it('should not run the globals when globals is false', function (done) {
-			var sampleThread = {
+		describe('should throw an error if headers is not an object in development mode', function () {
+
+			const AFTER_HEADERS_RETURN_ERROR = '`afterHeaders` must return an object.';
+
+			const sampleMethodConfig = {
+				afterHeaders: function (request) {
+					return null;
+				}
+			};
+
+			const originalRequest = {
+				method: 'get',
+				url: 'test.com'
+			};
+
+			handleDevFlagTest('global', function (done) {
+				globalize.afterHeaders.call(
+					{
+						_globalOptions: {
+							afterHeaders: function (request) {
+								return null;
+							}
+						}
+					},
+					{},
+					null,
+					{},
+					{},
+					{}
+				)
+				.then(assert.fail)
+				.catch((returnError) => {
+					assert.strictEqual(returnError.message, AFTER_HEADERS_RETURN_ERROR);
+				})
+				.then(done, done);
+			});
+
+			handleDevFlagTest('method', function (done) {
+				globalize.afterHeaders.call(
+					{ _globalOptions: {} },
+					sampleMethodConfig,
+					null,
+					{},
+					{},
+					{}
+				)
+				.then(assert.fail)
+				.catch((returnError) => {
+					assert.strictEqual(returnError.message, AFTER_HEADERS_RETURN_ERROR);
+				})
+				.then(done, done);
+			});
+
+			handleDevFlagTest('ok global but invalid method', function (done) {
+				globalize.afterHeaders.call(
+					{
+						_globalOptions: {
+							afterHeaders: function (request) {
+								return {};
+							}
+						}
+					},
+					sampleMethodConfig,
+					null,
+					{},
+					{},
+					{}
+				)
+				.then(assert.fail)
+				.catch((returnError) => {
+					assert.strictEqual(returnError.message, AFTER_HEADERS_RETURN_ERROR);
+				})
+				.then(done, done);
+			});
+
+		});
+
+		describe('should not run the globals when globals is false', function (done) {
+			const sampleThread = {
 				_globalOptions: {
 					afterHeaders: function (error, params, body, res) {
 						return {
@@ -1417,21 +1498,29 @@ describe('#globalize', function () {
 				}
 			};
 
-			globalize.afterHeaders.call(sampleThread, {
-				globals: false
-			}, {}).done(function (headers) {
-				assert.deepEqual(headers, {});
-				//done();
+			it('all globals false', (done) => {
+				globalize.afterHeaders.call(sampleThread, {
+					globals: false
+				}, {})
+				.then(function (headers) {
+					assert.deepEqual(headers, {});
+				})
+				.then(done, done);
+
 			});
 
-			globalize.afterHeaders.call(sampleThread, {
-				globals: {
-					afterHeaders: false
-				}
-			}, {}).done(function (headers) {
-				assert.deepEqual(headers, {});
-				done();
+			it('only afterHeaders globals false', (done) => {
+				globalize.afterHeaders.call(sampleThread, {
+					globals: {
+						afterHeaders: false
+					}
+				}, {})
+				.then(function (headers) {
+					assert.deepEqual(headers, {});
+				})
+				.then(done, done);
 			});
+
 		});
 
 	});
