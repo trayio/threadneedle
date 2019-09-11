@@ -5,9 +5,9 @@ const when = require('when');
 
 const globalize    = require('../lib/addMethod/globalize');
 
-let devMode = process.env.NODE_ENV === 'development';
+const devMode = process.env.NODE_ENV === 'development';
 function handleDevFlagTest (testMessage, testFunction) {
-	it(testMessage, function (done) {
+	it(testMessage, (done) => {
 		if (devMode) {
 			testFunction(done);
 		} else {
