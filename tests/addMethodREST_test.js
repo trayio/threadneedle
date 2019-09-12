@@ -89,7 +89,9 @@ describe('#addMethodREST', function () {
 		before(function(done) {
 			app = express();
 			app.use(bodyParser.json());
-			app.use(bodyParser.urlencoded());
+			app.use(bodyParser.urlencoded({
+			  extended: true
+			}));
 			server = app.listen(4000, done);
 		});
 

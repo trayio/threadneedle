@@ -3,3 +3,7 @@ dummycredentials.json
 
 #Test Files
 tests*
+
+#Config and testing
+.eslint*
+Grunt*
