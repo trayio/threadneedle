@@ -390,7 +390,7 @@ describe('#globalize', function () {
 			.then(done, done);
 		});
 
-		describe('should use original params if modified but not returned (and console warn)', function () {
+		describe('should use reference params if modified but not returned (and console warn)', function () {
 
 			const sampleGlobal = {
 				_globalOptions: {
@@ -414,7 +414,13 @@ describe('#globalize', function () {
 			it('global', function (done) {
 				globalize.before.call(sampleGlobal, {}, _.cloneDeep(originalParams))
 				.then(function (params) {
-					assert.deepEqual(params, originalParams);
+					assert.deepEqual(
+						params,
+						{
+							id: 'abc123',
+							notes: 'Hello'
+						}
+					);
 				})
 				.then(done, done);
 			});
@@ -426,7 +432,13 @@ describe('#globalize', function () {
 					_.cloneDeep(originalParams)
 				)
 				.then(function (params) {
-					assert.deepEqual(params, originalParams);
+					assert.deepEqual(
+						params,
+						{
+							id: 'abc123',
+							notes: ' World'
+						}
+					);
 				})
 				.then(done, done);
 			});
@@ -438,7 +450,13 @@ describe('#globalize', function () {
 					_.cloneDeep(originalParams)
 				)
 				.then(function (params) {
-					assert.deepEqual(params, originalParams);
+					assert.deepEqual(
+						params,
+						{
+							id: 'abc123',
+							notes: 'Hello World'
+						}
+					);
 				})
 				.then(done, done);
 			});
@@ -684,7 +702,7 @@ describe('#globalize', function () {
 			.then(done, done);
 		});
 
-		describe('should use original request if modified but not returned (and console warn)', function () {
+		describe('should use reference request if modified but not returned (and console warn)', function () {
 
 			const sampleGlobal = {
 				_globalOptions: {
@@ -708,7 +726,13 @@ describe('#globalize', function () {
 			it('global', function (done) {
 				globalize.beforeRequest.call(sampleGlobal, {}, _.cloneDeep(originalRequest))
 				.then(function (request) {
-					assert.deepEqual(request, originalRequest);
+					assert.deepEqual(
+						request,
+						{
+							method: 'get',
+							url: 'test.com?hello=world'
+						}
+					);
 				})
 				.then(done, done);
 			});
@@ -720,7 +744,13 @@ describe('#globalize', function () {
 					_.cloneDeep(originalRequest)
 				)
 				.then(function (request) {
-					assert.deepEqual(request, originalRequest);
+					assert.deepEqual(
+						request,
+						{
+							method: 'get',
+							url: 'test.com&test=123'
+						}
+					);
 				})
 				.then(done, done);
 			});
@@ -732,7 +762,13 @@ describe('#globalize', function () {
 					_.cloneDeep(originalRequest)
 				)
 				.then(function (request) {
-					assert.deepEqual(request, originalRequest);
+					assert.deepEqual(
+						request,
+						{
+							method: 'get',
+							url: 'test.com?hello=world&test=123'
+						}
+					);
 				})
 				.then(done, done);
 			});
