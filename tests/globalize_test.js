@@ -511,7 +511,7 @@ describe.only('#globalize', function () {
 				{
 					_globalOptions: {
 						before: function (params) {
-							return {
+							return { //new object instead of same referebce object
 								...params,
 								notes: 'Hello'
 							};
@@ -918,7 +918,7 @@ describe.only('#globalize', function () {
 					_globalOptions: {
 						beforeRequest: function (request) {
 							const url = request.url +  '?hello=world';
-							return {
+							return { //new object instead of same referebce object
 								...request,
 								url
 							};
