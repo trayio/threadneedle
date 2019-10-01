@@ -20,7 +20,7 @@ function handleDevFlagTest (testMessage, testFunction) {
 	});
 }
 
-describe('#globalize', function () {
+describe.only('#globalize', function () {
 
 	describe('#url', function () {
 
@@ -340,6 +340,43 @@ describe('#globalize', function () {
 			.then(done, done);
 		});
 
+		it('should run normally with global first and then method - new object', function (done) {
+			globalize.before.call(
+				{
+					_globalOptions: {
+						before: function (params) {
+							return {
+								...params,
+								notes: 'Hello'
+							};
+						}
+					}
+				},
+				{
+					before: function (params) {
+						if (!params.notes) {
+							throw new Error('notes does not exist');
+						}
+						return {
+							...params,
+							description: 'World'
+						};
+					}
+				},
+				{
+					id: 'abc123'
+				}
+			)
+			.then(function (params) {
+				assert.deepEqual(params, {
+					id: 'abc123',
+					notes: 'Hello',
+					description: 'World'
+				});
+			})
+			.then(done, done);
+		});
+
 		it('should run async normally with global first and then method', function (done) {
 			globalize.before.call(
 				{
@@ -460,6 +497,47 @@ describe('#globalize', function () {
 				})
 				.then(done, done);
 			});
+
+		});
+
+		it('should pass on global modification even if method is undefined', function (done) {
+
+			const originalParams = {
+				id: 'abc123',
+				notes: ''
+			};
+
+			globalize.before.call(
+				{
+					_globalOptions: {
+						before: function (params) {
+							return { //new object instead of same referebce object
+								...params,
+								notes: 'Hello'
+							};
+						}
+					}
+				},
+				{
+					before: function (params) {
+						if (!params.notes) {
+							throw new Error('notes does not exist in params');
+						}
+						assert(params.notes);
+					}
+				},
+				_.cloneDeep(originalParams)
+			)
+			.then(function (params) {
+				assert.deepEqual(
+					params,
+					{
+						id: 'abc123',
+						notes: 'Hello'
+					}
+				);
+			})
+			.then(done, done);
 
 		});
 
@@ -643,6 +721,59 @@ describe('#globalize', function () {
 			.then(done, done);
 		});
 
+		it('should run normally with global first and then method - new object', function (done) {
+
+			const sampleParams = {
+				user_id: 123
+			};
+
+			const sampleGlobal = {
+				_globalOptions: {
+					beforeRequest: function (request, params) {
+						assert.deepEqual(params, sampleParams);
+						const url = request.url +  '?hello=world';
+						return {
+							method: 'get',
+							url
+						};
+					}
+				}
+			};
+
+			const sampleMethodConfig = {
+				beforeRequest: function (request, params) {
+					assert.deepEqual(params, sampleParams);
+					assert(request.url);
+					request.url += '&test=123';
+					return {
+						...request,
+						data: {}
+					};
+				}
+			};
+
+			globalize.beforeRequest.call(
+				sampleGlobal,
+				sampleMethodConfig,
+				{
+					method: 'get',
+					url: 'test.com'
+				},
+				sampleParams
+			)
+			.then(function (request) {
+				assert.deepEqual(
+					request,
+					{
+						method: 'get',
+						url: 'test.com?hello=world&test=123',
+						data: {}
+					}
+				);
+			})
+			.then(done, done);
+		});
+
 		it('should run async normally with  global first and then method', function (done) {
 			const sampleGlobal = {
 				_globalOptions: {
@@ -772,6 +903,47 @@ describe('#globalize', function () {
 				})
 				.then(done, done);
 			});
+
+		});
+
+		it('should pass on global modification even if method is undefined', function (done) {
+
+			const originalRequest = {
+				method: 'get',
+				url: 'test.com'
+			};
+
+			globalize.beforeRequest.call(
+				{
+					_globalOptions: {
+						beforeRequest: function (request) {
+							const url = request.url +  '?hello=world';
+							return { //new object instead of same referebce object
+								...request,
+								url
+							};
+						}
+					}
+				},
+				{
+					beforeRequest: function (request) {
+						if (!request.url) {
+							throw new Error('url does not exist in request object');
+						}
+					}
+				},
+				_.cloneDeep(originalRequest)
+			)
+			.then(function (request) {
+				assert.deepEqual(
+					request,
+					{
+						method: 'get',
+						url: 'test.com?hello=world'
+					}
+				);
+			})
+			.then(done, done);
 
 		});
 
