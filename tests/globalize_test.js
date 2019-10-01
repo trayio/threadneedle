@@ -20,7 +20,7 @@ function handleDevFlagTest (testMessage, testFunction) {
 	});
 }
 
-describe.only('#globalize', function () {
+describe('#globalize', function () {
 
 	describe('#url', function () {
 
