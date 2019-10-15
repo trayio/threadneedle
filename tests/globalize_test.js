@@ -448,7 +448,7 @@ describe('#globalize', function () {
 				notes: ''
 			};
 
-			it('global', function (done) {
+			it('global - no local `before`', function (done) {
 				globalize.before.call(sampleGlobal, {}, _.cloneDeep(originalParams))
 				.then(function (params) {
 					assert.deepEqual(
@@ -462,9 +462,41 @@ describe('#globalize', function () {
 				.then(done, done);
 			});
 
-			it('method', function (done) {
+			it('global - non-returning local `before`', function (done) {
+				globalize.before.call(sampleGlobal, { before: () => {} }, _.cloneDeep(originalParams))
+				.then(function (params) {
+					assert.deepEqual(
+						params,
+						{
+							id: 'abc123',
+							notes: 'Hello'
+						}
+					);
+				})
+				.then(done, done);
+			});
+
+			it('method - empty global', function (done) {
 				globalize.before.call(
 					{ _globalOptions: {} },
+					sampleMethodConfig,
+					_.cloneDeep(originalParams)
+				)
+				.then(function (params) {
+					assert.deepEqual(
+						params,
+						{
+							id: 'abc123',
+							notes: ' World'
+						}
+					);
+				})
+				.then(done, done);
+			});
+
+			it('method - non-returning global `before`', function (done) {
+				globalize.before.call(
+					{ _globalOptions: { before: () => {} } },
 					sampleMethodConfig,
 					_.cloneDeep(originalParams)
 				)
