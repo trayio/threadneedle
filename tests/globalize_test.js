@@ -3,22 +3,35 @@ const assert = require('assert');
 const _ = require('lodash');
 const when = require('when');
 
-const globalize    = require('../lib/addMethod/globalize');
+const globalize = require('../lib/addMethod/globalize');
+const validateObjectArgumentByReference = require('../lib/addMethod/globalize/validateObjectArgumentByReference');
+
+const referenceModificationErrorMessage = 'Modification by reference is deprecated.',
+	nonObjectErrorMessage = 'An object must be returned';
+const referenceValidator = validateObjectArgumentByReference(referenceModificationErrorMessage, nonObjectErrorMessage);
 
 const devMode = process.env.NODE_ENV === 'development';
-function handleDevFlagTest (testMessage, testFunction) {
-	it(testMessage, (done) => {
-		if (devMode) {
-			testFunction(done);
+const handleDevFlagTest = (
+	devMode ?
+	it :
+	(testMessage, testFunction) => {
+		if (testFunction.length) { //Check whether the function expects any args
+			it(testMessage, (done) => {
+				process.env.NODE_ENV = 'development';
+				testFunction((...doneArgs) => {
+					delete process.env.NODE_ENV;
+					done(...doneArgs);
+				});
+			});
 		} else {
-			process.env.NODE_ENV = 'development';
-			testFunction((...doneArgs) => {
+			it(testMessage, () => {
+				process.env.NODE_ENV = 'development';
+				testFunction();
 				delete process.env.NODE_ENV;
-				done(...doneArgs);
 			});
 		}
-	});
-}
+	}
+);
 
 describe('#globalize', function () {
 
@@ -309,6 +322,68 @@ describe('#globalize', function () {
 	});
 
 
+	describe.only('validateObjectArgumentByReference', function () {
+
+		const originalObject = {
+			test: 'Hello world'
+		};
+
+		handleDevFlagTest('throws an error if modified by reference in dev mode', () => {
+
+			const referenceObject = _.cloneDeep(originalObject);
+
+			const validateResult = referenceValidator(referenceObject);
+
+			referenceObject.something = 'something';
+
+			try {
+				const result = validateResult();
+				assert.fail(result);
+			} catch (referenceModificationError) {
+				assert.strictEqual(referenceModificationError.message, referenceModificationErrorMessage);
+			}
+
+		});
+
+		it('passes on modification by reference when not in dev mode', () => {
+
+			const referenceObject = _.cloneDeep(originalObject);
+
+			const validateResult = referenceValidator(referenceObject);
+
+			referenceObject.something = 'something';
+
+			try {
+				const result = validateResult();
+				assert.deepEqual(result, referenceObject);
+			} catch (validationError) {
+				assert.fail(validationError);
+			}
+
+		});
+
+		it('maintains reference on further calls with modification by reference when not in dev mode', () => {
+
+			const referenceObject = _.cloneDeep(originalObject);
+
+			const validateResult = referenceValidator(referenceObject);
+
+			referenceObject.something = 'something';
+
+			try {
+				const result = validateResult();
+				assert.deepEqual(result, referenceObject);
+				result.notes = 'testing';
+				const secondResult = validateResult();
+				assert.deepEqual(secondResult, referenceObject);
+			} catch (validationError) {
+				assert.fail(validationError);
+			}
+
+		});
+
+	});
+
 	describe('#before', function () {
 
 		it('should run normally with global first and then method', function (done) {
@@ -463,7 +538,11 @@ describe('#globalize', function () {
 			});
 
 			it('global - non-returning local `before`', function (done) {
-				globalize.before.call(sampleGlobal, { before: () => {} }, _.cloneDeep(originalParams))
+				globalize.before.call(
+					sampleGlobal,
+					{ before: () => {} },
+					_.cloneDeep(originalParams)
+				)
 				.then(function (params) {
 					assert.deepEqual(
 						params,
@@ -476,7 +555,7 @@ describe('#globalize', function () {
 				.then(done, done);
 			});
 
-			it('method - empty global', function (done) {
+			it('method - no global `before`', function (done) {
 				globalize.before.call(
 					{ _globalOptions: {} },
 					sampleMethodConfig,
@@ -573,7 +652,7 @@ describe('#globalize', function () {
 
 		});
 
-		describe('should throw an error if params is modified but not returned in development mode', function () {
+		describe.only('should throw an error if params is modified but not returned in development mode', function () {
 
 			const sampleMethodConfig = {
 				before: function (params) {
@@ -886,7 +965,7 @@ describe('#globalize', function () {
 				url: 'test.com'
 			};
 
-			it('global', function (done) {
+			it('global - no local `beforeRequest`', function (done) {
 				globalize.beforeRequest.call(sampleGlobal, {}, _.cloneDeep(originalRequest))
 				.then(function (request) {
 					assert.deepEqual(
@@ -900,9 +979,45 @@ describe('#globalize', function () {
 				.then(done, done);
 			});
 
-			it('method', function (done) {
+			it('global - non-returning local `beforeRequest`', function (done) {
+				globalize.beforeRequest.call(
+					sampleGlobal,
+					{ beforeRequest: () => {} },
+					_.cloneDeep(originalRequest)
+				)
+				.then(function (request) {
+					assert.deepEqual(
+						request,
+						{
+							method: 'get',
+							url: 'test.com?hello=world'
+						}
+					);
+				})
+				.then(done, done);
+			});
+
+			it('method - no global `beforeRequest`', function (done) {
 				globalize.beforeRequest.call(
 					{ _globalOptions: {} },
+					sampleMethodConfig,
+					_.cloneDeep(originalRequest)
+				)
+				.then(function (request) {
+					assert.deepEqual(
+						request,
+						{
+							method: 'get',
+							url: 'test.com&test=123'
+						}
+					);
+				})
+				.then(done, done);
+			});
+
+			it('method - non-returning global `beforeRequest`', function (done) {
+				globalize.beforeRequest.call(
+					{ _globalOptions: { beforeRequest: () => {} } },
 					sampleMethodConfig,
 					_.cloneDeep(originalRequest)
 				)
