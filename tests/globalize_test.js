@@ -652,7 +652,7 @@ describe('#globalize', function () {
 
 		});
 
-		describe.only('should throw an error if params is modified but not returned in development mode', function () {
+		describe('should throw an error if params is modified but not returned in development mode', function () {
 
 			const sampleMethodConfig = {
 				before: function (params) {
