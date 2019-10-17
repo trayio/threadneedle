@@ -311,7 +311,7 @@ You can use the `afterSuccess` function argument to do this:
   expects: 200,
   afterSuccess: function (body, params, res) {
     body.name = body.first_name + ' ' + body.last_name;
-
+    return body;
     // You can also return a promise to do async logic. It must resolve
     // with the body.
   }
@@ -332,7 +332,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
     }
-
+    return err;
     // You can also return a promise to do async logic. It should resolve
     // with the error object.
   }
