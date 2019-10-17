@@ -322,7 +322,7 @@ describe('#globalize', function () {
 	});
 
 
-	describe.only('validateObjectArgumentByReference', function () {
+	describe('validateObjectArgumentByReference', function () {
 
 		const originalObject = {
 			test: 'Hello world'
