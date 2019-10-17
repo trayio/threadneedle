@@ -79,7 +79,27 @@ Parameters are (in the prefered order):
 
 Each of the properties you can pass to `addMethod` are described below:
 
-### method
+### before
+
+If you'd like to map or alter the `params` before running the main request, you can use
+the `before` function argument.
+
+Runs **before** any templating or requests.
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  before: function (params) {
+    params.dc = 'us5';
+    return params;
+    // You can also return a promise which should resolve having modified the params
+  }
+}
+```
+
+### method (required)
 
 The HTTP method you'd like to use. Valid values are:
 
@@ -92,8 +112,29 @@ The HTTP method you'd like to use. Valid values are:
 
 The values you declare here are case-insensitive.
 
+### options
 
-### url
+Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+
+Also gets templated.
+
+For example, to send & receive the data as json, just declare the `json` option:
+
+```js
+{
+  method: 'post',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
+  data: {
+    id: '{{listId}}',
+    apikey: '{{apiKey}}'
+  },
+  options: {
+    json: true
+  }
+}
+```
+
+### url (required)
 
 The URL you'd like to request to go to. This can be specified as a string, optionally using Mustache-style templating:
 
@@ -115,9 +156,17 @@ You can also specify the URL as a function. In this case, the `params` that woul
 }
 ```
 
+### query
+
+If you have to specify a lot of parameters in the query string for the URL, you can specify them here.
+The data will be URL encoded and appended at the end of the endpoint.
+
+Templating is supported, as with the `endpoint` and `data` parameters.
+
+
 ### data
 
-The payload you'd like to send to the third party. Relevant for `put`, `delete,` and `post` methods only.
+The payload you'd like to send to the third party. Relevant for methods which accept a body, such as `POST`, `PUT`, `DELETE,` and `PATCH`.
 
 As with the URL, you can provide Mustache parameters here:
 
@@ -160,32 +209,26 @@ Or if you'd prefer, as a function:
 }
 ```
 
-### query
-
-If you have to specify a lot of parameters in the query string for the URL, you can specify them here.
-The data will be URL encoded and appended at the end of the endpoint.
-
-Templating is supported, as with the `endpoint` and `data` parameters.
 
 
-### options
 
-Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+### beforeRequest
 
-Also gets templated.
-
-For example, to send & receive the data as json, just declare the `json` option:
+If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
+all parameters have been templated, use this method.
 
 ```js
 {
-  method: 'post',
-  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
-  data: {
-    id: '{{listId}}',
-    apikey: '{{apiKey}}'
-  },
-  options: {
-    json: true
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  beforeRequest: function (request, params) {
+    // Parameters on the `request` are `url`, `data`, `options`.
+    // `data` will be undefined for GET, HEAD, and OPTIONS requests.
+
+    delete request.data.id; // modification
+    return request;
+    // You can also return a promise which should resolve having modified the request
   }
 }
 ```
@@ -254,48 +297,6 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 
 
 Like `expects`, `notExpects` can be specified shorthand, or as a function.
-
-
-### before
-
-If you'd like to map or alter the `params` before running the main request, you can use
-the `before` function argument.
-
-Runs **before** any templating or requests.
-
-```js
-{
-  method: 'get',
-  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
-  expects: 200,
-  before: function (params) {
-    params.dc = 'us5';
-    // You can also return a promise which should resolve having modified the params
-  }
-}
-```
-
-### beforeRequest
-
-If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
-all parameters have been templated, use this method.
-
-```js
-{
-  method: 'get',
-  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
-  expects: 200,
-  beforeRequest: function (request, params) {
-    // Parameters on the `request` are `url`, `data`, `options`.
-    // `data` will be undefined for GET, HEAD, and OPTIONS requests.
-
-    delete request.data.id; // modification
-    return request;
-    // You can also return a promise which should resolve having modified the request
-  }
-}
-```
-
 
 
 ### afterSuccess
