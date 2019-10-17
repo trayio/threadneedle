@@ -285,12 +285,12 @@ all parameters have been templated, use this method.
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  beforeRequest: function (request) {
+  beforeRequest: function (request, params) {
     // Parameters on the `request` are `url`, `data`, `options`.
-    // `data` will be undefined for get requests.
+    // `data` will be undefined for GET, HEAD, and OPTIONS requests.
 
     delete request.data.id; // modification
-
+    return request;
     // You can also return a promise which should resolve having modified the request
   }
 }
