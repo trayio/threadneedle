@@ -328,7 +328,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  afterFailure: function (err, params) {
+  afterFailure: function (err, params, res) {
     if (err.response.statusCode === 403) {
       err.code = 'oauth_refresh';
     }
