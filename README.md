@@ -110,7 +110,7 @@ The HTTP method you'd like to use. Valid values are:
 * `patch`
 * `head`
 
-The values you declare here are case-insensitive.
+The values you declare here are **not case sensitive**.
 
 ### options
 
