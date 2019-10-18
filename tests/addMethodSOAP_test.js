@@ -9,6 +9,7 @@ const randString = require('mout/random/randString');
 const globalize = require('../lib/addMethod/globalize');
 const ThreadNeedle = require('../');
 
+const SOAPServer = require('./soapServer');
 
 describe.only('#addMethodSOAP', function () {
 
