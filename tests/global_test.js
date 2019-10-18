@@ -4,7 +4,7 @@ const ThreadNeedle = require('../');
 
 describe('Global settings', function () {
 
-	describe.only('#global', function () {
+	describe('#global', function () {
 
 		it('type should be `rest` by default', function () {
 			const threadneedle = new ThreadNeedle();
