@@ -330,7 +330,7 @@ Sometimes you'll want to modify the failure message in some way. You can do
   expects: 200,
   afterFailure: function (err, params, res) {
     if (err.response.statusCode === 403) {
-      err.code = 'oauth_refresh';
+      err.code = '#oauth_refresh';
     }
     return err;
     // You can also return a promise to do async logic. It should resolve
