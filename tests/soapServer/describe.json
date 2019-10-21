@@ -1,0 +1,5236 @@
+{
+	"RegOnline_x0020_API": {
+		"RegOnline_x0020_APISoap": {
+			"CheckinRegistrationsForEvent": {
+				"input": {
+					"registrationIDs": "s:string"
+				},
+				"output": {
+					"CheckinRegistrationsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"CheckinRegistrationsForAgendaItem": {
+				"input": {
+					"registrationIDs": "s:string",
+					"agendaItemID": "s:int",
+					"eventID": "s:int"
+				},
+				"output": {
+					"CheckinRegistrationsForAgendaItemResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"UpdateRegistration": {
+				"input": {
+					"registration": {
+						"ID": "s:int",
+						"EventID": "s:int",
+						"GroupID": "s:int",
+						"RegTypeID": "s:int",
+						"RegistrationType": "s:string",
+						"RegTypeDescription": "s:string",
+						"StatusID": "s:int",
+						"StatusDescription": "s:string",
+						"Prefix": "s:string",
+						"FirstName": "s:string",
+						"MiddleName": "s:string",
+						"LastName": "s:string",
+						"Suffix": "s:string",
+						"Title": "s:string",
+						"Email": "s:string",
+						"Company": "s:string",
+						"Address1": "s:string",
+						"Address2": "s:string",
+						"Address3": "s:string",
+						"City": "s:string",
+						"State": "s:string",
+						"Country": "s:string",
+						"PostalCode": "s:string",
+						"BalanceDue": "s:decimal",
+						"Phone": "s:string",
+						"HomePhone": "s:string",
+						"Extension": "s:string",
+						"Fax": "s:string",
+						"CellPhone": "s:string",
+						"CCEmail": "s:string",
+						"BadgeName": "s:string",
+						"CustID": "s:string",
+						"Photo": "s:string",
+						"DateOfBirth": "s:dateTime",
+						"Gender": "s:string",
+						"NationalityID": "s:int",
+						"Nationality": "s:string",
+						"RoomSharerID": "s:int",
+						"MembershipID": "s:string",
+						"CheckedIn": "s:boolean",
+						"CancelDate": "s:dateTime",
+						"DirectoryOptOut": "s:boolean",
+						"IsSubstitute": "s:boolean",
+						"Notes": "s:string",
+						"AddBy": "s:string",
+						"AddDate": "s:dateTime",
+						"ModBy": "s:string",
+						"ModDate": "s:dateTime",
+						"PaymentDocNumber": "s:string",
+						"GoogleVariableValue": "s:string",
+						"APIToken": "s:string",
+						"SessionId": "s:string",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomReportsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomReportsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomReport[]": {
+								"ID": "s:int",
+								"Name": "s:string",
+								"EventID": "s:int",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomReports": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomReportsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomReport[]": {
+								"ID": "s:int",
+								"Name": "s:string",
+								"EventID": "s:int",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetDirectories": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"GetDirectoriesResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomReport[]": {
+								"ID": "s:int",
+								"Name": "s:string",
+								"EventID": "s:int",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetDirectory": {
+				"input": {
+					"directoryID": "s:int",
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"GetDirectoryResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GetAttendeeMobileAppSettings": {
+				"input": {
+					"eventID": "s:int",
+					"accessCode": "s:string"
+				},
+				"output": {
+					"_GetAttendeeMobileAppSettingsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"eventtitle": "s:string",
+							"eventid": "s:int",
+							"customerid": "s:int",
+							"isnewuxevent": "s:boolean",
+							"eventaddress": "s:string",
+							"allowupdates": "s:boolean",
+							"allowpartialupdates": "s:boolean",
+							"url": "s:string",
+							"hidecontactinfo": "s:boolean",
+							"showyelp": "s:boolean",
+							"floormap": "s:string",
+							"errorcode": "s:int",
+							"statusmsg": "s:string",
+							"updateurl": "s:string",
+							"passwordurl": "s:string",
+							"locations": {
+								"location[]": {
+									"name": "s:string",
+									"type": "s:string",
+									"address": "s:string",
+									"icon": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"social": {
+								"twitter": {
+									"enabled": "s:boolean",
+									"hashtag": "s:string",
+									"widgetId": "s:string",
+									"defaulttweet": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"facebook": {
+									"enabled": "s:boolean",
+									"apikey": "s:string",
+									"pageid": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"linkedin": {
+									"enabled": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"style": {
+								"bgcolor": "s:string",
+								"textcolor": "s:string",
+								"linkcolor": "s:string",
+								"headerbgcolor": "s:string",
+								"headertextcolor": "s:string",
+								"headerhtml": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"culture": "s:string",
+							"resources": {
+								"resource[]": {
+									"key": "s:string",
+									"value": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"logging": "s:boolean",
+							"googlewebpropertyid": "s:string",
+							"googlevariableindex": "s:int",
+							"goolgevariablename": "s:string",
+							"showeucookieribbon": "s:boolean",
+							"isGuestLoginEnabledOnEvent": "s:boolean",
+							"isEventEligibleForGuest": "s:boolean",
+							"logoImageSrc": "s:string",
+							"logoLinkUrl": "s:string",
+							"isPasswordEnabledOnCustomer": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GetOrganizerMobileAppSettings": {
+				"input": {},
+				"output": {
+					"_GetOrganizerMobileAppSettingsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"resources": {
+								"setting[]": {
+									"key": "s:string",
+									"value": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"showeucookieribbon": "s:boolean",
+							"IsEnableLanyon": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"ValidateSFUser": {
+				"input": {
+					"userId": "s:string",
+					"token": "s:string"
+				},
+				"output": {
+					"ValidateSFUserResult": "s:int"
+				}
+			},
+			"UpdateEvent": {
+				"input": {
+					"updateEvent": {
+						"Id": "s:int",
+						"Title": "s:string",
+						"StartDate": "s:string",
+						"StartTime": "s:string",
+						"EndDate": "s:string",
+						"EndTime": "s:string",
+						"ClientEventId": "s:string",
+						"EventFee": "s:decimal",
+						"City": "s:string",
+						"State": "s:string",
+						"Country": "s:string",
+						"PostalCode": "s:string",
+						"LocationName": "s:string",
+						"LocationPhone": "s:string",
+						"LocationAddress1": "s:string",
+						"LocationAddress2": "s:string",
+						"ContactEmailAddress": "s:string",
+						"TimeZone": "s:string",
+						"Capacity": "s:int",
+						"CurrencyCode": "s:string",
+						"RegistrationTarget": "s:int",
+						"InternalNotes": "s:string",
+						"RegistrationFormUrl": "s:string",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"ID": "s:int",
+							"CustomerID": "s:int",
+							"ParentID": "s:int",
+							"Status": "s:string",
+							"Title": "s:string",
+							"StartDate": "s:dateTime",
+							"EndDate": "s:dateTime",
+							"ActiveDate": "s:dateTime",
+							"ClientEventID": "s:string",
+							"TypeID": "s:int",
+							"Type": "s:string",
+							"City": "s:string",
+							"State": "s:string",
+							"Country": "s:string",
+							"CountryCode": "s:string",
+							"PostalCode": "s:string",
+							"LocationName": "s:string",
+							"LocationRoom": "s:string",
+							"LocationPhone": "s:string",
+							"LocationBuilding": "s:string",
+							"LocationAddress1": "s:string",
+							"LocationAddress2": "s:string",
+							"TimeZone": "s:string",
+							"Capacity": "s:int",
+							"CurrencyCode": "s:string",
+							"Keywords": "s:string",
+							"AddDate": "s:dateTime",
+							"AddBy": "s:string",
+							"ModDate": "s:dateTime",
+							"ModBy": "s:string",
+							"Channel": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"Culture": "s:string",
+							"MediaType": "s:string",
+							"IsActive": "s:boolean",
+							"IsOnSite": "s:boolean",
+							"Latitude": "s:decimal",
+							"Longitude": "s:decimal",
+							"FloorMap": "s:string",
+							"InternalNotes": "s:string",
+							"TotalRevenue": "s:decimal",
+							"TotalRegistrations": "s:int",
+							"TotalCancels": "s:int",
+							"TotalSubstitutions": "s:int",
+							"TargetAttendance": "s:int",
+							"TotalIncompletes": "s:int",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsByEventID": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string"
+				},
+				"output": {
+					"GetRegistrationsByEventIDResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"Login": {
+				"input": {
+					"username": "s:string",
+					"password": "s:string"
+				},
+				"output": {
+					"LoginResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"Success": "s:boolean",
+							"OutMessage": "s:string",
+							"RedirectUrl": "s:string",
+							"EventSessionId": "s:string",
+							"CustomerId": "s:int",
+							"DisplayCaptcha": "s:boolean",
+							"IsCustomerDeactivated": "s:boolean",
+							"APIToken": "s:string",
+							"Email": "s:string",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"LoginRegistrantForPost": {
+				"input": {},
+				"output": {}
+			},
+			"LoginRegistrant": {
+				"input": {
+					"eventID": "s:int",
+					"email": "s:string",
+					"password": "s:string"
+				},
+				"output": {
+					"LoginRegistrantResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GuestLogin": {
+				"input": {
+					"eventID": "s:int",
+					"email": "s:string",
+					"password": "s:string",
+					"glpk": "s:string",
+					"rie": "s:string"
+				},
+				"output": {
+					"_GuestLoginResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GuestLoginForPost": {
+				"input": {},
+				"output": {}
+			},
+			"_VerifyGuestLogin": {
+				"input": {
+					"eventId": "s:int",
+					"email": "s:string",
+					"glpk": "s:string",
+					"rie": "s:string"
+				},
+				"output": {
+					"_VerifyGuestLoginResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"isGuestRegistration": "s:boolean",
+							"isVerificationEmailSent": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_VerifyGuestLoginForPost": {
+				"input": {},
+				"output": {}
+			},
+			"_VerifyPasswordRequiredToAccess": {
+				"input": {
+					"eventId": "s:int",
+					"email": "s:string",
+					"glpk": "s:string",
+					"rie": "s:string"
+				},
+				"output": {
+					"_VerifyPasswordRequiredToAccessResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"isGuestRegistration": "s:boolean",
+							"isPasswordEnabled": "s:boolean",
+							"isVerificationEmailSent": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_VerifyPasswordRequiredToAccessForPost": {
+				"input": {},
+				"output": {}
+			},
+			"CopyEvent": {
+				"input": {
+					"eventId": "s:int"
+				},
+				"output": {
+					"CopyEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"ID": "s:int",
+							"CustomerID": "s:int",
+							"ParentID": "s:int",
+							"Status": "s:string",
+							"Title": "s:string",
+							"StartDate": "s:dateTime",
+							"EndDate": "s:dateTime",
+							"ActiveDate": "s:dateTime",
+							"ClientEventID": "s:string",
+							"TypeID": "s:int",
+							"Type": "s:string",
+							"City": "s:string",
+							"State": "s:string",
+							"Country": "s:string",
+							"CountryCode": "s:string",
+							"PostalCode": "s:string",
+							"LocationName": "s:string",
+							"LocationRoom": "s:string",
+							"LocationPhone": "s:string",
+							"LocationBuilding": "s:string",
+							"LocationAddress1": "s:string",
+							"LocationAddress2": "s:string",
+							"TimeZone": "s:string",
+							"Capacity": "s:int",
+							"CurrencyCode": "s:string",
+							"Keywords": "s:string",
+							"AddDate": "s:dateTime",
+							"AddBy": "s:string",
+							"ModDate": "s:dateTime",
+							"ModBy": "s:string",
+							"Channel": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"Culture": "s:string",
+							"MediaType": "s:string",
+							"IsActive": "s:boolean",
+							"IsOnSite": "s:boolean",
+							"Latitude": "s:decimal",
+							"Longitude": "s:decimal",
+							"FloorMap": "s:string",
+							"InternalNotes": "s:string",
+							"TotalRevenue": "s:decimal",
+							"TotalRegistrations": "s:int",
+							"TotalCancels": "s:int",
+							"TotalSubstitutions": "s:int",
+							"TargetAttendance": "s:int",
+							"TotalIncompletes": "s:int",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEvents": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetEventsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetPublicEvents": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetPublicEventsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEvent": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GetEventForUser": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"_GetEventForUserResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetSurveysForEvent": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetSurveysForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEventStatistics": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetEventStatisticsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEventWebsite": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetEventWebsiteResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEventWebsite[]": {
+								"EventID": "s:int",
+								"AreTabsVisible": "s:boolean",
+								"IsRegisterNowButtonVisible": "s:boolean",
+								"IsContactDetailsSectionVisible": "s:boolean",
+								"IsSpacesRemainingVisible": "s:boolean",
+								"IsEarlyBirdAvailableVisible": "s:boolean",
+								"IsAddToCalendarLinkVisible": "s:boolean",
+								"IsTellAFriendLinkVisible": "s:boolean",
+								"IsFeaturesSectionVisible": "s:boolean",
+								"IsGlobalHeaderVisible": "s:boolean",
+								"IsGlobalFooterVisible": "s:boolean",
+								"IsWebsiteHeaderVisible": "s:boolean",
+								"IsWebsiteFooterVisible": "s:boolean",
+								"WebsiteHeader": "s:string",
+								"WebsiteFooter": "s:string",
+								"SummaryTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsEventDetailSectionVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"LodgingTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsLodgingInformationVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"AgendaTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsAgendaItemsSectionVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"DirectoriesTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsDirectoriesSectionVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsForCustomField": {
+				"input": {
+					"eventID": "s:int",
+					"cfid": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsForCustomFieldResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsForAgenda": {
+				"input": {
+					"eventID": "s:int",
+					"cfid": "s:int",
+					"filter": "s:string"
+				},
+				"output": {
+					"GetRegistrationsForAgendaResult": {
+						"APIRegistration[]": {
+							"ID": "s:int",
+							"EventID": "s:int",
+							"GroupID": "s:int",
+							"RegTypeID": "s:int",
+							"RegistrationType": "s:string",
+							"RegTypeDescription": "s:string",
+							"StatusID": "s:int",
+							"StatusDescription": "s:string",
+							"Prefix": "s:string",
+							"FirstName": "s:string",
+							"MiddleName": "s:string",
+							"LastName": "s:string",
+							"Suffix": "s:string",
+							"Title": "s:string",
+							"Email": "s:string",
+							"Company": "s:string",
+							"Address1": "s:string",
+							"Address2": "s:string",
+							"Address3": "s:string",
+							"City": "s:string",
+							"State": "s:string",
+							"Country": "s:string",
+							"PostalCode": "s:string",
+							"BalanceDue": "s:decimal",
+							"Phone": "s:string",
+							"HomePhone": "s:string",
+							"Extension": "s:string",
+							"Fax": "s:string",
+							"CellPhone": "s:string",
+							"CCEmail": "s:string",
+							"BadgeName": "s:string",
+							"CustID": "s:string",
+							"Photo": "s:string",
+							"DateOfBirth": "s:dateTime",
+							"Gender": "s:string",
+							"NationalityID": "s:int",
+							"Nationality": "s:string",
+							"RoomSharerID": "s:int",
+							"MembershipID": "s:string",
+							"CheckedIn": "s:boolean",
+							"CancelDate": "s:dateTime",
+							"DirectoryOptOut": "s:boolean",
+							"IsSubstitute": "s:boolean",
+							"Notes": "s:string",
+							"AddBy": "s:string",
+							"AddDate": "s:dateTime",
+							"ModBy": "s:string",
+							"ModDate": "s:dateTime",
+							"PaymentDocNumber": "s:string",
+							"GoogleVariableValue": "s:string",
+							"APIToken": "s:string",
+							"SessionId": "s:string",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistration": {
+				"input": {
+					"registrationID": "s:string"
+				},
+				"output": {
+					"GetRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsMerchandiseForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsMerchandiseForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrations": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetIncompleteRegistrations": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetIncompleteRegistrationsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetIncompleteRegistrationsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetIncompleteRegistrationsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"ContactEventOrganizer": {
+				"input": {
+					"message": "s:string",
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"ContactEventOrganizerResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"boolean[]": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetTransactions": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetTransactionsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APITransaction[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"RegistrationID": "s:int",
+								"Date": "s:dateTime",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"Amount": "s:decimal",
+								"EventCurrency": "s:string",
+								"GatewayAmount": "s:decimal",
+								"GatewayCurrency": "s:string",
+								"CCName": "s:string",
+								"CCType": "s:string",
+								"CCLast4": "s:string",
+								"CCExpDate": "s:dateTime",
+								"AuthCode": "s:string",
+								"GatewayTxnID": "s:string",
+								"Gateway": "s:string",
+								"SystemNotes": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetTransaction": {
+				"input": {
+					"ID": "s:int"
+				},
+				"output": {
+					"GetTransactionResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APITransaction[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"RegistrationID": "s:int",
+								"Date": "s:dateTime",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"Amount": "s:decimal",
+								"EventCurrency": "s:string",
+								"GatewayAmount": "s:decimal",
+								"GatewayCurrency": "s:string",
+								"CCName": "s:string",
+								"CCType": "s:string",
+								"CCLast4": "s:string",
+								"CCExpDate": "s:dateTime",
+								"AuthCode": "s:string",
+								"GatewayTxnID": "s:string",
+								"Gateway": "s:string",
+								"SystemNotes": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetTransactionsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetTransactionsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APITransaction[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"RegistrationID": "s:int",
+								"Date": "s:dateTime",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"Amount": "s:decimal",
+								"EventCurrency": "s:string",
+								"GatewayAmount": "s:decimal",
+								"GatewayCurrency": "s:string",
+								"CCName": "s:string",
+								"CCType": "s:string",
+								"CCLast4": "s:string",
+								"CCExpDate": "s:dateTime",
+								"AuthCode": "s:string",
+								"GatewayTxnID": "s:string",
+								"Gateway": "s:string",
+								"SystemNotes": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFields": {
+				"input": {
+					"eventID": "s:int",
+					"pageSectionID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetAgendaItems": {
+				"input": {
+					"eventID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetAgendaItemsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldListItems": {
+				"input": {
+					"eventID": "s:int",
+					"cfID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldListItemsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldListItem[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Price": "s:decimal",
+								"Capacity": "s:int",
+								"PerGroupLimit": "s:int",
+								"IsVisible": "s:boolean",
+								"Order": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldsForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"pageSectionID": "s:int"
+				},
+				"output": {
+					"GetCustomFieldsForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetAgendaItemsForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"GetAgendaItemsForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetAgendaItemResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetAgendaItemResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldResponse[]": {
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"PageSectionID": "s:int",
+								"RegistrationID": "s:int",
+								"Response": "s:string",
+								"CustomFieldStatus": "s:string",
+								"CustomFieldStatusID": "s:int",
+								"ItemDescription": "s:string",
+								"ItemID": "s:int",
+								"Amount": "s:decimal",
+								"Password": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"WaitlistOrder": "s:dateTime",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"IsEarlyBird": "s:unsignedByte",
+								"TaxRate1": "s:decimal",
+								"TaxRate2": "s:decimal",
+								"TaxRateTypeID": "s:short",
+								"GroupDiscountCredit": "s:decimal",
+								"DiscountCodeCredit": "s:decimal",
+								"DiscountCodeCreditSaved": "s:boolean",
+								"CustomFieldNameOnReport": "s:string",
+								"CustomFieldNameOnForm": "s:string",
+								"CustomFieldStartDate": "s:dateTime",
+								"CustomFieldEndDate": "s:dateTime",
+								"CustomFieldLocation": "s:string",
+								"CustomFieldTypeID": "s:int",
+								"CustomFieldZOrder": "s:int",
+								"TaxAmount1": "s:decimal",
+								"TaxAmount2": "s:decimal",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"UpdateAgendaItemResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"agendaItemResponses": {
+						"APICustomFieldResponse[]": {
+							"EventID": "s:int",
+							"CFID": "s:int",
+							"PageSectionID": "s:int",
+							"RegistrationID": "s:int",
+							"Response": "s:string",
+							"CustomFieldStatus": "s:string",
+							"CustomFieldStatusID": "s:int",
+							"ItemDescription": "s:string",
+							"ItemID": "s:int",
+							"Amount": "s:decimal",
+							"Password": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"WaitlistOrder": "s:dateTime",
+							"AddBy": "s:string",
+							"AddDate": "s:dateTime",
+							"ModBy": "s:string",
+							"ModDate": "s:dateTime",
+							"IsEarlyBird": "s:unsignedByte",
+							"TaxRate1": "s:decimal",
+							"TaxRate2": "s:decimal",
+							"TaxRateTypeID": "s:short",
+							"GroupDiscountCredit": "s:decimal",
+							"DiscountCodeCredit": "s:decimal",
+							"DiscountCodeCreditSaved": "s:boolean",
+							"CustomFieldNameOnReport": "s:string",
+							"CustomFieldNameOnForm": "s:string",
+							"CustomFieldStartDate": "s:dateTime",
+							"CustomFieldEndDate": "s:dateTime",
+							"CustomFieldLocation": "s:string",
+							"CustomFieldTypeID": "s:int",
+							"CustomFieldZOrder": "s:int",
+							"TaxAmount1": "s:decimal",
+							"TaxAmount2": "s:decimal",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateAgendaItemResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldResponses": {
+				"input": {
+					"eventID": "s:int",
+					"cfID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldResponsesResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldResponse[]": {
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"PageSectionID": "s:int",
+								"RegistrationID": "s:int",
+								"Response": "s:string",
+								"CustomFieldStatus": "s:string",
+								"CustomFieldStatusID": "s:int",
+								"ItemDescription": "s:string",
+								"ItemID": "s:int",
+								"Amount": "s:decimal",
+								"Password": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"WaitlistOrder": "s:dateTime",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"IsEarlyBird": "s:unsignedByte",
+								"TaxRate1": "s:decimal",
+								"TaxRate2": "s:decimal",
+								"TaxRateTypeID": "s:short",
+								"GroupDiscountCredit": "s:decimal",
+								"DiscountCodeCredit": "s:decimal",
+								"DiscountCodeCreditSaved": "s:boolean",
+								"CustomFieldNameOnReport": "s:string",
+								"CustomFieldNameOnForm": "s:string",
+								"CustomFieldStartDate": "s:dateTime",
+								"CustomFieldEndDate": "s:dateTime",
+								"CustomFieldLocation": "s:string",
+								"CustomFieldTypeID": "s:int",
+								"CustomFieldZOrder": "s:int",
+								"TaxAmount1": "s:decimal",
+								"TaxAmount2": "s:decimal",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"pageSectionID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldResponse[]": {
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"PageSectionID": "s:int",
+								"RegistrationID": "s:int",
+								"Response": "s:string",
+								"CustomFieldStatus": "s:string",
+								"CustomFieldStatusID": "s:int",
+								"ItemDescription": "s:string",
+								"ItemID": "s:int",
+								"Amount": "s:decimal",
+								"Password": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"WaitlistOrder": "s:dateTime",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"IsEarlyBird": "s:unsignedByte",
+								"TaxRate1": "s:decimal",
+								"TaxRate2": "s:decimal",
+								"TaxRateTypeID": "s:short",
+								"GroupDiscountCredit": "s:decimal",
+								"DiscountCodeCredit": "s:decimal",
+								"DiscountCodeCreditSaved": "s:boolean",
+								"CustomFieldNameOnReport": "s:string",
+								"CustomFieldNameOnForm": "s:string",
+								"CustomFieldStartDate": "s:dateTime",
+								"CustomFieldEndDate": "s:dateTime",
+								"CustomFieldLocation": "s:string",
+								"CustomFieldTypeID": "s:int",
+								"CustomFieldZOrder": "s:int",
+								"TaxAmount1": "s:decimal",
+								"TaxAmount2": "s:decimal",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"UpdateCustomFieldResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"customFieldResponses": {
+						"APICustomFieldResponse[]": {
+							"EventID": "s:int",
+							"CFID": "s:int",
+							"PageSectionID": "s:int",
+							"RegistrationID": "s:int",
+							"Response": "s:string",
+							"CustomFieldStatus": "s:string",
+							"CustomFieldStatusID": "s:int",
+							"ItemDescription": "s:string",
+							"ItemID": "s:int",
+							"Amount": "s:decimal",
+							"Password": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"WaitlistOrder": "s:dateTime",
+							"AddBy": "s:string",
+							"AddDate": "s:dateTime",
+							"ModBy": "s:string",
+							"ModDate": "s:dateTime",
+							"IsEarlyBird": "s:unsignedByte",
+							"TaxRate1": "s:decimal",
+							"TaxRate2": "s:decimal",
+							"TaxRateTypeID": "s:short",
+							"GroupDiscountCredit": "s:decimal",
+							"DiscountCodeCredit": "s:decimal",
+							"DiscountCodeCreditSaved": "s:boolean",
+							"CustomFieldNameOnReport": "s:string",
+							"CustomFieldNameOnForm": "s:string",
+							"CustomFieldStartDate": "s:dateTime",
+							"CustomFieldEndDate": "s:dateTime",
+							"CustomFieldLocation": "s:string",
+							"CustomFieldTypeID": "s:int",
+							"CustomFieldZOrder": "s:int",
+							"TaxAmount1": "s:decimal",
+							"TaxAmount2": "s:decimal",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateCustomFieldResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			}
+		},
+		"RegOnline_x0020_APISoap12": {
+			"CheckinRegistrationsForEvent": {
+				"input": {
+					"registrationIDs": "s:string"
+				},
+				"output": {
+					"CheckinRegistrationsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"CheckinRegistrationsForAgendaItem": {
+				"input": {
+					"registrationIDs": "s:string",
+					"agendaItemID": "s:int",
+					"eventID": "s:int"
+				},
+				"output": {
+					"CheckinRegistrationsForAgendaItemResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"UpdateRegistration": {
+				"input": {
+					"registration": {
+						"ID": "s:int",
+						"EventID": "s:int",
+						"GroupID": "s:int",
+						"RegTypeID": "s:int",
+						"RegistrationType": "s:string",
+						"RegTypeDescription": "s:string",
+						"StatusID": "s:int",
+						"StatusDescription": "s:string",
+						"Prefix": "s:string",
+						"FirstName": "s:string",
+						"MiddleName": "s:string",
+						"LastName": "s:string",
+						"Suffix": "s:string",
+						"Title": "s:string",
+						"Email": "s:string",
+						"Company": "s:string",
+						"Address1": "s:string",
+						"Address2": "s:string",
+						"Address3": "s:string",
+						"City": "s:string",
+						"State": "s:string",
+						"Country": "s:string",
+						"PostalCode": "s:string",
+						"BalanceDue": "s:decimal",
+						"Phone": "s:string",
+						"HomePhone": "s:string",
+						"Extension": "s:string",
+						"Fax": "s:string",
+						"CellPhone": "s:string",
+						"CCEmail": "s:string",
+						"BadgeName": "s:string",
+						"CustID": "s:string",
+						"Photo": "s:string",
+						"DateOfBirth": "s:dateTime",
+						"Gender": "s:string",
+						"NationalityID": "s:int",
+						"Nationality": "s:string",
+						"RoomSharerID": "s:int",
+						"MembershipID": "s:string",
+						"CheckedIn": "s:boolean",
+						"CancelDate": "s:dateTime",
+						"DirectoryOptOut": "s:boolean",
+						"IsSubstitute": "s:boolean",
+						"Notes": "s:string",
+						"AddBy": "s:string",
+						"AddDate": "s:dateTime",
+						"ModBy": "s:string",
+						"ModDate": "s:dateTime",
+						"PaymentDocNumber": "s:string",
+						"GoogleVariableValue": "s:string",
+						"APIToken": "s:string",
+						"SessionId": "s:string",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomReportsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomReportsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomReport[]": {
+								"ID": "s:int",
+								"Name": "s:string",
+								"EventID": "s:int",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomReports": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomReportsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomReport[]": {
+								"ID": "s:int",
+								"Name": "s:string",
+								"EventID": "s:int",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetDirectories": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"GetDirectoriesResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomReport[]": {
+								"ID": "s:int",
+								"Name": "s:string",
+								"EventID": "s:int",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetDirectory": {
+				"input": {
+					"directoryID": "s:int",
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"GetDirectoryResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GetAttendeeMobileAppSettings": {
+				"input": {
+					"eventID": "s:int",
+					"accessCode": "s:string"
+				},
+				"output": {
+					"_GetAttendeeMobileAppSettingsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"eventtitle": "s:string",
+							"eventid": "s:int",
+							"customerid": "s:int",
+							"isnewuxevent": "s:boolean",
+							"eventaddress": "s:string",
+							"allowupdates": "s:boolean",
+							"allowpartialupdates": "s:boolean",
+							"url": "s:string",
+							"hidecontactinfo": "s:boolean",
+							"showyelp": "s:boolean",
+							"floormap": "s:string",
+							"errorcode": "s:int",
+							"statusmsg": "s:string",
+							"updateurl": "s:string",
+							"passwordurl": "s:string",
+							"locations": {
+								"location[]": {
+									"name": "s:string",
+									"type": "s:string",
+									"address": "s:string",
+									"icon": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"social": {
+								"twitter": {
+									"enabled": "s:boolean",
+									"hashtag": "s:string",
+									"widgetId": "s:string",
+									"defaulttweet": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"facebook": {
+									"enabled": "s:boolean",
+									"apikey": "s:string",
+									"pageid": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"linkedin": {
+									"enabled": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"style": {
+								"bgcolor": "s:string",
+								"textcolor": "s:string",
+								"linkcolor": "s:string",
+								"headerbgcolor": "s:string",
+								"headertextcolor": "s:string",
+								"headerhtml": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"culture": "s:string",
+							"resources": {
+								"resource[]": {
+									"key": "s:string",
+									"value": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"logging": "s:boolean",
+							"googlewebpropertyid": "s:string",
+							"googlevariableindex": "s:int",
+							"goolgevariablename": "s:string",
+							"showeucookieribbon": "s:boolean",
+							"isGuestLoginEnabledOnEvent": "s:boolean",
+							"isEventEligibleForGuest": "s:boolean",
+							"logoImageSrc": "s:string",
+							"logoLinkUrl": "s:string",
+							"isPasswordEnabledOnCustomer": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GetOrganizerMobileAppSettings": {
+				"input": {},
+				"output": {
+					"_GetOrganizerMobileAppSettingsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"resources": {
+								"setting[]": {
+									"key": "s:string",
+									"value": "s:string",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"showeucookieribbon": "s:boolean",
+							"IsEnableLanyon": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"ValidateSFUser": {
+				"input": {
+					"userId": "s:string",
+					"token": "s:string"
+				},
+				"output": {
+					"ValidateSFUserResult": "s:int"
+				}
+			},
+			"UpdateEvent": {
+				"input": {
+					"updateEvent": {
+						"Id": "s:int",
+						"Title": "s:string",
+						"StartDate": "s:string",
+						"StartTime": "s:string",
+						"EndDate": "s:string",
+						"EndTime": "s:string",
+						"ClientEventId": "s:string",
+						"EventFee": "s:decimal",
+						"City": "s:string",
+						"State": "s:string",
+						"Country": "s:string",
+						"PostalCode": "s:string",
+						"LocationName": "s:string",
+						"LocationPhone": "s:string",
+						"LocationAddress1": "s:string",
+						"LocationAddress2": "s:string",
+						"ContactEmailAddress": "s:string",
+						"TimeZone": "s:string",
+						"Capacity": "s:int",
+						"CurrencyCode": "s:string",
+						"RegistrationTarget": "s:int",
+						"InternalNotes": "s:string",
+						"RegistrationFormUrl": "s:string",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"ID": "s:int",
+							"CustomerID": "s:int",
+							"ParentID": "s:int",
+							"Status": "s:string",
+							"Title": "s:string",
+							"StartDate": "s:dateTime",
+							"EndDate": "s:dateTime",
+							"ActiveDate": "s:dateTime",
+							"ClientEventID": "s:string",
+							"TypeID": "s:int",
+							"Type": "s:string",
+							"City": "s:string",
+							"State": "s:string",
+							"Country": "s:string",
+							"CountryCode": "s:string",
+							"PostalCode": "s:string",
+							"LocationName": "s:string",
+							"LocationRoom": "s:string",
+							"LocationPhone": "s:string",
+							"LocationBuilding": "s:string",
+							"LocationAddress1": "s:string",
+							"LocationAddress2": "s:string",
+							"TimeZone": "s:string",
+							"Capacity": "s:int",
+							"CurrencyCode": "s:string",
+							"Keywords": "s:string",
+							"AddDate": "s:dateTime",
+							"AddBy": "s:string",
+							"ModDate": "s:dateTime",
+							"ModBy": "s:string",
+							"Channel": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"Culture": "s:string",
+							"MediaType": "s:string",
+							"IsActive": "s:boolean",
+							"IsOnSite": "s:boolean",
+							"Latitude": "s:decimal",
+							"Longitude": "s:decimal",
+							"FloorMap": "s:string",
+							"InternalNotes": "s:string",
+							"TotalRevenue": "s:decimal",
+							"TotalRegistrations": "s:int",
+							"TotalCancels": "s:int",
+							"TotalSubstitutions": "s:int",
+							"TargetAttendance": "s:int",
+							"TotalIncompletes": "s:int",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsByEventID": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string"
+				},
+				"output": {
+					"GetRegistrationsByEventIDResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"Login": {
+				"input": {
+					"username": "s:string",
+					"password": "s:string"
+				},
+				"output": {
+					"LoginResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"Success": "s:boolean",
+							"OutMessage": "s:string",
+							"RedirectUrl": "s:string",
+							"EventSessionId": "s:string",
+							"CustomerId": "s:int",
+							"DisplayCaptcha": "s:boolean",
+							"IsCustomerDeactivated": "s:boolean",
+							"APIToken": "s:string",
+							"Email": "s:string",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"LoginRegistrantForPost": {
+				"input": {},
+				"output": {}
+			},
+			"LoginRegistrant": {
+				"input": {
+					"eventID": "s:int",
+					"email": "s:string",
+					"password": "s:string"
+				},
+				"output": {
+					"LoginRegistrantResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GuestLogin": {
+				"input": {
+					"eventID": "s:int",
+					"email": "s:string",
+					"password": "s:string",
+					"glpk": "s:string",
+					"rie": "s:string"
+				},
+				"output": {
+					"_GuestLoginResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GuestLoginForPost": {
+				"input": {},
+				"output": {}
+			},
+			"_VerifyGuestLogin": {
+				"input": {
+					"eventId": "s:int",
+					"email": "s:string",
+					"glpk": "s:string",
+					"rie": "s:string"
+				},
+				"output": {
+					"_VerifyGuestLoginResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"isGuestRegistration": "s:boolean",
+							"isVerificationEmailSent": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_VerifyGuestLoginForPost": {
+				"input": {},
+				"output": {}
+			},
+			"_VerifyPasswordRequiredToAccess": {
+				"input": {
+					"eventId": "s:int",
+					"email": "s:string",
+					"glpk": "s:string",
+					"rie": "s:string"
+				},
+				"output": {
+					"_VerifyPasswordRequiredToAccessResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"isGuestRegistration": "s:boolean",
+							"isPasswordEnabled": "s:boolean",
+							"isVerificationEmailSent": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_VerifyPasswordRequiredToAccessForPost": {
+				"input": {},
+				"output": {}
+			},
+			"CopyEvent": {
+				"input": {
+					"eventId": "s:int"
+				},
+				"output": {
+					"CopyEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"ID": "s:int",
+							"CustomerID": "s:int",
+							"ParentID": "s:int",
+							"Status": "s:string",
+							"Title": "s:string",
+							"StartDate": "s:dateTime",
+							"EndDate": "s:dateTime",
+							"ActiveDate": "s:dateTime",
+							"ClientEventID": "s:string",
+							"TypeID": "s:int",
+							"Type": "s:string",
+							"City": "s:string",
+							"State": "s:string",
+							"Country": "s:string",
+							"CountryCode": "s:string",
+							"PostalCode": "s:string",
+							"LocationName": "s:string",
+							"LocationRoom": "s:string",
+							"LocationPhone": "s:string",
+							"LocationBuilding": "s:string",
+							"LocationAddress1": "s:string",
+							"LocationAddress2": "s:string",
+							"TimeZone": "s:string",
+							"Capacity": "s:int",
+							"CurrencyCode": "s:string",
+							"Keywords": "s:string",
+							"AddDate": "s:dateTime",
+							"AddBy": "s:string",
+							"ModDate": "s:dateTime",
+							"ModBy": "s:string",
+							"Channel": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"Culture": "s:string",
+							"MediaType": "s:string",
+							"IsActive": "s:boolean",
+							"IsOnSite": "s:boolean",
+							"Latitude": "s:decimal",
+							"Longitude": "s:decimal",
+							"FloorMap": "s:string",
+							"InternalNotes": "s:string",
+							"TotalRevenue": "s:decimal",
+							"TotalRegistrations": "s:int",
+							"TotalCancels": "s:int",
+							"TotalSubstitutions": "s:int",
+							"TargetAttendance": "s:int",
+							"TotalIncompletes": "s:int",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEvents": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetEventsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetPublicEvents": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetPublicEventsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEvent": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"_GetEventForUser": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"_GetEventForUserResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetSurveysForEvent": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetSurveysForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEventStatistics": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetEventStatisticsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEvent[]": {
+								"ID": "s:int",
+								"CustomerID": "s:int",
+								"ParentID": "s:int",
+								"Status": "s:string",
+								"Title": "s:string",
+								"StartDate": "s:dateTime",
+								"EndDate": "s:dateTime",
+								"ActiveDate": "s:dateTime",
+								"ClientEventID": "s:string",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"CountryCode": "s:string",
+								"PostalCode": "s:string",
+								"LocationName": "s:string",
+								"LocationRoom": "s:string",
+								"LocationPhone": "s:string",
+								"LocationBuilding": "s:string",
+								"LocationAddress1": "s:string",
+								"LocationAddress2": "s:string",
+								"TimeZone": "s:string",
+								"Capacity": "s:int",
+								"CurrencyCode": "s:string",
+								"Keywords": "s:string",
+								"AddDate": "s:dateTime",
+								"AddBy": "s:string",
+								"ModDate": "s:dateTime",
+								"ModBy": "s:string",
+								"Channel": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"Culture": "s:string",
+								"MediaType": "s:string",
+								"IsActive": "s:boolean",
+								"IsOnSite": "s:boolean",
+								"Latitude": "s:decimal",
+								"Longitude": "s:decimal",
+								"FloorMap": "s:string",
+								"InternalNotes": "s:string",
+								"TotalRevenue": "s:decimal",
+								"TotalRegistrations": "s:int",
+								"TotalCancels": "s:int",
+								"TotalSubstitutions": "s:int",
+								"TargetAttendance": "s:int",
+								"TotalIncompletes": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetEventWebsite": {
+				"input": {
+					"eventID": "s:int"
+				},
+				"output": {
+					"GetEventWebsiteResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIEventWebsite[]": {
+								"EventID": "s:int",
+								"AreTabsVisible": "s:boolean",
+								"IsRegisterNowButtonVisible": "s:boolean",
+								"IsContactDetailsSectionVisible": "s:boolean",
+								"IsSpacesRemainingVisible": "s:boolean",
+								"IsEarlyBirdAvailableVisible": "s:boolean",
+								"IsAddToCalendarLinkVisible": "s:boolean",
+								"IsTellAFriendLinkVisible": "s:boolean",
+								"IsFeaturesSectionVisible": "s:boolean",
+								"IsGlobalHeaderVisible": "s:boolean",
+								"IsGlobalFooterVisible": "s:boolean",
+								"IsWebsiteHeaderVisible": "s:boolean",
+								"IsWebsiteFooterVisible": "s:boolean",
+								"WebsiteHeader": "s:string",
+								"WebsiteFooter": "s:string",
+								"SummaryTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsEventDetailSectionVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"LodgingTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsLodgingInformationVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"AgendaTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsAgendaItemsSectionVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"DirectoriesTab": {
+									"TabType": "EventWebsiteTabType|s:string|Summary,Lodging,Agenda,Directory,Custom,Speaker",
+									"Title": "s:string",
+									"IsVisible": "s:boolean",
+									"IsCustomContentVisible": "s:boolean",
+									"CustomContent": "s:string",
+									"IsDirectoriesSectionVisible": "s:boolean",
+									"targetNSAlias": "tns",
+									"targetNamespace": "http://www.regonline.com/api"
+								},
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsForCustomField": {
+				"input": {
+					"eventID": "s:int",
+					"cfid": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsForCustomFieldResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsForAgenda": {
+				"input": {
+					"eventID": "s:int",
+					"cfid": "s:int",
+					"filter": "s:string"
+				},
+				"output": {
+					"GetRegistrationsForAgendaResult": {
+						"APIRegistration[]": {
+							"ID": "s:int",
+							"EventID": "s:int",
+							"GroupID": "s:int",
+							"RegTypeID": "s:int",
+							"RegistrationType": "s:string",
+							"RegTypeDescription": "s:string",
+							"StatusID": "s:int",
+							"StatusDescription": "s:string",
+							"Prefix": "s:string",
+							"FirstName": "s:string",
+							"MiddleName": "s:string",
+							"LastName": "s:string",
+							"Suffix": "s:string",
+							"Title": "s:string",
+							"Email": "s:string",
+							"Company": "s:string",
+							"Address1": "s:string",
+							"Address2": "s:string",
+							"Address3": "s:string",
+							"City": "s:string",
+							"State": "s:string",
+							"Country": "s:string",
+							"PostalCode": "s:string",
+							"BalanceDue": "s:decimal",
+							"Phone": "s:string",
+							"HomePhone": "s:string",
+							"Extension": "s:string",
+							"Fax": "s:string",
+							"CellPhone": "s:string",
+							"CCEmail": "s:string",
+							"BadgeName": "s:string",
+							"CustID": "s:string",
+							"Photo": "s:string",
+							"DateOfBirth": "s:dateTime",
+							"Gender": "s:string",
+							"NationalityID": "s:int",
+							"Nationality": "s:string",
+							"RoomSharerID": "s:int",
+							"MembershipID": "s:string",
+							"CheckedIn": "s:boolean",
+							"CancelDate": "s:dateTime",
+							"DirectoryOptOut": "s:boolean",
+							"IsSubstitute": "s:boolean",
+							"Notes": "s:string",
+							"AddBy": "s:string",
+							"AddDate": "s:dateTime",
+							"ModBy": "s:string",
+							"ModDate": "s:dateTime",
+							"PaymentDocNumber": "s:string",
+							"GoogleVariableValue": "s:string",
+							"APIToken": "s:string",
+							"SessionId": "s:string",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistration": {
+				"input": {
+					"registrationID": "s:string"
+				},
+				"output": {
+					"GetRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrationsMerchandiseForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsMerchandiseForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetRegistrations": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetRegistrationsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetIncompleteRegistrations": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetIncompleteRegistrationsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetIncompleteRegistrationsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetIncompleteRegistrationsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APIRegistration[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"GroupID": "s:int",
+								"RegTypeID": "s:int",
+								"RegistrationType": "s:string",
+								"RegTypeDescription": "s:string",
+								"StatusID": "s:int",
+								"StatusDescription": "s:string",
+								"Prefix": "s:string",
+								"FirstName": "s:string",
+								"MiddleName": "s:string",
+								"LastName": "s:string",
+								"Suffix": "s:string",
+								"Title": "s:string",
+								"Email": "s:string",
+								"Company": "s:string",
+								"Address1": "s:string",
+								"Address2": "s:string",
+								"Address3": "s:string",
+								"City": "s:string",
+								"State": "s:string",
+								"Country": "s:string",
+								"PostalCode": "s:string",
+								"BalanceDue": "s:decimal",
+								"Phone": "s:string",
+								"HomePhone": "s:string",
+								"Extension": "s:string",
+								"Fax": "s:string",
+								"CellPhone": "s:string",
+								"CCEmail": "s:string",
+								"BadgeName": "s:string",
+								"CustID": "s:string",
+								"Photo": "s:string",
+								"DateOfBirth": "s:dateTime",
+								"Gender": "s:string",
+								"NationalityID": "s:int",
+								"Nationality": "s:string",
+								"RoomSharerID": "s:int",
+								"MembershipID": "s:string",
+								"CheckedIn": "s:boolean",
+								"CancelDate": "s:dateTime",
+								"DirectoryOptOut": "s:boolean",
+								"IsSubstitute": "s:boolean",
+								"Notes": "s:string",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"PaymentDocNumber": "s:string",
+								"GoogleVariableValue": "s:string",
+								"APIToken": "s:string",
+								"SessionId": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"ContactEventOrganizer": {
+				"input": {
+					"message": "s:string",
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"ContactEventOrganizerResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"boolean[]": "s:boolean",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetTransactions": {
+				"input": {
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetTransactionsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APITransaction[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"RegistrationID": "s:int",
+								"Date": "s:dateTime",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"Amount": "s:decimal",
+								"EventCurrency": "s:string",
+								"GatewayAmount": "s:decimal",
+								"GatewayCurrency": "s:string",
+								"CCName": "s:string",
+								"CCType": "s:string",
+								"CCLast4": "s:string",
+								"CCExpDate": "s:dateTime",
+								"AuthCode": "s:string",
+								"GatewayTxnID": "s:string",
+								"Gateway": "s:string",
+								"SystemNotes": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetTransaction": {
+				"input": {
+					"ID": "s:int"
+				},
+				"output": {
+					"GetTransactionResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APITransaction[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"RegistrationID": "s:int",
+								"Date": "s:dateTime",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"Amount": "s:decimal",
+								"EventCurrency": "s:string",
+								"GatewayAmount": "s:decimal",
+								"GatewayCurrency": "s:string",
+								"CCName": "s:string",
+								"CCType": "s:string",
+								"CCLast4": "s:string",
+								"CCExpDate": "s:dateTime",
+								"AuthCode": "s:string",
+								"GatewayTxnID": "s:string",
+								"Gateway": "s:string",
+								"SystemNotes": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetTransactionsForEvent": {
+				"input": {
+					"eventID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetTransactionsForEventResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APITransaction[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"RegistrationID": "s:int",
+								"Date": "s:dateTime",
+								"TypeID": "s:int",
+								"Type": "s:string",
+								"Amount": "s:decimal",
+								"EventCurrency": "s:string",
+								"GatewayAmount": "s:decimal",
+								"GatewayCurrency": "s:string",
+								"CCName": "s:string",
+								"CCType": "s:string",
+								"CCLast4": "s:string",
+								"CCExpDate": "s:dateTime",
+								"AuthCode": "s:string",
+								"GatewayTxnID": "s:string",
+								"Gateway": "s:string",
+								"SystemNotes": "s:string",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFields": {
+				"input": {
+					"eventID": "s:int",
+					"pageSectionID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetAgendaItems": {
+				"input": {
+					"eventID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetAgendaItemsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldListItems": {
+				"input": {
+					"eventID": "s:int",
+					"cfID": "s:int",
+					"filter": "s:string",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldListItemsResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldListItem[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Price": "s:decimal",
+								"Capacity": "s:int",
+								"PerGroupLimit": "s:int",
+								"IsVisible": "s:boolean",
+								"Order": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldsForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"pageSectionID": "s:int"
+				},
+				"output": {
+					"GetCustomFieldsForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetAgendaItemsForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int"
+				},
+				"output": {
+					"GetAgendaItemsForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomField[]": {
+								"ID": "s:int",
+								"EventID": "s:int",
+								"PageSectionID": "s:int",
+								"NameOnForm": "s:string",
+								"NameOnReport": "s:string",
+								"Details": "s:string",
+								"Location": "s:string",
+								"StartDate": "s:dateTime",
+								"StartDateString": "s:string",
+								"EndDate": "s:dateTime",
+								"Amount": "s:decimal",
+								"Capacity": "s:int",
+								"ZOrder": "s:int",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetAgendaItemResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetAgendaItemResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldResponse[]": {
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"PageSectionID": "s:int",
+								"RegistrationID": "s:int",
+								"Response": "s:string",
+								"CustomFieldStatus": "s:string",
+								"CustomFieldStatusID": "s:int",
+								"ItemDescription": "s:string",
+								"ItemID": "s:int",
+								"Amount": "s:decimal",
+								"Password": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"WaitlistOrder": "s:dateTime",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"IsEarlyBird": "s:unsignedByte",
+								"TaxRate1": "s:decimal",
+								"TaxRate2": "s:decimal",
+								"TaxRateTypeID": "s:short",
+								"GroupDiscountCredit": "s:decimal",
+								"DiscountCodeCredit": "s:decimal",
+								"DiscountCodeCreditSaved": "s:boolean",
+								"CustomFieldNameOnReport": "s:string",
+								"CustomFieldNameOnForm": "s:string",
+								"CustomFieldStartDate": "s:dateTime",
+								"CustomFieldEndDate": "s:dateTime",
+								"CustomFieldLocation": "s:string",
+								"CustomFieldTypeID": "s:int",
+								"CustomFieldZOrder": "s:int",
+								"TaxAmount1": "s:decimal",
+								"TaxAmount2": "s:decimal",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"UpdateAgendaItemResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"agendaItemResponses": {
+						"APICustomFieldResponse[]": {
+							"EventID": "s:int",
+							"CFID": "s:int",
+							"PageSectionID": "s:int",
+							"RegistrationID": "s:int",
+							"Response": "s:string",
+							"CustomFieldStatus": "s:string",
+							"CustomFieldStatusID": "s:int",
+							"ItemDescription": "s:string",
+							"ItemID": "s:int",
+							"Amount": "s:decimal",
+							"Password": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"WaitlistOrder": "s:dateTime",
+							"AddBy": "s:string",
+							"AddDate": "s:dateTime",
+							"ModBy": "s:string",
+							"ModDate": "s:dateTime",
+							"IsEarlyBird": "s:unsignedByte",
+							"TaxRate1": "s:decimal",
+							"TaxRate2": "s:decimal",
+							"TaxRateTypeID": "s:short",
+							"GroupDiscountCredit": "s:decimal",
+							"DiscountCodeCredit": "s:decimal",
+							"DiscountCodeCreditSaved": "s:boolean",
+							"CustomFieldNameOnReport": "s:string",
+							"CustomFieldNameOnForm": "s:string",
+							"CustomFieldStartDate": "s:dateTime",
+							"CustomFieldEndDate": "s:dateTime",
+							"CustomFieldLocation": "s:string",
+							"CustomFieldTypeID": "s:int",
+							"CustomFieldZOrder": "s:int",
+							"TaxAmount1": "s:decimal",
+							"TaxAmount2": "s:decimal",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateAgendaItemResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldResponses": {
+				"input": {
+					"eventID": "s:int",
+					"cfID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldResponsesResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldResponse[]": {
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"PageSectionID": "s:int",
+								"RegistrationID": "s:int",
+								"Response": "s:string",
+								"CustomFieldStatus": "s:string",
+								"CustomFieldStatusID": "s:int",
+								"ItemDescription": "s:string",
+								"ItemID": "s:int",
+								"Amount": "s:decimal",
+								"Password": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"WaitlistOrder": "s:dateTime",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"IsEarlyBird": "s:unsignedByte",
+								"TaxRate1": "s:decimal",
+								"TaxRate2": "s:decimal",
+								"TaxRateTypeID": "s:short",
+								"GroupDiscountCredit": "s:decimal",
+								"DiscountCodeCredit": "s:decimal",
+								"DiscountCodeCreditSaved": "s:boolean",
+								"CustomFieldNameOnReport": "s:string",
+								"CustomFieldNameOnForm": "s:string",
+								"CustomFieldStartDate": "s:dateTime",
+								"CustomFieldEndDate": "s:dateTime",
+								"CustomFieldLocation": "s:string",
+								"CustomFieldTypeID": "s:int",
+								"CustomFieldZOrder": "s:int",
+								"TaxAmount1": "s:decimal",
+								"TaxAmount2": "s:decimal",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"GetCustomFieldResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"pageSectionID": "s:int",
+					"orderBy": "s:string"
+				},
+				"output": {
+					"GetCustomFieldResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": {
+							"APICustomFieldResponse[]": {
+								"EventID": "s:int",
+								"CFID": "s:int",
+								"PageSectionID": "s:int",
+								"RegistrationID": "s:int",
+								"Response": "s:string",
+								"CustomFieldStatus": "s:string",
+								"CustomFieldStatusID": "s:int",
+								"ItemDescription": "s:string",
+								"ItemID": "s:int",
+								"Amount": "s:decimal",
+								"Password": "s:string",
+								"IsWaitlisted": "s:boolean",
+								"WaitlistOrder": "s:dateTime",
+								"AddBy": "s:string",
+								"AddDate": "s:dateTime",
+								"ModBy": "s:string",
+								"ModDate": "s:dateTime",
+								"IsEarlyBird": "s:unsignedByte",
+								"TaxRate1": "s:decimal",
+								"TaxRate2": "s:decimal",
+								"TaxRateTypeID": "s:short",
+								"GroupDiscountCredit": "s:decimal",
+								"DiscountCodeCredit": "s:decimal",
+								"DiscountCodeCreditSaved": "s:boolean",
+								"CustomFieldNameOnReport": "s:string",
+								"CustomFieldNameOnForm": "s:string",
+								"CustomFieldStartDate": "s:dateTime",
+								"CustomFieldEndDate": "s:dateTime",
+								"CustomFieldLocation": "s:string",
+								"CustomFieldTypeID": "s:int",
+								"CustomFieldZOrder": "s:int",
+								"TaxAmount1": "s:decimal",
+								"TaxAmount2": "s:decimal",
+								"targetNSAlias": "tns",
+								"targetNamespace": "http://www.regonline.com/api"
+							},
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			},
+			"UpdateCustomFieldResponsesForRegistration": {
+				"input": {
+					"eventID": "s:int",
+					"registrationID": "s:int",
+					"customFieldResponses": {
+						"APICustomFieldResponse[]": {
+							"EventID": "s:int",
+							"CFID": "s:int",
+							"PageSectionID": "s:int",
+							"RegistrationID": "s:int",
+							"Response": "s:string",
+							"CustomFieldStatus": "s:string",
+							"CustomFieldStatusID": "s:int",
+							"ItemDescription": "s:string",
+							"ItemID": "s:int",
+							"Amount": "s:decimal",
+							"Password": "s:string",
+							"IsWaitlisted": "s:boolean",
+							"WaitlistOrder": "s:dateTime",
+							"AddBy": "s:string",
+							"AddDate": "s:dateTime",
+							"ModBy": "s:string",
+							"ModDate": "s:dateTime",
+							"IsEarlyBird": "s:unsignedByte",
+							"TaxRate1": "s:decimal",
+							"TaxRate2": "s:decimal",
+							"TaxRateTypeID": "s:short",
+							"GroupDiscountCredit": "s:decimal",
+							"DiscountCodeCredit": "s:decimal",
+							"DiscountCodeCreditSaved": "s:boolean",
+							"CustomFieldNameOnReport": "s:string",
+							"CustomFieldNameOnForm": "s:string",
+							"CustomFieldStartDate": "s:dateTime",
+							"CustomFieldEndDate": "s:dateTime",
+							"CustomFieldLocation": "s:string",
+							"CustomFieldTypeID": "s:int",
+							"CustomFieldZOrder": "s:int",
+							"TaxAmount1": "s:decimal",
+							"TaxAmount2": "s:decimal",
+							"targetNSAlias": "tns",
+							"targetNamespace": "http://www.regonline.com/api"
+						},
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				},
+				"output": {
+					"UpdateCustomFieldResponsesForRegistrationResult": {
+						"Success": "s:boolean",
+						"Message": "s:string",
+						"Data": "s:boolean",
+						"StatusCode": "s:int",
+						"Authority": "s:int",
+						"targetNSAlias": "tns",
+						"targetNamespace": "http://www.regonline.com/api"
+					}
+				}
+			}
+		}
+	}
+}
