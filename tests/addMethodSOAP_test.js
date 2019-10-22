@@ -23,7 +23,19 @@ describe.only('#addMethodSOAP', function () {
 		};
 	}
 
-	describe('Running', function () {
+	let soapServer;
+	before((done) => {
+		soapServer = new SOAPServer(8000);
+
+		soapServer.startServer((startError) => {
+			if (startError) {
+				throw startError;
+			}
+			done();
+		});
+	});
+
+	describe.only('Running', function () {
 		this.timeout(30000);
 		let threadneedle;
 
@@ -33,7 +45,8 @@ describe.only('#addMethodSOAP', function () {
 
 				type: 'SOAP',
 
-				wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+				// wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+				wsdl: 'https://localhost:8000/default.asmx?WSDL',
 
 				options: {
 					headers: [
@@ -52,6 +65,7 @@ describe.only('#addMethodSOAP', function () {
 
 
 			});
+
 		});
 
 		it('should error if wsdl is not provided (or not a string)', function (done) {
@@ -111,7 +125,7 @@ describe.only('#addMethodSOAP', function () {
 		});
 
 
-		it('should be able to add a standard SOAP method', function (done) {
+		it.only('should be able to add a standard SOAP method', function (done) {
 
 			when(threadneedle.addMethod(
 				'list_events',
@@ -556,6 +570,15 @@ describe.only('#addMethodSOAP', function () {
 
 		});
 
+	});
+
+	after((done) => {
+		soapServer.stopServer((closeError) => {
+			if (closeError) {
+				throw closeError;
+			}
+			done();
+		});
 	});
 
 });
