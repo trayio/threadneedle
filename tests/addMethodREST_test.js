@@ -121,6 +121,25 @@ describe('#addMethodREST', function () {
 			});
 		});
 
+		it('should work with a basic example and specified type `rest`', function (done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, {
+				type: 'REST',
+				method: 'get',
+				url: host + '/' + name,
+				expects: 200
+			});
+
+			app.get('/' + name, function (req, res) {
+				res.status(200).send('ok');
+			});
+
+			threadneedle[name]().done(function (result) {
+				assert.equal(result.body, 'ok');
+				done();
+			});
+		});
+
 		it('should substitute to the url with a basic example', function (done) {
 			var name = randString(10);
 			threadneedle.addMethod(name, {
