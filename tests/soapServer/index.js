@@ -46,6 +46,7 @@ class SOAPServer {
 
 }
 
+//Start/stop server if this file is directly invoked, i,e, `node index.js`
 if (require.main === module) {
 	const soapServer = new SOAPServer(8000);
 	soapServer.startServer();
