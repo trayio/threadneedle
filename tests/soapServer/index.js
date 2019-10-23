@@ -2,21 +2,11 @@ const http = require('http');
 const fs = require('fs');
 
 const _ = require('lodash');
-const needle = require('needle');
 const SOAP = require('soap');
-
-// SOAP.createClient(__dirname + '/regonline.wsdl', (err, client) => {
-// 	console.log(__dirname);
-// 	console.log(err);
-// 	const clientDescription = client.describe();
-// 	fs.writeFileSync(__dirname + '/describe.json', JSON.stringify(clientDescription, null, '\t'), 'utf8');
-// });
 
 const soapService = require('./soapService');
 
 const wsdlXML = fs.readFileSync(__dirname + '/regonline.wsdl', 'utf8');
-
-
 
 class SOAPServer {
 
