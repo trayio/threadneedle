@@ -4735,10 +4735,10 @@
     </wsdl:binding>
     <wsdl:service name="RegOnline_x0020_API">
         <wsdl:port name="RegOnline_x0020_APISoap" binding="tns:RegOnline_x0020_APISoap">
-            <soap:address location="https://www.regonline.com/api/default.asmx" />
+            <soap:address location="http://localhost:8000/default.asmx" />
         </wsdl:port>
         <wsdl:port name="RegOnline_x0020_APISoap12" binding="tns:RegOnline_x0020_APISoap12">
-            <soap12:address location="https://www.regonline.com/api/default.asmx" />
+            <soap12:address location="http://localhost:8000/default.asmx" />
         </wsdl:port>
         <wsdl:port name="RegOnline_x0020_APIHttpGet" binding="tns:RegOnline_x0020_APIHttpGet">
             <http:address location="http://www.regonline.com/api/default.asmx" />

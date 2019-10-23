@@ -1,7 +1,5 @@
 const methodFunctions = {
 	GetEvents: function (...getEventsArgs) {
-		console.log('here = GetEvents');
-		// console.log(getEventsArgs);
 		return {
 			GetEventsResult: {
 				Success: true,
@@ -88,11 +86,6 @@ const methodFunctions = {
 	}
 };
 
-// module.exports = {
-// 	'RegOnlineService': {
-// 		'RegOnlinePort': methodFunctions
-// 	}
-// };
 module.exports = {
 	'RegOnline_x0020_API': {
 		'RegOnline_x0020_APISoap': methodFunctions,

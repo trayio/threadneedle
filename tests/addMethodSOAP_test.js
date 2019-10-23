@@ -11,17 +11,30 @@ const ThreadNeedle = require('../');
 
 const SOAPServer = require('./soapServer');
 
-describe.only('#addMethodSOAP', function () {
+function promiseFailFunc (done) {
+	return function (err) {
+		//eslint-disable-next-line no-console
+		console.log(err);
+		assert.fail(err);
+		done(err);
+	};
+}
 
-	const REGONLINE_TOKEN = require('./dummycredentials.json').regonline;
+function asyncTest (message, testFunction) {
+	it(message, async () => {
+		try {
+			await testFunction();
+		} catch (testError) {
+			//eslint-disable-next-line no-console
+			console.log(testError);
+			throw testError;
+		}
+	});
+}
 
-	function promiseFailFunc (done) {
-		return function (err) {
-			console.log(err);
-			assert.fail(err);
-			done();
-		};
-	}
+const REGONLINE_TOKEN = 'abc1234';
+
+describe('#addMethodSOAP', function () {
 
 	let soapServer;
 	before((done) => {
@@ -35,7 +48,7 @@ describe.only('#addMethodSOAP', function () {
 		});
 	});
 
-	describe.only('Running', function () {
+	describe('Running', function () {
 		this.timeout(30000);
 		let threadneedle;
 
@@ -45,8 +58,7 @@ describe.only('#addMethodSOAP', function () {
 
 				type: 'SOAP',
 
-				// wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
-				wsdl: 'https://localhost:8000/default.asmx?WSDL',
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
 				options: {
 					headers: [
@@ -125,10 +137,10 @@ describe.only('#addMethodSOAP', function () {
 		});
 
 
-		it.only('should be able to add a standard SOAP method', function (done) {
+		it('should be able to add a standard SOAP method', function (done) {
 
 			when(threadneedle.addMethod(
-				'list_events',
+				'list_events_test',
 				{
 					method: 'GetEvents',
 
@@ -140,7 +152,7 @@ describe.only('#addMethodSOAP', function () {
 
 			.then(
 				function () {
-					assert(_.isFunction(threadneedle['list_events']));
+					assert(_.isFunction(threadneedle['list_events_test']));
 					done();
 				},
 				promiseFailFunc(done)
@@ -148,17 +160,23 @@ describe.only('#addMethodSOAP', function () {
 
 		});
 
-		it('should be able to execute a standard SOAP method', function (done) {
+		asyncTest('should be able to execute a standard SOAP method', async function () {
 
+			await threadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
 
-			when(threadneedle['list_events']({}))
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			);
 
-			.then(function (results) {
-				assert.deepEqual(results.headers, {});
-				assert(results.body['GetEventsResult']['Success']);
-			})
+			const results = await threadneedle['list_events']({});
 
-			.then(done, promiseFailFunc(done));
+			assert.deepEqual(results.headers, {});
+			assert(results.body['GetEventsResult']['Success']);
 
 		});
 
@@ -205,7 +223,7 @@ describe.only('#addMethodSOAP', function () {
 
 				type: 'SOAP',
 
-				wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
 				options: {
 					headers: [
@@ -525,7 +543,7 @@ describe.only('#addMethodSOAP', function () {
 
 					type: 'SOAP',
 
-					wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+					wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
 					options: {
 						headers: [
