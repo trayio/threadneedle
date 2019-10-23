@@ -663,7 +663,7 @@ If there is meta data that needs to be specified with every `REST template` meth
 As of v1.3.0, threadneedle has added support for SOAP, on both a global and method level.
 The library used is [node-soap](https://github.com/vpulim/node-soap)
 
-This mode can be initialised by adding the following flag to the (global) model: `soap: true`.
+This mode can be initialised by adding the following flag to the (global) model: `type: 'SOAP'`.
 If the flag is set on the global level, then threadneedle will only accept valid SOAP objects and functions as methods (and REST will not be supported). However, if the flag is only used by a method, then only the method will be in SOAP mode, but will expect all required fields to be provided.
 
 ### Global fields

@@ -180,6 +180,54 @@ describe('#addMethodSOAP', function () {
 
 		});
 
+		asyncTest('should prepend baseMethod to model method', async function () {
+
+			const privateThreadneedle = new ThreadNeedle();
+
+			privateThreadneedle.global({
+
+				type: 'SOAP',
+
+				baseMethod: 'Get',
+
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
+
+				options: {
+					headers: [
+						{
+							value: {
+								TokenHeader: {
+									APIToken: REGONLINE_TOKEN
+								}
+							},
+							xmlns: 'http://www.regonline.com/api',
+						}
+					]
+				},
+
+				data: {}
+
+
+			});
+
+			await privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'Events',
+
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			);
+
+			const results = await threadneedle['list_events']({});
+
+			assert.deepEqual(results.headers, {});
+			assert(results.body['GetEventsResult']['Success']);
+
+
+		});
 
 		it('should substitute to the url and data with a basic example', function (done) {
 
