@@ -2,6 +2,8 @@ const assert = require('assert');
 const _ = require('lodash');
 const ThreadNeedle = require('../');
 
+const { handleDevFlagTest } = require('./testUtils.js');
+
 describe('Global settings', function () {
 
 	describe('#global', function () {
@@ -34,7 +36,17 @@ describe('Global settings', function () {
 			});
 		});
 
-	});
+		handleDevFlagTest('should error if soap flag is used in development mode', function () {
+			try {
+				const threadneedle = new ThreadNeedle(true);
+				assert.fail('Did not error for SOAP flag usage in dev mode.');
+			} catch (soapFlagError) {
+				assert(soapFlagError.message.includes('`soap` flag has been deprecated. Use `type: \'SOAP\'` instead.'));
+			}
+		});
 
+
+
+	});
 
 });

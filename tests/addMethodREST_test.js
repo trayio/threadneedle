@@ -36,7 +36,6 @@ describe('#addMethodREST', function () {
 			assert.strictEqual(caught, 2);
 		});
 
-
 		it('should error when a method already exists for that name', function () {
 			var caught = 0;
 			try {
@@ -74,6 +73,21 @@ describe('#addMethodREST', function () {
 				caught++;
 			}
 			assert.strictEqual(caught, 1);
+		});
+
+		it('should error if `type` is not valid', function () {
+			const privateThreadneedle = new ThreadNeedle();
+			try {
+				privateThreadneedle.addMethod(randString(10), {
+					type: 'test',
+					method: 'get',
+					url: 'http://localhost:4000',
+					expects: 200
+				});
+				assert.fail('Invalid type did not throw an error');
+			} catch (globalError) {
+				assert(globalError.message.includes(`\`type\` must be strings 'REST' or 'SOAP'`));
+			}
 		});
 
 	});
