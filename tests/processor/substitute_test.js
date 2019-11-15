@@ -5,7 +5,7 @@ const _	= require('lodash');
 const substitute	= require('../../lib/processor/substitute');
 const throwTest = require('../testUtils/throwTest');
 
-describe('substitute', () => {
+describe.only('substitute', () => {
 
 	const testData = {
 		id: 'abc',
@@ -21,7 +21,7 @@ describe('substitute', () => {
 		true: true,
 		false: false,
 		null: null,
-		time: new Date(2016, 1, 5)
+		time: new Date(2019, 1, 12)
 	};
 
 	it('substitute is a function', () => {
