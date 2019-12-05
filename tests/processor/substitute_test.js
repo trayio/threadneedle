@@ -2,7 +2,7 @@ const assert	= require('assert');
 
 const _	= require('lodash');
 
-const substitute	= require('../../lib/processor/substitute');
+const substitute = require('../../lib/processor/substitute');
 const throwTest = require('../testUtils/throwTest');
 
 describe.only('substitute', () => {
