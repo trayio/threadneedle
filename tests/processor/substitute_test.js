@@ -180,7 +180,7 @@ describe.only('substitute', () => {
 		assert.deepEqual(output, [{ id: `${testData.id}`, string: `${testData.string}` }]);
 	});
 
-	it('non-templates should remain as they are', () => {
+	it('should keep non-templates as they are', () => {
 		const output = substitute(
 			{
 				id: '{{id}}',
