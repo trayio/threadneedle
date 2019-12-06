@@ -43,5 +43,8 @@
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.2.0",
     "mocha-unfunk-reporter": "^0.4.0"
+  },
+  "engines": {
+    "node": ">=10.16.3"
   }
 }
