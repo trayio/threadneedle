@@ -11,15 +11,14 @@ describe('processor.before', function () {
 		assert(_.isFunction(before));
 	});
 
-	// it('before returns a promise', () => {
-	// 	assert(when.isPromiseLike(
-	// 		before(
-	// 			() => {},
-	// 			() => {},
-	// 			{}
-	// 		)
-	// 	));
-	// });
+	it('before returns a promise', () => {
+		const thenable = before(
+			() => {},
+			() => {},
+			{}
+		).then;
+		assert(_.isFunction(thenable));
+	});
 
 	it('before function executes global\'s before local', function (done) {
 
@@ -161,6 +160,32 @@ describe('processor.before', function () {
 		.catch(done);
 
 	});
+
+	throwTest(
+		'before function should throw on global before local',
+		before,
+		[
+			(params) => { throw new Error('ERROR THROWN'); },
+			(params) => { return (params.test /= 2, params); },
+			{
+				test: 10
+			}
+		],
+		'ERROR THROWN'
+	);
+
+	throwTest(
+		'before function should throw on local',
+		before,
+		[
+			(params) => { return (params.test /= 2, params); },
+			(params) => { throw new Error('ERROR THROWN'); },
+			{
+				test: 10
+			}
+		],
+		'ERROR THROWN'
+	);
 
 	// it('should run normally with global first and then method', function (done) {
 	// 	globalize.before.call(
