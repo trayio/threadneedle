@@ -205,115 +205,108 @@ describe('processor.before', function () {
 	// -----------------------------------
 	//TODO
 
-	//
-	// describe('should use reference params if modified but not returned (and console warn)', function () {
-	//
-	// 	const sampleGlobal = {
-	// 		_globalOptions: {
-	// 			before: function (params) {
-	// 				params.notes = 'Hello';
-	// 			}
-	// 		}
-	// 	};
-	//
-	// 	const sampleMethodConfig = {
-	// 		before: function (params) {
-	// 			params.notes += ' World';
-	// 		}
-	// 	};
-	//
-	// 	const originalParams = {
-	// 		id: 'abc123',
-	// 		notes: ''
-	// 	};
-	//
-	// 	it('global - no local `before`', function (done) {
-	// 		before(sampleGlobal, {}, _.cloneDeep(originalParams))
-	// 		.then(function (params) {
-	// 			assert.deepEqual(
-	// 				params,
-	// 				{
-	// 					id: 'abc123',
-	// 					notes: 'Hello'
-	// 				}
-	// 			);
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	it('global - non-returning local `before`', function (done) {
-	// 		before(
-	// 			sampleGlobal,
-	// 			{ before: () => {} },
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(
-	// 				params,
-	// 				{
-	// 					id: 'abc123',
-	// 					notes: 'Hello'
-	// 				}
-	// 			);
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	it('method - no global `before`', function (done) {
-	// 		before(
-	// 			{ _globalOptions: {} },
-	// 			sampleMethodConfig,
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(
-	// 				params,
-	// 				{
-	// 					id: 'abc123',
-	// 					notes: ' World'
-	// 				}
-	// 			);
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	it('method - non-returning global `before`', function (done) {
-	// 		before(
-	// 			{ _globalOptions: { before: () => {} } },
-	// 			sampleMethodConfig,
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(
-	// 				params,
-	// 				{
-	// 					id: 'abc123',
-	// 					notes: ' World'
-	// 				}
-	// 			);
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	it('both', function (done) {
-	// 		before(
-	// 			sampleGlobal,
-	// 			sampleMethodConfig,
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(
-	// 				params,
-	// 				{
-	// 					id: 'abc123',
-	// 					notes: 'Hello World'
-	// 				}
-	// 			);
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// });
+	describe('should use reference params if modified but not returned (and console warn)', function () {
+
+		const sampleGlobal = function (params) {
+			params.notes = 'Hello';
+		};
+
+		const sampleMethodConfig = function (params) {
+			params.notes += ' World';
+		};
+
+		const originalParams = {
+			id: 'abc123',
+			notes: ''
+		};
+
+		it('global - no local `before`', function (done) {
+			before(undefined, sampleGlobal, _.cloneDeep(originalParams))
+			.then(function (params) {
+				assert.deepEqual(
+					params,
+					{
+						id: 'abc123',
+						notes: 'Hello'
+					}
+				);
+			})
+			.then(done, done);
+		});
+
+		it('global - non-returning local `before`', function (done) {
+			before(
+				() => {},
+				sampleGlobal,
+				_.cloneDeep(originalParams)
+			)
+			.then(function (params) {
+				assert.deepEqual(
+					params,
+					{
+						id: 'abc123',
+						notes: 'Hello'
+					}
+				);
+			})
+			.then(done, done);
+		});
+
+		it('method - no global `before`', function (done) {
+			before(
+				sampleMethodConfig,
+				undefined,
+				_.cloneDeep(originalParams)
+			)
+			.then(function (params) {
+				assert.deepEqual(
+					params,
+					{
+						id: 'abc123',
+						notes: ' World'
+					}
+				);
+			})
+			.then(done, done);
+		});
+
+		it('method - non-returning global `before`', function (done) {
+			before(
+				sampleMethodConfig,
+				() => {},
+				_.cloneDeep(originalParams)
+			)
+			.then(function (value) {
+				assert.deepEqual(
+					value,
+					{
+						id: 'abc123',
+						notes: ' World'
+					}
+				);
+			})
+			.then(done, done);
+		});
+
+		it('both', function (done) {
+			before(
+				sampleMethodConfig,
+				sampleGlobal,
+				_.cloneDeep(originalParams)
+			)
+			.then(function (params) {
+				assert.deepEqual(
+					params,
+					{
+						id: 'abc123',
+						notes: 'Hello World'
+					}
+				);
+			})
+			.then(done, done);
+		});
+
+	});
 	//
 	// it('should pass on global modification even if method is undefined', function (done) {
 	//
