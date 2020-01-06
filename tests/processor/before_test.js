@@ -7,11 +7,11 @@ const throwTest = require('../testUtils/throwTest');
 
 describe('processor.before', function () {
 
-	it('before is a function', () => {
+	it('should be a function', () => {
 		assert(_.isFunction(before));
 	});
 
-	it('before returns a promise', () => {
+	it('should return a promise', () => {
 		const thenable = before(
 			() => {},
 			() => {},
@@ -20,26 +20,69 @@ describe('processor.before', function () {
 		assert(_.isFunction(thenable));
 	});
 
-	it('before function executes global first, then local', function (done) {
+	it('should execute global first, then method', async function () {
 
-		before(
+		const value = await before(
 			(params) => { return (params.test -= 4, params); },
 			(params) => { return (params.test /= 2, params); },
 			{
+				id: 'abc123',
 				test: 10
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.test, 1);
-			done();
-		})
-
-		.catch(done);
+		assert.strictEqual(value.id, 'abc123');
+		assert.strictEqual(value.test, 1);
 
 	});
 
-	it('before function does not execute global if not provided ', async function () {
+	it('should execute global first, then method, with both returning new/unreferenced objects', async function () {
+
+		const value = await before(
+			(params) => {
+				if (!params.notes) {
+					throw new Error('notes does not exist');
+				}
+				return {
+					...params,
+					description: 'World'
+				};
+			},
+			(params) => {
+				return {
+					...params,
+					notes: 'Hello'
+				};
+			},
+			{
+				id: 'abc123'
+			}
+		);
+
+		assert.deepEqual(value, {
+			id: 'abc123',
+			notes: 'Hello',
+			description: 'World'
+		});
+
+		const overwrittenObject = await before(
+			(params) => {
+				if (!params.notes) {
+					throw new Error('notes does not exist');
+				}
+				return { description: 'World' };
+			},
+			(params) => {
+				return { notes: 'Hello' };
+			},
+			{ id: 'abc123' }
+		);
+
+		assert.deepEqual(overwrittenObject, { description: 'World' });
+
+	});
+
+	it('should not execute global if not provided ', async function () {
 
 		const value = await before(
 			(params) => { return (params.test -= 4, params); },
@@ -53,7 +96,7 @@ describe('processor.before', function () {
 
 	});
 
-	it('before function allows global to be a promise', async function () {
+	it('should allow global to be a promise', async function () {
 
 		const value = await before(
 			(params) => {
@@ -72,7 +115,20 @@ describe('processor.before', function () {
 
 	});
 
-	it('before function does not execute local if not provided', async function () {
+	throwTest(
+		'should error when non-object is returned (except undefined)',
+		before,
+		[
+			() => { return null; },
+			undefined,
+			{
+				id: 'abc123'
+			}
+		],
+		'`before` must return an object.'
+	);
+
+	it('should not execute method if not provided', async function () {
 
 		const value = await before(
 			undefined,
@@ -87,7 +143,7 @@ describe('processor.before', function () {
 
 	});
 
-	it('before function allows local to be a promise', async function () {
+	it('should allow method to be a promise', async function () {
 
 		const value = await before(
 			undefined,
@@ -106,27 +162,22 @@ describe('processor.before', function () {
 
 	});
 
-	it('before function does nothing if neither global or local is provided', function (done) {
+	it('should do nothing if neither global or method is provided', async function () {
 
-		before(
+		const value = await before(
 			undefined,
 			undefined,
 			{
 				test: 10
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.test, 10);
-			done();
-		})
-
-		.catch(done);
+		assert.strictEqual(value.test, 10);
 
 	});
 
 	throwTest(
-		'before function should throw on global before local',
+		'should throw on global before local',
 		before,
 		[
 			(params) => { throw new Error('ERROR THROWN'); },
@@ -139,7 +190,7 @@ describe('processor.before', function () {
 	);
 
 	throwTest(
-		'before function should throw on local',
+		'should throw on local',
 		before,
 		[
 			(params) => { return (params.test /= 2, params); },
@@ -152,122 +203,8 @@ describe('processor.before', function () {
 	);
 
 	// -----------------------------------
+	//TODO
 
-	// it('should run normally with global first and then method', function (done) {
-	// 	before.call(
-	// 		{
-	// 			_globalOptions: {
-	// 				before: function (params) {
-	// 					params.notes = 'Hello';
-	// 					return params;
-	// 				}
-	// 			}
-	// 		},
-	// 		{
-	// 			before: function (params) {
-	// 				params.notes += ' World';
-	// 				return params;
-	// 			}
-	// 		},
-	// 		{
-	// 			id: 'abc123'
-	// 		}
-	// 	)
-	// 	.then(function (params) {
-	// 		assert.deepEqual(params, {
-	// 			id: 'abc123',
-	// 			notes: 'Hello World'
-	// 		});
-	// 	})
-	// 	.then(done, done);
-	// });
-	//
-	// it('should run normally with global first and then method - new object', function (done) {
-	// 	globalize.before.call(
-	// 		{
-	// 			_globalOptions: {
-	// 				before: function (params) {
-	// 					return {
-	// 						...params,
-	// 						notes: 'Hello'
-	// 					};
-	// 				}
-	// 			}
-	// 		},
-	// 		{
-	// 			before: function (params) {
-	// 				if (!params.notes) {
-	// 					throw new Error('notes does not exist');
-	// 				}
-	// 				return {
-	// 					...params,
-	// 					description: 'World'
-	// 				};
-	// 			}
-	// 		},
-	// 		{
-	// 			id: 'abc123'
-	// 		}
-	// 	)
-	// 	.then(function (params) {
-	// 		assert.deepEqual(params, {
-	// 			id: 'abc123',
-	// 			notes: 'Hello',
-	// 			description: 'World'
-	// 		});
-	// 	})
-	// 	.then(done, done);
-	// });
-	//
-	// it('should run async normally with global first and then method', function (done) {
-	// 	globalize.before.call(
-	// 		{
-	// 			_globalOptions: {
-	// 				before: function (params) {
-	// 					params.notes = 'Hello';
-	// 					return when.resolve(params);
-	// 				}
-	// 			}
-	// 		},
-	// 		{
-	// 			before: function (params) {
-	// 				params.notes += ' World';
-	// 				return when.resolve(params);
-	// 			}
-	// 		},
-	// 		{
-	// 			id: 'abc123'
-	// 		}
-	// 	)
-	// 	.then(function (params) {
-	// 		assert.deepEqual(params, {
-	// 			id: 'abc123',
-	// 			notes: 'Hello World'
-	// 		});
-	// 	})
-	// 	.then(done, done);
-	// });
-	//
-	// it('should error when non-object is returned (except undefined)', function (done) {
-	// 	globalize.before.call(
-	// 		{
-	// 			_globalOptions: {
-	// 				before: function (params) {
-	// 					return null;
-	// 				}
-	// 			}
-	// 		},
-	// 		{},
-	// 		{
-	// 			id: 'abc123'
-	// 		}
-	// 	)
-	// 	.then(assert.fail)
-	// 	.catch((returnError) => {
-	// 		assert.strictEqual(returnError.message, '`before` must return an object.');
-	// 	})
-	// 	.then(done, done);
-	// });
 	//
 	// describe('should use reference params if modified but not returned (and console warn)', function () {
 	//
@@ -291,7 +228,7 @@ describe('processor.before', function () {
 	// 	};
 	//
 	// 	it('global - no local `before`', function (done) {
-	// 		globalize.before.call(sampleGlobal, {}, _.cloneDeep(originalParams))
+	// 		before(sampleGlobal, {}, _.cloneDeep(originalParams))
 	// 		.then(function (params) {
 	// 			assert.deepEqual(
 	// 				params,
@@ -305,7 +242,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	it('global - non-returning local `before`', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			sampleGlobal,
 	// 			{ before: () => {} },
 	// 			_.cloneDeep(originalParams)
@@ -323,7 +260,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	it('method - no global `before`', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			{ _globalOptions: {} },
 	// 			sampleMethodConfig,
 	// 			_.cloneDeep(originalParams)
@@ -341,7 +278,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	it('method - non-returning global `before`', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			{ _globalOptions: { before: () => {} } },
 	// 			sampleMethodConfig,
 	// 			_.cloneDeep(originalParams)
@@ -359,7 +296,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	it('both', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			sampleGlobal,
 	// 			sampleMethodConfig,
 	// 			_.cloneDeep(originalParams)
@@ -385,7 +322,7 @@ describe('processor.before', function () {
 	// 		notes: ''
 	// 	};
 	//
-	// 	globalize.before.call(
+	// 	before(
 	// 		{
 	// 			_globalOptions: {
 	// 				before: function (params) {
@@ -433,7 +370,7 @@ describe('processor.before', function () {
 	// 	};
 	//
 	// 	handleDevFlagTest('global', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			{
 	// 				_globalOptions: {
 	// 					before: function (params) {
@@ -455,7 +392,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	handleDevFlagTest('method', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			{ _globalOptions: {} },
 	// 			sampleMethodConfig,
 	// 			_.cloneDeep(originalParams)
@@ -468,7 +405,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	handleDevFlagTest('ok global but invalid method', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			{
 	// 				_globalOptions: {
 	// 					before: function (params) {
@@ -500,7 +437,7 @@ describe('processor.before', function () {
 	// 	};
 	//
 	// 	it('all globals false', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			sampleGlobal,
 	// 			{
 	// 				globals: false,
@@ -524,7 +461,7 @@ describe('processor.before', function () {
 	// 	});
 	//
 	// 	it('only before globals false', function (done) {
-	// 		globalize.before.call(
+	// 		before(
 	// 			sampleGlobal,
 	// 			{
 	// 				globals: {
