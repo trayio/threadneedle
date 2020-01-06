@@ -2,20 +2,19 @@ const assert = require('assert');
 
 const _ = require('lodash');
 
-module.exports = (testName, execFun, execArgs, errMessage) => {
-	if (_.isFunction(execFun.then)) {
-		it(testName, async () => {
+function isPromise (targetFunction) {
+	return targetFunction.constructor.name === 'AsyncFunction' || _.isFunction(targetFunction.then);
+}
 
-			await execFun(...execArgs)
+module.exports = (testName, execFun, execArgs, errMessage) => {
+	if (isPromise(execFun)) {
+		it(testName, async () => {
+			execFun(...execArgs)
 
 			.then(assert.fail)
 
 			.catch((err) => {
 				assert(_.includes(err.message, errMessage));
-			})
-
-			.finally(() => {
-				console.log('here');
 			});
 
 		});

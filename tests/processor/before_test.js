@@ -20,7 +20,7 @@ describe('processor.before', function () {
 		assert(_.isFunction(thenable));
 	});
 
-	it('before function executes global\'s before local', function (done) {
+	it('before function executes global first, then local', function (done) {
 
 		before(
 			(params) => { return (params.test -= 4, params); },
@@ -39,47 +39,23 @@ describe('processor.before', function () {
 
 	});
 
-	it('before function does not execute global if not provided ', function (done) {
+	it('before function does not execute global if not provided ', async function () {
 
-		before(
+		const value = await before(
 			(params) => { return (params.test -= 4, params); },
 			undefined,
 			{
 				test: 10
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.test, 6);
-			done();
-		})
-
-		.catch(done);
+		assert.strictEqual(value.test, 6);
 
 	});
 
-	it('before function does not execute global if not provided ', function (done) {
+	it('before function allows global to be a promise', async function () {
 
-		before(
-			(params) => { return (params.test -= 4, params); },
-			undefined,
-			{
-				test: 10
-			}
-		)
-
-		.then(function (value) {
-			assert.strictEqual(value.test, 6);
-			done();
-		})
-
-		.catch(done);
-
-	});
-
-	it('before function allows global to be a promise', function (done) {
-
-		before(
+		const value = await before(
 			(params) => {
 				return new Promise((resolve, reject) => {
 					resolve((params.test -= 4, params));
@@ -89,39 +65,31 @@ describe('processor.before', function () {
 			{
 				test: 10
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.test, 6);
-			done();
-		})
+		assert.strictEqual(value.test, 6);
 
-		.catch(done);
 
 	});
 
-	it('before function does not execute local if not provided', function (done) {
+	it('before function does not execute local if not provided', async function () {
 
-		before(
+		const value = await before(
 			undefined,
 			(params) => { return (params.test /= 2, params); },
 			{
 				test: 10
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.test, 5);
-			done();
-		})
+		assert.strictEqual(value.test, 5);
 
-		.catch(done);
 
 	});
 
-	it('before function allows local to be a promise', function (done) {
+	it('before function allows local to be a promise', async function () {
 
-		before(
+		const value = await before(
 			undefined,
 			(params) => {
 				return new Promise((resolve, reject) => {
@@ -131,14 +99,10 @@ describe('processor.before', function () {
 			{
 				test: 10
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.test, 5);
-			done();
-		})
+		assert.strictEqual(value.test, 5);
 
-		.catch(done);
 
 	});
 
@@ -187,8 +151,10 @@ describe('processor.before', function () {
 		'ERROR THROWN'
 	);
 
+	// -----------------------------------
+
 	// it('should run normally with global first and then method', function (done) {
-	// 	globalize.before.call(
+	// 	before.call(
 	// 		{
 	// 			_globalOptions: {
 	// 				before: function (params) {
