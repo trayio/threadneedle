@@ -38,26 +38,23 @@ describe('processor.beforeRequest', function () {
 
 	});
 
-	it('beforeRequest function does not execute global if not provided ', function (done) {
+	it('beforeRequest function does not execute global if not provided ', async function () {
 
-		beforeRequest(
+		const value = await beforeRequest(
 			(request) => { return (request.data += 'abc', request); },
 			undefined,
 			{
 				data: 'xyz'
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.data, 'xyzabc');
-			done();
-		});
+		assert.strictEqual(value.data, 'xyzabc');
 
 	});
 
-	it('beforeRequest function allows global to be a promise', function (done) {
+	it('beforeRequest function allows global to be a promise', async function () {
 
-		beforeRequest(
+		const value = await beforeRequest(
 			(request) => {
 				return new Promise(function (resolve, reject) {
 					resolve((request.data += 'abc', request));
@@ -67,35 +64,29 @@ describe('processor.beforeRequest', function () {
 			{
 				data: 'xyz'
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.data, 'xyzabc');
-			done();
-		});
+		assert.strictEqual(value.data, 'xyzabc');
 
 	});
 
-	it('beforeRequest function does not execute local if not provided', function (done) {
+	it('beforeRequest function does not execute local if not provided', async function () {
 
-		beforeRequest(
+		const value = await beforeRequest(
 			undefined,
 			(request) => { return (request.data += '123', request); },
 			{
 				data: 'xyz'
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.data, 'xyz123');
-			done();
-		});
+		assert.strictEqual(value.data, 'xyz123');
 
 	});
 
-	it('beforeRequest function allows local to be a promise', function (done) {
+	it('beforeRequest function allows local to be a promise', async function () {
 
-		beforeRequest(
+		const value = await beforeRequest(
 			undefined,
 			(request) => {
 				return new Promise(function (resolve, reject) {
@@ -105,29 +96,23 @@ describe('processor.beforeRequest', function () {
 			{
 				data: 'xyz'
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.data, 'xyz123');
-			done();
-		});
+		assert.strictEqual(value.data, 'xyz123');
 
 	});
 
-	it('beforeRequest function does nothing if neither global or local is provided', function (done) {
+	it('beforeRequest function does nothing if neither global or local is provided', async function () {
 
-		beforeRequest(
+		const value = await beforeRequest(
 			undefined,
 			undefined,
 			{
 				data: 'xyz'
 			}
-		)
+		);
 
-		.then(function (value) {
-			assert.strictEqual(value.data, 'xyz');
-			done();
-		});
+		assert.strictEqual(value.data, 'xyz');
 
 	});
 
