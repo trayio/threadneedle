@@ -6,6 +6,7 @@ const before = require('../../lib/processor/before');
 const throwTest = require('../testUtils/throwTest');
 const devFlagTest = require('../testUtils/devFlagTest');
 
+/* eslint-disable no-unused-vars */
 describe('processor.before', function () {
 
 	//TODO: add tests to coreFlow tests to ensure globals flase is processed correctly
