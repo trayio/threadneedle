@@ -2,9 +2,7 @@ const assert = require('assert');
 
 const _ = require('lodash');
 
-function isPromise (targetFunction) {
-	return targetFunction.constructor.name === 'AsyncFunction' || _.isFunction(targetFunction.then);
-}
+const isPromise = require('./isPromise.js');
 
 module.exports = (testName, execFun, execArgs, errMessage) => {
 	if (isPromise(execFun)) {

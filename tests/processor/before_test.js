@@ -4,8 +4,11 @@ const _	= require('lodash');
 
 const before = require('../../lib/processor/before');
 const throwTest = require('../testUtils/throwTest');
+const devFlagTest = require('../testUtils/devFlagTest');
 
 describe('processor.before', function () {
+
+	//TODO: add tests to coreFlow tests to ensure globals flase is processed correctly
 
 	it('should be a function', () => {
 		assert(_.isFunction(before));
@@ -202,10 +205,7 @@ describe('processor.before', function () {
 		'ERROR THROWN'
 	);
 
-	// -----------------------------------
-	//TODO
-
-	describe('should use reference params if modified but not returned (and console warn)', function () {
+	describe('(to be deprecated) should use reference params if modified but not returned (and console warn)', function () {
 
 		const sampleGlobal = function (params) {
 			params.notes = 'Hello';
@@ -220,264 +220,161 @@ describe('processor.before', function () {
 			notes: ''
 		};
 
-		it('global - no local `before`', function (done) {
-			before(undefined, sampleGlobal, _.cloneDeep(originalParams))
-			.then(function (params) {
-				assert.deepEqual(
-					params,
-					{
-						id: 'abc123',
-						notes: 'Hello'
-					}
-				);
-			})
-			.then(done, done);
+		it('global - no local `before`', async function () {
+			const value = await before(undefined, sampleGlobal, _.cloneDeep(originalParams));
+			assert.deepEqual(
+				value,
+				{
+					id: 'abc123',
+					notes: 'Hello'
+				}
+			);
 		});
 
-		it('global - non-returning local `before`', function (done) {
-			before(
+		it('global - non-returning local `before`', async function () {
+			const value = await before(
 				() => {},
 				sampleGlobal,
 				_.cloneDeep(originalParams)
-			)
-			.then(function (params) {
-				assert.deepEqual(
-					params,
-					{
-						id: 'abc123',
-						notes: 'Hello'
-					}
-				);
-			})
-			.then(done, done);
+			);
+			assert.deepEqual(
+				value,
+				{
+					id: 'abc123',
+					notes: 'Hello'
+				}
+			);
 		});
 
-		it('method - no global `before`', function (done) {
-			before(
+		it('method - no global `before`', async function () {
+			const value = await before(
 				sampleMethodConfig,
 				undefined,
 				_.cloneDeep(originalParams)
-			)
-			.then(function (params) {
-				assert.deepEqual(
-					params,
-					{
-						id: 'abc123',
-						notes: ' World'
-					}
-				);
-			})
-			.then(done, done);
+			);
+			assert.deepEqual(
+				value,
+				{
+					id: 'abc123',
+					notes: ' World'
+				}
+			);
 		});
 
-		it('method - non-returning global `before`', function (done) {
-			before(
+		it('method - non-returning global `before`', async function () {
+			const value = await before(
 				sampleMethodConfig,
 				() => {},
 				_.cloneDeep(originalParams)
-			)
-			.then(function (value) {
-				assert.deepEqual(
-					value,
-					{
-						id: 'abc123',
-						notes: ' World'
-					}
-				);
-			})
-			.then(done, done);
+			);
+			assert.deepEqual(
+				value,
+				{
+					id: 'abc123',
+					notes: ' World'
+				}
+			);
 		});
 
-		it('both', function (done) {
-			before(
+		it('both', async function () {
+			const value = await before(
 				sampleMethodConfig,
 				sampleGlobal,
 				_.cloneDeep(originalParams)
-			)
-			.then(function (params) {
-				assert.deepEqual(
-					params,
-					{
-						id: 'abc123',
-						notes: 'Hello World'
-					}
-				);
-			})
-			.then(done, done);
+			);
+			assert.deepEqual(
+				value,
+				{
+					id: 'abc123',
+					notes: 'Hello World'
+				}
+			);
 		});
 
 	});
-	//
-	// it('should pass on global modification even if method is undefined', function (done) {
-	//
-	// 	const originalParams = {
-	// 		id: 'abc123',
-	// 		notes: ''
-	// 	};
-	//
-	// 	before(
-	// 		{
-	// 			_globalOptions: {
-	// 				before: function (params) {
-	// 					return { //new object instead of same referebce object
-	// 						...params,
-	// 						notes: 'Hello'
-	// 					};
-	// 				}
-	// 			}
-	// 		},
-	// 		{
-	// 			before: function (params) {
-	// 				if (!params.notes) {
-	// 					throw new Error('notes does not exist in params');
-	// 				}
-	// 				assert(params.notes);
-	// 			}
-	// 		},
-	// 		_.cloneDeep(originalParams)
-	// 	)
-	// 	.then(function (params) {
-	// 		assert.deepEqual(
-	// 			params,
-	// 			{
-	// 				id: 'abc123',
-	// 				notes: 'Hello'
-	// 			}
-	// 		);
-	// 	})
-	// 	.then(done, done);
-	//
-	// });
-	//
-	// describe('should throw an error if params is modified but not returned in development mode', function () {
-	//
-	// 	const sampleMethodConfig = {
-	// 		before: function (params) {
-	// 			params.notes += ' World';
-	// 		}
-	// 	};
-	//
-	// 	const originalParams = {
-	// 		id: 'abc123',
-	// 		notes: ''
-	// 	};
-	//
-	// 	handleDevFlagTest('global', function (done) {
-	// 		before(
-	// 			{
-	// 				_globalOptions: {
-	// 					before: function (params) {
-	// 						params.notes = 'Hello';
-	// 					}
-	// 				}
-	// 			},
-	// 			{},
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(params, originalParams);
-	// 		})
-	// 		.then(assert.fail)
-	// 		.catch((modError) => {
-	// 			assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	handleDevFlagTest('method', function (done) {
-	// 		before(
-	// 			{ _globalOptions: {} },
-	// 			sampleMethodConfig,
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(assert.fail)
-	// 		.catch((modError) => {
-	// 			assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	handleDevFlagTest('ok global but invalid method', function (done) {
-	// 		before(
-	// 			{
-	// 				_globalOptions: {
-	// 					before: function (params) {
-	// 						params.notes = 'Hello';
-	// 						return params;
-	// 					}
-	// 				}
-	// 			},
-	// 			sampleMethodConfig,
-	// 			_.cloneDeep(originalParams)
-	// 		)
-	// 		.then(assert.fail)
-	// 		.catch((modError) => {
-	// 			assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// });
-	//
-	// describe('should not run global before when globals is false', function (done) {
-	// 	const sampleGlobal = {
-	// 		_globalOptions: {
-	// 			before: function (params) {
-	// 				params.notes = 'Hello';
-	// 				return params;
-	// 			}
-	// 		}
-	// 	};
-	//
-	// 	it('all globals false', function (done) {
-	// 		before(
-	// 			sampleGlobal,
-	// 			{
-	// 				globals: false,
-	// 				before: function (params) {
-	// 					params.notes += ' World';
-	// 					return params;
-	// 				}
-	// 			},
-	// 			{
-	// 				id: 'abc123',
-	// 				notes: ''
-	// 			}
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(params, {
-	// 				id: 'abc123',
-	// 				notes: ' World'
-	// 			});
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	//
-	// 	it('only before globals false', function (done) {
-	// 		before(
-	// 			sampleGlobal,
-	// 			{
-	// 				globals: {
-	// 					before: false
-	// 				},
-	// 				before: function (params) {
-	// 					params.notes += ' World';
-	// 					return params;
-	// 				}
-	// 			},
-	// 			{
-	// 				id: 'abc123',
-	// 				notes: ''
-	// 			}
-	// 		)
-	// 		.then(function (params) {
-	// 			assert.deepEqual(params, {
-	// 				id: 'abc123',
-	// 				notes: ' World'
-	// 			});
-	// 		})
-	// 		.then(done, done);
-	// 	});
-	// });
+
+	it('should pass on global modification even if method is undefined', async function () {
+
+		const originalParams = {
+			id: 'abc123',
+			notes: ''
+		};
+
+		const value = await before(
+			function (params) {
+				if (!params.notes) {
+					throw new Error('notes does not exist in params');
+				}
+				assert(params.notes);
+			},
+			function (params) {
+				return { //new object instead of same referebce object
+					...params,
+					notes: 'Hello'
+				};
+			},
+			_.cloneDeep(originalParams)
+		);
+
+		assert.deepEqual(
+			value,
+			{
+				id: 'abc123',
+				notes: 'Hello'
+			}
+		);
+
+	});
+
+	describe('should throw an error if params is modified but not returned in development mode', function () {
+
+		const sampleMethodBefore = function (params) {
+			params.notes += ' World';
+		};
+
+		const originalParams = {
+			id: 'abc123',
+			notes: ''
+		};
+
+		devFlagTest('global', async function () {
+			await before(
+				undefined,
+				function (params) {
+					params.notes = 'Hello';
+				},
+				_.cloneDeep(originalParams)
+			)
+			.catch((modError) => {
+				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+			});
+		});
+
+		devFlagTest('method', async function () {
+			await before(
+				sampleMethodBefore,
+				undefined,
+				_.cloneDeep(originalParams)
+			)
+			.catch((modError) => {
+				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+			});
+		});
+
+		devFlagTest('valid global but invalid method', async function () {
+			await before(
+				sampleMethodBefore,
+				function (params) {
+					params.notes = 'Hello';
+					return params;
+				},
+				_.cloneDeep(originalParams)
+			)
+			.catch((modError) => {
+				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
+			});
+		});
+
+	});
 
 });
