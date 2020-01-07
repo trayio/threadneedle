@@ -120,7 +120,7 @@ describe('processor.beforeRequest', function () {
 		'beforeRequest function should throw on global before local',
 		beforeRequest,
 		[
-			(request) => { throw new Error('ERROR THROWN') },
+			(request) => { throw new Error('ERROR THROWN'); },
 			(request) => { return (request.data += '123', request); },
 			{
 				data: 'xyz'
@@ -134,7 +134,7 @@ describe('processor.beforeRequest', function () {
 		beforeRequest,
 		[
 			(request) => { return (request.data += 'abc', request); },
-			(request) => { throw new Error('ERROR THROWN') },
+			(request) => { throw new Error('ERROR THROWN'); },
 			{
 				data: 'xyz'
 			}
