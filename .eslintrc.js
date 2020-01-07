@@ -15,7 +15,7 @@ module.exports = {
 
         //recommended overrides
         'no-console': 1, //Use `// eslint-disable-next-line no-console` if you need to keep console.log
-        'no-unused-vars': 0, //Uncomment later
+        'no-unused-vars': 1,
         'no-case-declarations': 0,
         'no-inner-declarations': 0,
 
