@@ -89,8 +89,8 @@ describe('processor.before', function () {
 	it('should not execute global if not provided ', async function () {
 
 		const returnedParams = await before(
-			(params) => { return (params.test -= 4, params); },
 			undefined,
+			(params) => { return (params.test -= 4, params); },
 			{
 				test: 10
 			}
@@ -103,12 +103,12 @@ describe('processor.before', function () {
 	it('should allow global to be a promise', async function () {
 
 		const returnedParams = await before(
+			undefined,
 			(params) => {
 				return new Promise((resolve, reject) => {
 					resolve((params.test -= 4, params));
 				});
 			},
-			undefined,
 			{
 				test: 10
 			}
@@ -135,8 +135,8 @@ describe('processor.before', function () {
 	it('should not execute method if not provided', async function () {
 
 		const returnedParams = await before(
-			undefined,
 			(params) => { return (params.test /= 2, params); },
+			undefined,
 			{
 				test: 10
 			}
@@ -150,12 +150,12 @@ describe('processor.before', function () {
 	it('should allow method to be a promise', async function () {
 
 		const returnedParams = await before(
-			undefined,
 			(params) => {
 				return new Promise((resolve, reject) => {
 					resolve((params.test /= 2, params));
 				});
 			},
+			undefined,
 			{
 				test: 10
 			}
@@ -163,6 +163,30 @@ describe('processor.before', function () {
 
 		assert.strictEqual(returnedParams.test, 5);
 
+
+	});
+
+	it('should execute normally with both being async', async function () {
+
+		const returnedParams = await before(
+			(params) => {
+				return new Promise((resolve, reject) => {
+					resolve((params.test /= 2, params));
+				});
+			},
+			(params) => {
+				return new Promise((resolve, reject) => {
+					resolve((params.test -= 4, params));
+				});
+			},
+			{
+				id: 'abc123',
+				test: 10
+			}
+		);
+
+		assert.strictEqual(returnedParams.id, 'abc123');
+		assert.strictEqual(returnedParams.test, 3);
 
 	});
 
