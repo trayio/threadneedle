@@ -119,18 +119,37 @@ describe('processor.before', function () {
 
 	});
 
-	throwTest(
-		'should error when non-object is returned (except undefined)',
-		before,
-		[
-			() => { return null; },
-			undefined,
-			{
-				id: 'abc123'
-			}
-		],
-		'`before` must return an object.'
-	);
+	describe('should error when non-object is returned (except undefined)', () => {
+
+		throwTest(
+			'global',
+			before,
+			[
+				undefined,
+				() => { return null; },
+				{
+					id: 'abc123'
+				}
+			],
+			'`before` must return an object.'
+		);
+
+
+		throwTest(
+			'method',
+			before,
+			[
+				() => { return []; },
+				undefined,
+				{
+					id: 'abc123'
+				}
+			],
+			'`before` must return an object.'
+		);
+
+	});
+
 
 	it('should not execute method if not provided', async function () {
 
