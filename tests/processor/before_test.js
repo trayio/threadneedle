@@ -69,7 +69,7 @@ describe('processor.before', function () {
 			description: 'World'
 		});
 
-		const overwrittenObject = await before(
+		const overwrittenParamsObject = await before(
 			(params) => {
 				if (!params.notes) {
 					throw new Error('notes does not exist');
@@ -82,7 +82,7 @@ describe('processor.before', function () {
 			{ id: 'abc123' }
 		);
 
-		assert.deepEqual(overwrittenObject, { description: 'World' });
+		assert.deepEqual(overwrittenParamsObject, { description: 'World' });
 
 	});
 
