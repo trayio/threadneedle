@@ -124,6 +124,32 @@ describe('processor.beforeRequest', function () {
 
 	});
 
+	it('should have `params` as second argument of function', async () => {
+
+		const originalParams = {
+			id: 'abc123',
+			notes: ''
+		};
+
+		await beforeRequest(
+			(request, params) => {
+				assert.deepEqual(originalParams, params);
+				return (request.url += '&order=asc', request.data += 'abc', request);
+			},
+			(request, params) => {
+				assert.deepEqual(originalParams, params);
+				return (request.data += '123', request);
+			},
+			{
+				method: 'post',
+				url: 'test.com/search?testSuite=123',
+				data: 'xyz'
+			},
+			originalParams
+		);
+
+	});
+
 	it('should not execute global if not provided ', async function () {
 
 		const returnedRequest = await beforeRequest(
