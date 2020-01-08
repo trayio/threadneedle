@@ -150,7 +150,6 @@ describe('processor.before', function () {
 
 	});
 
-
 	it('should not execute method if not provided', async function () {
 
 		const returnedParams = await before(
