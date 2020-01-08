@@ -26,7 +26,7 @@ describe('processor.before', function () {
 
 	it('should execute global first, then method', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			(params) => { return (params.test -= 4, params); },
 			(params) => { return (params.test /= 2, params); },
 			{
@@ -35,14 +35,14 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.strictEqual(value.id, 'abc123');
-		assert.strictEqual(value.test, 1);
+		assert.strictEqual(returnedParams.id, 'abc123');
+		assert.strictEqual(returnedParams.test, 1);
 
 	});
 
 	it('should execute global first, then method, with both returning new/unreferenced objects', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			(params) => {
 				if (!params.notes) {
 					throw new Error('notes does not exist');
@@ -63,7 +63,7 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.deepEqual(value, {
+		assert.deepEqual(returnedParams, {
 			id: 'abc123',
 			notes: 'Hello',
 			description: 'World'
@@ -88,7 +88,7 @@ describe('processor.before', function () {
 
 	it('should not execute global if not provided ', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			(params) => { return (params.test -= 4, params); },
 			undefined,
 			{
@@ -96,13 +96,13 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.strictEqual(value.test, 6);
+		assert.strictEqual(returnedParams.test, 6);
 
 	});
 
 	it('should allow global to be a promise', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			(params) => {
 				return new Promise((resolve, reject) => {
 					resolve((params.test -= 4, params));
@@ -114,7 +114,7 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.strictEqual(value.test, 6);
+		assert.strictEqual(returnedParams.test, 6);
 
 
 	});
@@ -134,7 +134,7 @@ describe('processor.before', function () {
 
 	it('should not execute method if not provided', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			undefined,
 			(params) => { return (params.test /= 2, params); },
 			{
@@ -142,14 +142,14 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.strictEqual(value.test, 5);
+		assert.strictEqual(returnedParams.test, 5);
 
 
 	});
 
 	it('should allow method to be a promise', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			undefined,
 			(params) => {
 				return new Promise((resolve, reject) => {
@@ -161,14 +161,14 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.strictEqual(value.test, 5);
+		assert.strictEqual(returnedParams.test, 5);
 
 
 	});
 
 	it('should do nothing if neither global or method is provided', async function () {
 
-		const value = await before(
+		const returnedParams = await before(
 			undefined,
 			undefined,
 			{
@@ -176,7 +176,7 @@ describe('processor.before', function () {
 			}
 		);
 
-		assert.strictEqual(value.test, 10);
+		assert.strictEqual(returnedParams.test, 10);
 
 	});
 
@@ -222,9 +222,9 @@ describe('processor.before', function () {
 		};
 
 		it('global - no local `before`', async function () {
-			const value = await before(undefined, sampleGlobal, _.cloneDeep(originalParams));
+			const returnedParams = await before(undefined, sampleGlobal, _.cloneDeep(originalParams));
 			assert.deepEqual(
-				value,
+				returnedParams,
 				{
 					id: 'abc123',
 					notes: 'Hello'
@@ -233,13 +233,13 @@ describe('processor.before', function () {
 		});
 
 		it('global - non-returning local `before`', async function () {
-			const value = await before(
+			const returnedParams = await before(
 				() => {},
 				sampleGlobal,
 				_.cloneDeep(originalParams)
 			);
 			assert.deepEqual(
-				value,
+				returnedParams,
 				{
 					id: 'abc123',
 					notes: 'Hello'
@@ -248,13 +248,13 @@ describe('processor.before', function () {
 		});
 
 		it('method - no global `before`', async function () {
-			const value = await before(
+			const returnedParams = await before(
 				sampleMethodConfig,
 				undefined,
 				_.cloneDeep(originalParams)
 			);
 			assert.deepEqual(
-				value,
+				returnedParams,
 				{
 					id: 'abc123',
 					notes: ' World'
@@ -263,13 +263,13 @@ describe('processor.before', function () {
 		});
 
 		it('method - non-returning global `before`', async function () {
-			const value = await before(
+			const returnedParams = await before(
 				sampleMethodConfig,
 				() => {},
 				_.cloneDeep(originalParams)
 			);
 			assert.deepEqual(
-				value,
+				returnedParams,
 				{
 					id: 'abc123',
 					notes: ' World'
@@ -278,13 +278,13 @@ describe('processor.before', function () {
 		});
 
 		it('both', async function () {
-			const value = await before(
+			const returnedParams = await before(
 				sampleMethodConfig,
 				sampleGlobal,
 				_.cloneDeep(originalParams)
 			);
 			assert.deepEqual(
-				value,
+				returnedParams,
 				{
 					id: 'abc123',
 					notes: 'Hello World'
@@ -301,7 +301,7 @@ describe('processor.before', function () {
 			notes: ''
 		};
 
-		const value = await before(
+		const returnedParams = await before(
 			function (params) {
 				if (!params.notes) {
 					throw new Error('notes does not exist in params');
@@ -318,7 +318,7 @@ describe('processor.before', function () {
 		);
 
 		assert.deepEqual(
-			value,
+			returnedParams,
 			{
 				id: 'abc123',
 				notes: 'Hello'
