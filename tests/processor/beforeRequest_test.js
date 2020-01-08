@@ -471,6 +471,7 @@ describe('processor.beforeRequest', function () {
 				},
 				_.cloneDeep(originalRequest)
 			)
+			.then(assert.fail)
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
 			});
@@ -482,6 +483,7 @@ describe('processor.beforeRequest', function () {
 				undefined,
 				_.cloneDeep(originalRequest)
 			)
+			.then(assert.fail)
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
 			});
@@ -496,6 +498,7 @@ describe('processor.beforeRequest', function () {
 				},
 				_.cloneDeep(originalRequest)
 			)
+			.then(assert.fail)
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `beforeRequest` must return the modified object.');
 			});

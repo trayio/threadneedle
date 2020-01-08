@@ -388,6 +388,7 @@ describe('processor.before', function () {
 				},
 				_.cloneDeep(originalParams)
 			)
+			.then(assert.fail)
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
 			});
@@ -399,6 +400,7 @@ describe('processor.before', function () {
 				undefined,
 				_.cloneDeep(originalParams)
 			)
+			.then(assert.fail)
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
 			});
@@ -413,6 +415,7 @@ describe('processor.before', function () {
 				},
 				_.cloneDeep(originalParams)
 			)
+			.then(assert.fail)
 			.catch((modError) => {
 				assert.strictEqual(modError.message, 'Modification by reference is deprecated. `before` must return the modified object.');
 			});
