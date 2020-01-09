@@ -5,7 +5,8 @@ const _	= require('lodash');
 const substitute = require('../../lib/processor/substitute');
 const throwTest = require('../testUtils/throwTest');
 
-describe.only('processor.substitute', () => {
+/* eslint-disable no-unused-vars */
+describe('processor.substitute', () => {
 
 	const testData = {
 		id: 'abc',
