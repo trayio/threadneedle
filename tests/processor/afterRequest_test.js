@@ -3,7 +3,6 @@ const _	= require('lodash');
 
 const afterRequest = require('../../lib/processor/afterRequest');
 const throwTest = require('../testUtils/throwTest');
-const devFlagTest = require('../testUtils/devFlagTest');
 
 /* eslint-disable no-unused-vars */
 describe('processor.afterRequest', () => {
@@ -27,7 +26,7 @@ describe('processor.afterRequest', () => {
 		assert(_.isFunction(thenable));
 	});
 
-	it('should execute global first, then local', async function () {
+	it('should execute global first, then method', async function () {
 
 		const returnedBody = await afterRequest(
 			(request) => { return (request.data += 'abc', request); },
@@ -50,8 +49,8 @@ describe('processor.afterRequest', () => {
 	it('should not execute global if not provided ', async function () {
 
 		const returnedBody = await afterRequest(
-			(request) => { return (request.data += 'abc', request); },
 			undefined,
+			(request) => { return (request.data += 'abc', request); },
 			{
 				data: 'xyz'
 			}
@@ -64,12 +63,12 @@ describe('processor.afterRequest', () => {
 	it('should allow global to be a promise', async function () {
 
 		const returnedBody = await afterRequest(
+			undefined,
 			(request) => {
 				return new Promise(function (resolve, reject) {
 					resolve((request.data += 'abc', request));
 				});
 			},
-			undefined,
 			{
 				data: 'xyz'
 			}
@@ -79,11 +78,11 @@ describe('processor.afterRequest', () => {
 
 	});
 
-	it('should not execute local if not provided', async function () {
+	it('should not execute method if not provided', async function () {
 
 		const returnedBody = await afterRequest(
-			undefined,
 			(request) => { return (request.data += '123', request); },
+			undefined,
 			{
 				data: 'xyz'
 			}
@@ -93,15 +92,15 @@ describe('processor.afterRequest', () => {
 
 	});
 
-	it('should allow local to be a promise', async function () {
+	it('should allow method to be a promise', async function () {
 
 		const returnedBody = await afterRequest(
-			undefined,
 			(request) => {
 				return new Promise(function (resolve, reject) {
 					resolve((request.data += '123', request));
 				});
 			},
+			undefined,
 			{
 				data: 'xyz'
 			}
@@ -111,7 +110,35 @@ describe('processor.afterRequest', () => {
 
 	});
 
-	it('should do nothing if neither global or local is provided', async function () {
+	it('should execute normally with both being async', async function () {
+
+		const returnedBody = await afterRequest(
+			(request) => {
+				return new Promise((resolve, reject) => {
+					resolve((request.data += 'abc', request));
+				});
+			},
+			(request) => {
+				return new Promise((resolve, reject) => {
+					resolve((request.data += '123', request));
+				});
+			},
+			{
+				data: 'xyz'
+			},
+			{},
+			{
+				body: {
+					data: 'xyz'
+				}
+			}
+		);
+
+		assert.strictEqual(returnedBody.data, 'xyz123abc');
+
+	});
+
+	it('should do nothing if neither global or method is provided', async function () {
 
 		const returnedBody = await afterRequest(
 			undefined,
@@ -126,11 +153,11 @@ describe('processor.afterRequest', () => {
 	});
 
 	throwTest(
-		'should throw on global before local',
+		'should throw on global before method',
 		afterRequest,
 		[
-			(request) => { throw new Error('ERROR THROWN'); },
 			(request) => { return (request.data += '123', request); },
+			(request) => { throw new Error('ERROR THROWN'); },
 			{
 				data: 'xyz'
 			}
@@ -139,11 +166,11 @@ describe('processor.afterRequest', () => {
 	);
 
 	throwTest(
-		'should throw on local',
+		'should throw on method',
 		afterRequest,
 		[
-			(request) => { return (request.data += 'abc', request); },
 			(request) => { throw new Error('ERROR THROWN'); },
+			(request) => { return (request.data += 'abc', request); },
 			{
 				data: 'xyz'
 			}
@@ -151,184 +178,4 @@ describe('processor.afterRequest', () => {
 		'ERROR THROWN'
 	);
 
-	//TODO
-
 });
-
-
-// describe('#afterSuccess', function () {
-//
-// 	it('should run the global before method when declared', function (done) {
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterSuccess: function (body) {
-// 					body.success = true;
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterSuccess.call(sample, {}, {}).done(function (body) {
-// 			assert.deepEqual(body, { success: true });
-// 			done();
-// 		});
-// 	});
-//
-// 	it('should allow for a global promise async', function (done) {
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterSuccess: function (body) {
-// 					return when.promise(function (resolve, reject) {
-// 						body.success = true;
-// 						resolve();
-// 					});
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterSuccess.call(sample, {}, {}).done(function (body) {
-// 			assert.deepEqual(body, { success: true });
-// 			done();
-// 		});
-// 	});
-//
-// 	it('should call the global promise before the local one', function (done) {
-// 		var calledFirst;
-// 		var calls = 0;
-//
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterSuccess: function (params) {
-// 					if (!calledFirst) calledFirst = 'global';
-// 					calls++;
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterSuccess.call(sample, {
-// 			afterSuccess: function () {
-// 				if (!calledFirst) calledFirst = 'local';
-// 				calls++;
-// 			}
-// 		}, {}).done(function (params) {
-// 			assert.equal(calledFirst, 'global');
-// 			assert.equal(calls, 2);
-// 			done();
-// 		});
-// 	});
-//
-// 	it('should not run the globals when globals is false', function (done) {
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterSuccess: function (body) {
-// 					body.success = true;
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterSuccess.call(sample, {
-// 			globals: false
-// 		}, {}).done(function (body) {
-// 			assert.deepEqual(body, {});
-// 			//done();
-// 		});
-//
-// 		globalize.afterSuccess.call(sample, {
-// 			globals: {
-// 				afterSuccess: false
-// 			}
-// 		}, {}).done(function (body) {
-// 			assert.deepEqual(body, {});
-// 			done();
-// 		});
-// 	});
-//
-// });
-//
-// describe('#afterFailure', function () {
-//
-// 	it('should run the global before method when declared', function (done) {
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterFailure: function (err) {
-// 					err.code = 'oauth_refresh';
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterFailure.call(sample, {}, {}).done(function (err) {
-// 			assert.deepEqual(err, { code: 'oauth_refresh' });
-// 			done();
-// 		});
-// 	});
-//
-// 	it('should allow for a global promise async', function (done) {
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterFailure: function (err) {
-// 					return when.promise(function (resolve, reject) {
-// 						err.code = 'oauth_refresh';
-// 						resolve();
-// 					});
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterFailure.call(sample, {}, {}).done(function (err) {
-// 			assert.deepEqual(err, { code: 'oauth_refresh' });
-// 			done();
-// 		});
-// 	});
-//
-// 	it('should call the global promise before the local one', function (done) {
-// 		var calledFirst;
-// 		var calls = 0;
-//
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterFailure: function () {
-// 					if (!calledFirst) calledFirst = 'global';
-// 					calls++;
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterFailure.call(sample, {
-// 			afterFailure: function () {
-// 				if (!calledFirst) calledFirst = 'local';
-// 				calls++;
-// 			}
-// 		}, {}).done(function () {
-// 			assert.equal(calledFirst, 'global');
-// 			assert.equal(calls, 2);
-// 			done();
-// 		});
-// 	});
-//
-// 	it('should not run the global when globals is false', function (done) {
-// 		var sample = {
-// 			_globalOptions: {
-// 				afterFailure: function (err) {
-// 					err.code = 'oauth_refresh';
-// 				}
-// 			}
-// 		};
-//
-// 		globalize.afterFailure.call(sample, {
-// 			globals: false
-// 		}, {}).done(function (err) {
-// 			assert.deepEqual(err, {});
-// 			//done();
-// 		});
-//
-// 		globalize.afterFailure.call(sample, {
-// 			globals: {
-// 				afterFailure: false
-// 			}
-// 		}, {}).done(function (err) {
-// 			assert.deepEqual(err, {});
-// 			done();
-// 		});
-// 	});
-//
-//
-// });
