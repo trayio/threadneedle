@@ -15,6 +15,172 @@ const { handleDevFlagTest } = require('./testUtils.js');
 
 describe('#globalize', function () {
 
+	describe('#method', function () {
+
+		it('should allow static method to be set', function () {
+			const sample = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.method.call(sample, { method: 'get' }, {}),
+				'get'
+			);
+			assert.strictEqual(
+				globalize.method.call(sample, { method: 'POST' }, {}),
+				'post'
+			);
+		});
+
+		it('should allow moustaching of method', function () {
+			const sample = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.method.call(sample, { method: '{{method}}' }, { method: 'head' }),
+				'head'
+			);
+			assert.strictEqual(
+				globalize.method.call(sample, { method: '{{method}}' }, { method: 'DELETE' }),
+				'delete'
+			);
+		});
+
+		it('should allow function to return method string', function () {
+			const sample = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.method.call(
+					sample,
+					{
+						method: function (params) {
+							return params.method;
+						}
+					},
+					{
+						method: 'PATCH'
+					}
+				),
+				'patch'
+			);
+		});
+
+		describe('should only allow valid HTTP verbs as methods', function () {
+
+			const validMethods = [
+				'head',
+				'options',
+				'get',
+				'post',
+				'put',
+				'patch',
+				'delete',
+			].map((verb) => {
+				return ( _.sample([ true, false ]) ? verb.toUpperCase() : verb );
+			});
+
+			const sample = {
+				_globalOptions: {}
+			};
+
+			describe('valid methods via static', () => {
+
+				validMethods.forEach((method) => {
+
+					it(`${method}`, () => {
+						assert.strictEqual(
+							globalize.method.call(
+								sample,
+								{
+									method: method
+								},
+								{}
+							),
+							method.toLowerCase()
+						);
+					});
+
+				});
+
+			});
+
+			describe('valid methods via moustaching', () => {
+
+				validMethods.forEach((method) => {
+
+					it(`${method}`, () => {
+						assert.strictEqual(
+							globalize.method.call(
+								sample,
+								{
+									method: '{{method}}'
+								},
+								{
+									method: method
+								}
+							),
+							method.toLowerCase()
+						);
+					});
+
+				});
+
+			});
+
+			describe('valid methods via function', () => {
+
+				validMethods.forEach((method) => {
+
+					it(`${method}`, () => {
+						assert.strictEqual(
+							globalize.method.call(
+								sample,
+								{
+									method: function (params) {
+										return params.method;
+									}
+								},
+								{
+									method: method
+								}
+							),
+							method.toLowerCase()
+						);
+					});
+
+				});
+
+			});
+
+			it('should error for invalid method', () => {
+				try {
+					const returnedMethod = globalize.method.call(
+						sample,
+						{
+							method: 'test'
+						},
+						{}
+					);
+					assert.fail(returnedMethod);
+				} catch (methodError) {
+					assert(_.includes(
+						methodError.message,
+						'Invalid method:'
+					));
+					assert(_.includes(
+						methodError.message,
+						'\'method\' must be a valid HTTP verb.'
+					));
+				}
+			});
+
+		});
+
+	});
+
 	describe('#url', function () {
 
 		it('should add the global baseUrl on the front unless it starts with http(s)://', function () {
