@@ -156,15 +156,15 @@ describe('#globalize', function () {
 			});
 
 			it('should error for invalid method', () => {
+				let returnedMethod;
 				try {
-					const returnedMethod = globalize.method.call(
+					returnedMethod = globalize.method.call(
 						sample,
 						{
 							method: 'test'
 						},
 						{}
 					);
-					assert.fail(returnedMethod);
 				} catch (methodError) {
 					assert(_.includes(
 						methodError.message,
@@ -174,7 +174,9 @@ describe('#globalize', function () {
 						methodError.message,
 						'\'method\' must be a valid HTTP verb.'
 					));
+					return;
 				}
+				assert.fail(returnedMethod);
 			});
 
 		});
