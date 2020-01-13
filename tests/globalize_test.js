@@ -185,7 +185,7 @@ describe('#globalize', function () {
 
 	describe('#url', function () {
 
-		it('should add the global baseUrl on the front unless it starts with http(s)://', function () {
+		it('should add the global baseUrl on the front unless method url starts with http(s)://', function () {
 			var sample = {
 				_globalOptions: {
 					baseUrl: 'http://mydomain.com'
@@ -263,6 +263,45 @@ describe('#globalize', function () {
 			);
 		});
 
+		it('should allow method url to be empty string, but baseUrl must be valid', () => {
+			const sample = {
+				_globalOptions: {
+					baseUrl: 'http://mydomain.com'
+				}
+			};
+
+			assert.strictEqual(
+				globalize.baseUrl.call(sample, { url: '' }, {}),
+				'http://mydomain.com'
+			);
+
+			const sample2 = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.baseUrl.call(sample2, { url: 'http://mydomain.com' }, {}),
+				'http://mydomain.com'
+			);
+		});
+
+		it('should throw error for empty string url', () => {
+			const sample = {
+				_globalOptions: {
+					baseUrl: ''
+				}
+			};
+
+			let returnedUrl;
+			try {
+				returnedUrl = globalize.baseUrl.call(sample, { url: '' }, {});
+			} catch (urlError) {
+				assert(_.includes(urlError.message, 'A valid URL has not been supplied.'));
+				return;
+			}
+			assert.fail(returnedUrl);
+		});
+
 		it('should not run the global when globals is false', function () {
 			var sample = {
 				_globalOptions: {
@@ -281,7 +320,7 @@ describe('#globalize', function () {
 			);
 		});
 
-		describe('should use baseUrl in global configuration instead of url; throw error in development mode', function () {
+		describe('should use `baseUrl` in global configuration instead of `url`; throw error in development mode', function () {
 
 			it('uses baseUrl', function () {
 				assert.strictEqual(
