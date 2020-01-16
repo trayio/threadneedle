@@ -15,9 +15,177 @@ const { handleDevFlagTest } = require('./testUtils.js');
 
 describe('#globalize', function () {
 
+	describe('#method', function () {
+
+		it('should allow static method to be set', function () {
+			const sample = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.method.call(sample, { method: 'get' }, {}),
+				'get'
+			);
+			assert.strictEqual(
+				globalize.method.call(sample, { method: 'POST' }, {}),
+				'post'
+			);
+		});
+
+		it('should allow moustaching of method', function () {
+			const sample = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.method.call(sample, { method: '{{method}}' }, { method: 'head' }),
+				'head'
+			);
+			assert.strictEqual(
+				globalize.method.call(sample, { method: '{{method}}' }, { method: 'DELETE' }),
+				'delete'
+			);
+		});
+
+		it('should allow function to return method string', function () {
+			const sample = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.method.call(
+					sample,
+					{
+						method: function (params) {
+							return params.method;
+						}
+					},
+					{
+						method: 'PATCH'
+					}
+				),
+				'patch'
+			);
+		});
+
+		describe('should only allow valid HTTP verbs as methods', function () {
+
+			const validMethods = [
+				'head',
+				'options',
+				'get',
+				'post',
+				'put',
+				'patch',
+				'delete',
+			].map((verb) => {
+				return ( _.sample([ true, false ]) ? verb.toUpperCase() : verb );
+			});
+
+			const sample = {
+				_globalOptions: {}
+			};
+
+			describe('valid methods via static', () => {
+
+				validMethods.forEach((method) => {
+
+					it(`${method}`, () => {
+						assert.strictEqual(
+							globalize.method.call(
+								sample,
+								{
+									method: method
+								},
+								{}
+							),
+							method.toLowerCase()
+						);
+					});
+
+				});
+
+			});
+
+			describe('valid methods via moustaching', () => {
+
+				validMethods.forEach((method) => {
+
+					it(`${method}`, () => {
+						assert.strictEqual(
+							globalize.method.call(
+								sample,
+								{
+									method: '{{method}}'
+								},
+								{
+									method: method
+								}
+							),
+							method.toLowerCase()
+						);
+					});
+
+				});
+
+			});
+
+			describe('valid methods via function', () => {
+
+				validMethods.forEach((method) => {
+
+					it(`${method}`, () => {
+						assert.strictEqual(
+							globalize.method.call(
+								sample,
+								{
+									method: function (params) {
+										return params.method;
+									}
+								},
+								{
+									method: method
+								}
+							),
+							method.toLowerCase()
+						);
+					});
+
+				});
+
+			});
+
+			it('should error for invalid method', () => {
+				let returnedMethod;
+				try {
+					returnedMethod = globalize.method.call(
+						sample,
+						{
+							method: 'test'
+						},
+						{}
+					);
+				} catch (methodError) {
+					assert(_.includes(
+						methodError.message,
+						'Invalid method:'
+					));
+					assert(_.includes(
+						methodError.message,
+						'\'method\' must be a valid HTTP verb.'
+					));
+					return;
+				}
+				assert.fail(returnedMethod);
+			});
+
+		});
+
+	});
+
 	describe('#url', function () {
 
-		it('should add the global baseUrl on the front unless it starts with http(s)://', function () {
+		it('should add the global baseUrl on the front unless method url starts with http(s)://', function () {
 			var sample = {
 				_globalOptions: {
 					baseUrl: 'http://mydomain.com'
@@ -95,6 +263,45 @@ describe('#globalize', function () {
 			);
 		});
 
+		it('should allow method url to be empty string, but baseUrl must be valid', () => {
+			const sample = {
+				_globalOptions: {
+					baseUrl: 'http://mydomain.com'
+				}
+			};
+
+			assert.strictEqual(
+				globalize.baseUrl.call(sample, { url: '' }, {}),
+				'http://mydomain.com'
+			);
+
+			const sample2 = {
+				_globalOptions: {}
+			};
+
+			assert.strictEqual(
+				globalize.baseUrl.call(sample2, { url: 'http://mydomain.com' }, {}),
+				'http://mydomain.com'
+			);
+		});
+
+		it('should throw error for empty string url', () => {
+			const sample = {
+				_globalOptions: {
+					baseUrl: ''
+				}
+			};
+
+			let returnedUrl;
+			try {
+				returnedUrl = globalize.baseUrl.call(sample, { url: '' }, {});
+			} catch (urlError) {
+				assert(_.includes(urlError.message, 'A valid URL has not been supplied.'));
+				return;
+			}
+			assert.fail(returnedUrl);
+		});
+
 		it('should not run the global when globals is false', function () {
 			var sample = {
 				_globalOptions: {
@@ -113,7 +320,7 @@ describe('#globalize', function () {
 			);
 		});
 
-		describe('should use baseUrl in global configuration instead of url; throw error in development mode', function () {
+		describe('should use `baseUrl` in global configuration instead of `url`; throw error in development mode', function () {
 
 			it('uses baseUrl', function () {
 				assert.strictEqual(
