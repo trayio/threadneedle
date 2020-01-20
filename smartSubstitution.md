@@ -7,6 +7,11 @@ Smart substitution can be utilised outside of Threadneedle via the following:
 ## Overview
 Unlike simple templating, smart substitution aims to preserve data types when possible, and as such checks when simple mustaching has been specified. In the event smart substitution is not possible, Threadneedle falls back to [mustache.js](https://github.com/janl/mustache.js/).
 
+Furthermore, smart substitution will resolve functions by providing `params`
+/input as the first and only argument, and then setting the function result as the value.
+
+Finally, smart substitution will attempt to traverse objects and arrays. resolving templates which are nested.
+
 ## Simple mustaching
 Simple mustaching are string values that contain only a single mustache template.
 Example:
