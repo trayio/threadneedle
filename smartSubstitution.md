@@ -39,6 +39,19 @@ In this case, Threadneedle will attempt smart substitution.
 ```
 In this case, Threadneedle will fallback to mustache.js.
 
+## Function substitution
+If a function is specified as the value, smart substitution will pass in the `params` and set the response as the value for the property.
+Example:
+```js
+{
+	url: (params) => {
+		return params.url;
+	}
+}
+```
+
+**NOTE**: smart substitution does not work with async functions/promises.
+
 ### Pathing
 Smart substitution accepts pathing as part of the template configuration in a mustache. [Lodash](https://lodash.com/docs/)'s `_.get` is utilised to resolve paths.
 Example:
