@@ -12,6 +12,14 @@ Furthermore, smart substitution will resolve functions by providing `params`
 
 Finally, smart substitution will attempt to traverse objects and arrays. resolving templates which are nested.
 
+## smartSubstitution(target, params)
+The function accepts two arguments:
+- **target** (any)- the target template to perform smart substitution on.
+- **params** (object) - the data source for performing the smart substitution.
+
+The function will return the resolved target.
+
+
 ## Simple mustaching
 Simple mustaching are string values that contain only a single mustache template.
 Example:
