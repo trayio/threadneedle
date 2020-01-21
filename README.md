@@ -49,6 +49,7 @@ threadneedle.getLists({
 * [addMethod](#addmethod)
 * [global](#global)
 * [SOAP Mode](#soap-mode)
+* [Smart Substitution](smartSubstitution.md)
 
 
 ## addMethod
@@ -79,9 +80,29 @@ Parameters are (in the prefered order):
 
 Each of the properties you can pass to `addMethod` are described below:
 
-### method
+### before
 
-The HTTP method you'd like to use. Valid values are:
+If you'd like to map or alter the `params` before running the main request, you can use
+the `before` function argument.
+
+Runs **before** any templating or requests.
+
+```js
+{
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  before: function (params) {
+    params.dc = 'us5';
+    return params;
+    // You can also return a promise which should resolve having modified the params
+  }
+}
+```
+
+### method (required)
+
+The HTTP verb to use for the request. Valid values are:
 
 * `post`
 * `put`
@@ -90,10 +111,33 @@ The HTTP method you'd like to use. Valid values are:
 * `patch`
 * `head`
 
-The values you declare here are case-insensitive.
+The values you declare here are **not case sensitive**.
 
+As of v1.11.0, `method` can be a function or mustaching can be used to provide one of the valid values.
 
-### url
+### options
+
+Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+
+Also gets templated.
+
+For example, to send & receive the data as json, just declare the `json` option:
+
+```js
+{
+  method: 'post',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
+  data: {
+    id: '{{listId}}',
+    apikey: '{{apiKey}}'
+  },
+  options: {
+    json: true
+  }
+}
+```
+
+### url (required)
 
 The URL you'd like to request to go to. This can be specified as a string, optionally using Mustache-style templating:
 
@@ -115,9 +159,17 @@ You can also specify the URL as a function. In this case, the `params` that woul
 }
 ```
 
+### query
+
+If you have to specify a lot of parameters in the query string for the URL, you can specify them here.
+The data will be URL encoded and appended at the end of the endpoint.
+
+Templating is supported, as with the `endpoint` and `data` parameters.
+
+
 ### data
 
-The payload you'd like to send to the third party. Relevant for `put`, `delete,` and `post` methods only.
+The payload you'd like to send to the third party. Relevant for methods which accept a body, such as `POST`, `PUT`, `DELETE,` and `PATCH`.
 
 As with the URL, you can provide Mustache parameters here:
 
@@ -160,32 +212,26 @@ Or if you'd prefer, as a function:
 }
 ```
 
-### query
-
-If you have to specify a lot of parameters in the query string for the URL, you can specify them here.
-The data will be URL encoded and appended at the end of the endpoint.
-
-Templating is supported, as with the `endpoint` and `data` parameters.
 
 
-### options
 
-Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+### beforeRequest
 
-Also gets templated.
-
-For example, to send & receive the data as json, just declare the `json` option:
+If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
+all parameters have been templated, use this method.
 
 ```js
 {
-  method: 'post',
-  url: 'https://{{dc}}.api.mailchimp.com/2.0/lists/subscribe',
-  data: {
-    id: '{{listId}}',
-    apikey: '{{apiKey}}'
-  },
-  options: {
-    json: true
+  method: 'get',
+  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
+  expects: 200,
+  beforeRequest: function (request, params) {
+    // Parameters on the `request` are `url`, `data`, `options`.
+    // `data` will be undefined for GET, HEAD, and OPTIONS requests.
+
+    delete request.data.id; // modification
+    return request;
+    // You can also return a promise which should resolve having modified the request
   }
 }
 ```
@@ -256,48 +302,6 @@ The counterpart to `expects`, except that if __ANY__ of the specified status cod
 Like `expects`, `notExpects` can be specified shorthand, or as a function.
 
 
-### before
-
-If you'd like to map or alter the `params` before running the main request, you can use
-the `before` function argument.
-
-Runs **before** any templating or requests.
-
-```js
-{
-  method: 'get',
-  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
-  expects: 200,
-  before: function (params) {
-    params.dc = 'us5';
-    // You can also return a promise which should resolve having modified the params
-  }
-}
-```
-
-### beforeRequest
-
-If you'd like to do some final checks and tweaks **before** the actual request is made, but **after**
-all parameters have been templated, use this method.
-
-```js
-{
-  method: 'get',
-  url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
-  expects: 200,
-  beforeRequest: function (request) {
-    // Parameters on the `request` are `url`, `data`, `options`.
-    // `data` will be undefined for get requests.
-
-    delete request.data.id; // modification
-
-    // You can also return a promise which should resolve having modified the request
-  }
-}
-```
-
-
-
 ### afterSuccess
 
 Sometimes you'll want to translate, format, or map the success response data in some way.
@@ -310,7 +314,7 @@ You can use the `afterSuccess` function argument to do this:
   expects: 200,
   afterSuccess: function (body, params, res) {
     body.name = body.first_name + ' ' + body.last_name;
-
+    return body;
     // You can also return a promise to do async logic. It must resolve
     // with the body.
   }
@@ -327,11 +331,11 @@ Sometimes you'll want to modify the failure message in some way. You can do
   method: 'get',
   url: 'https://{{dc}}.api.mailchimp.com/2.0/users?apikey={{apiKey}}',
   expects: 200,
-  afterFailure: function (err, params) {
+  afterFailure: function (err, params, res) {
     if (err.response.statusCode === 403) {
-      err.code = 'oauth_refresh';
+      err.code = '#oauth_refresh';
     }
-
+    return err;
     // You can also return a promise to do async logic. It should resolve
     // with the error object.
   }
@@ -662,7 +666,7 @@ If there is meta data that needs to be specified with every `REST template` meth
 As of v1.3.0, threadneedle has added support for SOAP, on both a global and method level.
 The library used is [node-soap](https://github.com/vpulim/node-soap)
 
-This mode can be initialised by adding the following flag to the (global) model: `soap: true`.
+This mode can be initialised by adding the following flag to the (global) model: `type: 'SOAP'`.
 If the flag is set on the global level, then threadneedle will only accept valid SOAP objects and functions as methods (and REST will not be supported). However, if the flag is only used by a method, then only the method will be in SOAP mode, but will expect all required fields to be provided.
 
 ### Global fields

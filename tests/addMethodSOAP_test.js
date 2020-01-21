@@ -1,371 +1,436 @@
-var assert       = require('assert');
-var _            = require('lodash');
-var when            = require('when');
-var express      = require('express');
-var when         = require('when');
-var fs           = require('fs');
-var randString   = require('mout/random/randString');
-var globalize    = require('../lib/addMethod/globalize');
-var ThreadNeedle = require('../');
+const assert = require('assert');
+const fs = require('fs');
 
+const _ = require('lodash');
+const when = require('when');
+const express = require('express');
+
+const randString = require('mout/random/randString');
+const globalize = require('../lib/addMethod/globalize');
+const ThreadNeedle = require('../');
+
+const SOAPServer = require('./soapServer');
+
+function promiseFailFunc (done) {
+	return function (err) {
+		//eslint-disable-next-line no-console
+		console.log(err);
+		assert.fail(err);
+		done(err);
+	};
+}
+
+function asyncTest (message, testFunction) {
+	it(message, async () => {
+		try {
+			await testFunction();
+		} catch (testError) {
+			//eslint-disable-next-line no-console
+			console.log(testError);
+			throw testError;
+		}
+	});
+}
+
+const REGONLINE_TOKEN = 'abc1234';
 
 describe('#addMethodSOAP', function () {
 
-    var regonline_token = require('./dummycredentials.json').regonline;
+	let soapServer;
+	before((done) => {
+		soapServer = new SOAPServer(8000);
 
-    function promiseFailFunc (done) {
-        return function (err) {
-            console.log(err);
-            assert.fail(err);
-            done();
-        }
-    }
+		soapServer.startServer((startError) => {
+			if (startError) {
+				throw startError;
+			}
+			done();
+		});
+	});
 
-    describe('Running', function () {
-        this.timeout(30000);
-        var threadneedle;
+	describe('Running', function () {
+		this.timeout(30000);
+		let threadneedle;
 
-        before(function () {
-            threadneedle = new ThreadNeedle(true);
-            threadneedle.global({
-
-                soap: true,
-
-                wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
-
-                options: {
-                    headers: [{
-                        value: {
-                            TokenHeader: {
-                                APIToken: regonline_token
-                            }
-                        },
-                        xmlns: 'http://www.regonline.com/api',
-                    }]
-                },
+		before(function () {
+			threadneedle = new ThreadNeedle();
+			threadneedle.global({
 
-                data: {}
+				type: 'SOAP',
+
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
+				options: {
+					headers: [
+						{
+							value: {
+								TokenHeader: {
+									APIToken: REGONLINE_TOKEN
+								}
+							},
+							xmlns: 'http://www.regonline.com/api',
+						}
+					]
+				},
 
-            });
-        });
+				data: {}
 
-        it('should error if wsdl is not provided (or not a string)', function (done) {
 
-            var privateThreadneedle = new ThreadNeedle(true);
+			});
 
-            privateThreadneedle.global({
+		});
 
-                soap: true,
+		it('should error if wsdl is not provided (or not a string)', function (done) {
 
-                options: {
-                    headers: [{
-                        value: {
-                            TokenHeader: {
-                                APIToken: regonline_token
-                            }
-                        },
-                        xmlns: 'http://www.regonline.com/api',
-                    }]
-                },
+			const privateThreadneedle = new ThreadNeedle();
 
-                data: {}
+			privateThreadneedle.global({
 
+				type: 'SOAP',
 
-            });
+				options: {
+					headers: [
+						{
+							value: {
+								TokenHeader: {
+									APIToken: REGONLINE_TOKEN
+								}
+							},
+							xmlns: 'http://www.regonline.com/api',
+						}
+					]
+				},
 
-            when(
-                privateThreadneedle.addMethod(
-                    'list_events',
-                    {
-                        method: 'GetEvents',
+				data: {}
 
-                        data: {
-                            orderBy: 'ID DESC',
-                        }
-                    }
-                )
-            )
 
-            .done(
-                function () {
+			});
 
-                    when(
-                        privateThreadneedle['list_events']({})
-                    )
+			when(privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
 
-                    .done(
-                        promiseFailFunc(done),
-                        function (err) {
-                            assert.strictEqual(err, '`wsdl` field (string) must be provided to create a client instance.');
-                            done();
-                        }
-                    );
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			))
 
-                },
-                promiseFailFunc(done)
-            );
+			.then(
+				function () {
 
-        });
+					when(privateThreadneedle['list_events']({}))
 
+					.then(
+						promiseFailFunc(done),
+						function (err) {
+							assert.strictEqual(err, '`wsdl` field (string) must be provided to create a client instance.');
+							done();
+						}
+					);
 
-        it('should be able to add a standard SOAP method', function (done) {
+				},
+				promiseFailFunc(done)
+			);
 
-            when(
-                threadneedle.addMethod(
-                    'list_events',
-                    {
-                        method: 'GetEvents',
+		});
 
-                        data: {
-                            orderBy: 'ID DESC',
-                        }
-                    }
-                )
-            )
 
-            .done(
-                function () {
-                    assert(_.isFunction(threadneedle['list_events']));
-                    done();
-                },
-                promiseFailFunc(done)
-            );
+		it('should be able to add a standard SOAP method', function (done) {
 
-        });
+			when(threadneedle.addMethod(
+				'list_events_test',
+				{
+					method: 'GetEvents',
 
-        it('should be able to execute a standard SOAP method', function (done) {
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			))
 
+			.then(
+				function () {
+					assert(_.isFunction(threadneedle['list_events_test']));
+					done();
+				},
+				promiseFailFunc(done)
+			);
 
-            when(
-                threadneedle['list_events']({})
-            )
+		});
 
-            .then(function (results) {
-                assert.deepEqual(results.headers, {});
-                assert(results.body['GetEventsResult']['Success']);
-            })
+		asyncTest('should be able to execute a standard SOAP method', async function () {
 
-            .done(done, promiseFailFunc(done));
+			await threadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
 
-        });
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			);
 
+			const results = await threadneedle['list_events']({});
 
-        it('should substitute to the url and data with a basic example', function (done) {
+			assert.deepEqual(results.headers, {});
+			assert(results.body['GetEventsResult']['Success']);
 
-            when(
-                threadneedle.addMethod(
-                    'list_events2',
-                    {
-                        method: 'Get{{event_type}}',
+		});
 
-                        data: {
-                            orderBy: '{{order_by}}',
-                        }
-                    }
-                )
-            )
+		asyncTest('should prepend baseMethod to model method', async function () {
 
-            .done(
-                function (result) {
+			const privateThreadneedle = new ThreadNeedle();
 
-                    when(
-                        threadneedle['list_events2']({
-                            event_type: 'Events',
-                            order_by: 'ID DESC'
-                        })
-                    )
+			privateThreadneedle.global({
 
-                    .then(function (results) {
-                        assert(results.body['GetEventsResult']['Success']);
-                    })
+				type: 'SOAP',
 
-                    .done(done, promiseFailFunc(done));
+				baseMethod: 'Get',
 
-                },
-                promiseFailFunc(done)
-            );
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
-        });
+				options: {
+					headers: [
+						{
+							value: {
+								TokenHeader: {
+									APIToken: REGONLINE_TOKEN
+								}
+							},
+							xmlns: 'http://www.regonline.com/api',
+						}
+					]
+				},
 
+				data: {}
 
-        it('should substitute to the options with a basic example', function (done) {
 
-            var privateThreadneedle = new ThreadNeedle(true);
+			});
 
-            privateThreadneedle.global({
+			await privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'Events',
 
-                soap: true,
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			);
 
-                wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+			const results = await threadneedle['list_events']({});
 
-                options: {
-                    headers: [{
-                        value: {
-                            TokenHeader: {
-                                APIToken: '{{access_token}}'
-                            }
-                        },
-                        xmlns: 'http://www.regonline.com/api',
-                    }]
-                },
+			assert.deepEqual(results.headers, {});
+			assert(results.body['GetEventsResult']['Success']);
 
-                data: {}
 
+		});
 
-            });
+		it('should substitute to the url and data with a basic example', function (done) {
 
-            when(
-                privateThreadneedle.addMethod(
-                    'list_events',
-                    {
-                        method: 'GetEvents',
+			when(threadneedle.addMethod(
+				'list_events2',
+				{
+					method: 'Get{{event_type}}',
 
-                        data: {
-                            orderBy: 'ID DESC',
-                        }
-                    }
-                )
-            )
+					data: {
+						orderBy: '{{order_by}}',
+					}
+				}
+			))
 
-            .done(
-                function () {
-
-                    when(
-                        privateThreadneedle['list_events']({
-                            access_token: regonline_token
-                        })
-                    )
-
-                    .then(function (results) {
-                        assert.deepEqual(results.headers, {});
-                        assert(results.body['GetEventsResult']['Success']);
-                    })
+			.then(
+				function (result) {
 
-                    .done(done, promiseFailFunc(done));
+					when(threadneedle['list_events2']({
+						event_type: 'Events',
+						order_by: 'ID DESC'
+					}))
 
-                },
-                promiseFailFunc(done)
-            );
+					.then(function (results) {
+						assert(results.body['GetEventsResult']['Success']);
+					})
 
-        });
+					.then(done, promiseFailFunc(done));
 
+				},
+				promiseFailFunc(done)
+			);
 
-        it('should reject if expects function returns error', function (done) {
-            this.timeout(10000);
+		});
 
-            when(
-                threadneedle.addMethod(
-                    'list_events3',
-                    {
-                        method: 'GetEvents',
 
-                        data: {
-                            orderBy: 'ID DESC',
-                        },
+		it('should substitute to the options with a basic example', function (done) {
 
-                        expects: function (results) {
-                            if (results.body['GetEventsResult']['Success'] === true) {
-                                return 'Test Error';
-                            }
-                        }
-                    }
-                )
-            )
+			const privateThreadneedle = new ThreadNeedle();
 
-            .done(
-                function (result) {
+			privateThreadneedle.global({
 
-                    when(
-                        threadneedle['list_events3']({})
-                    )
+				type: 'SOAP',
 
-                    .done(
-                        promiseFailFunc(done),
-                        function (err) {
-                            assert.deepEqual(err.headers, {});
-                            assert(err.body.message === 'Test Error');
-                            done();
-                        }
-                    );
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
-                },
-                promiseFailFunc(done)
-            );
+				options: {
+					headers: [
+						{
+							value: {
+								TokenHeader: {
+									APIToken: '{{access_token}}'
+								}
+							},
+							xmlns: 'http://www.regonline.com/api',
+						}
+					]
+				},
 
-        });
+				data: {}
 
-        it('should reject if notExpects function returns error', function (done) {
 
-            when(
-                threadneedle.addMethod(
-                    'list_events4',
-                    {
-                        method: 'GetEvents',
+			});
 
-                        data: {
-                            orderBy: 'ID DESC',
-                        },
+			when(privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
 
-                        notExpects: function (results) {
-                            if (results.body['GetEventsResult']['Success'] === true) {
-                                return 'Test Error';
-                            }
-                        }
-                    }
-                )
-            )
+					data: {
+						orderBy: 'ID DESC',
+					}
+				}
+			))
 
-            .done(
-                function (result) {
+			.then(
+				function () {
 
-                    when(
-                        threadneedle['list_events4']({})
-                    )
+					when(privateThreadneedle['list_events']({
+						access_token: REGONLINE_TOKEN
+					}))
 
-                    .done(
-                        promiseFailFunc(done),
-                        function (err) {
-                            assert(err.body.message === 'Test Error');
-                            done();
-                        }
-                    );
+					.then(function (results) {
+						assert.deepEqual(results.headers, {});
+						assert(results.body['GetEventsResult']['Success']);
+					})
 
-                },
-                promiseFailFunc(done)
-            );
+					.then(done, promiseFailFunc(done));
 
-        });
+				},
+				promiseFailFunc(done)
+			);
 
+		});
 
-    });
 
-    describe('Ad-hoc', function () {
+		it('should reject if expects function returns error', function (done) {
+			this.timeout(10000);
 
-        it('should be fine with allowing the method config to be a function', function (done) {
+			when(threadneedle.addMethod(
+				'list_events3',
+				{
+					method: 'GetEvents',
 
-            var threadneedle = new ThreadNeedle(true);
+					data: {
+						orderBy: 'ID DESC',
+					},
 
-            threadneedle.addMethod(
-                'myCustomMethod',
-                function (params) {
-                    return params.name;
-                }
-            );
+					expects: function (results) {
+						if (results.body['GetEventsResult']['Success'] === true) {
+							return 'Test Error';
+						}
+					}
+				}
+			))
 
-            threadneedle.myCustomMethod({ name: 'Chris' })
+			.then(
+				function (result) {
 
-            .done(
-                function (val) {
-                    assert.deepEqual(val.body, 'Chris');
-                    done();
-                },
-                function (err) {
-                    assert.fail(err);
-                }
-            );
+					when(threadneedle['list_events3']({}))
 
-        });
+					.then(
+						promiseFailFunc(done),
+						function (err) {
+							assert.deepEqual(err.headers, {});
+							assert(err.body.message === 'Test Error');
+							done();
+						}
+					);
+
+				},
+				promiseFailFunc(done)
+			);
+
+		});
+
+		it('should reject if notExpects function returns error', function (done) {
+
+			when(threadneedle.addMethod(
+				'list_events4',
+				{
+					method: 'GetEvents',
+
+					data: {
+						orderBy: 'ID DESC',
+					},
+
+					notExpects: function (results) {
+						if (results.body['GetEventsResult']['Success'] === true) {
+							return 'Test Error';
+						}
+					}
+				}
+			))
+
+			.then(
+				function (result) {
+
+					when(threadneedle['list_events4']({}))
+
+					.then(
+						promiseFailFunc(done),
+						function (err) {
+							assert(err.body.message === 'Test Error');
+							done();
+						}
+					);
+
+				},
+				promiseFailFunc(done)
+			);
+
+		});
+
+
+	});
+
+	describe('Ad-hoc', function () {
+
+		it('should be fine with allowing the method config to be a function', function (done) {
+
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({ type: 'soap' });
+
+			threadneedle.addMethod(
+				'myCustomMethod',
+				function (params) {
+					return params.name;
+				}
+			);
+
+			threadneedle.myCustomMethod({ name: 'Chris' })
+
+			.then(
+				function (val) {
+					assert.deepEqual(val.body, 'Chris');
+					done();
+				},
+				function (err) {
+					assert.fail(err);
+				}
+			);
+
+		});
 
 		function functionModel (params) {
 			return (
@@ -373,7 +438,7 @@ describe('#addMethodSOAP', function () {
 				when.resolve({ success: true }) :
 				when.reject(new Error('functionModel Error'))
 			);
-		};
+		}
 
 		function afterHeadersFunction (error, params, body, res) {
 			if (params.ahFlag) {
@@ -385,22 +450,23 @@ describe('#addMethodSOAP', function () {
 			}
 		}
 
-		it('Should place `afterHeaders` object in header if function model resolve', function(done) {
-			var name = randString(10);
-			var threadneedle = new ThreadNeedle(true);
+		it('Should place `afterHeaders` object in header if function model resolve', function (done) {
+			const name = randString(10);
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({ type: 'soap' });
 			threadneedle.addMethod(name, functionModel, afterHeadersFunction);
 
 			threadneedle[name]({
 				passFlag: true,
 				ahFlag: true
 			})
-			.done(
-				function(result) {
+			.then(
+				function (result) {
 					assert.deepEqual(result.headers.gotError, false);
 					assert.deepEqual(result.body.success, true);
 					done();
 				},
-				function(error) {
+				function (error) {
 					assert.fail('Wrong clause - failing');
 					assert.fail(error);
 					done();
@@ -408,22 +474,23 @@ describe('#addMethodSOAP', function () {
 			);
 		});
 
-		it('Should place `afterHeaders` error in body if function model resolve', function(done) {
-			var name = randString(10);
-			var threadneedle = new ThreadNeedle(true);
+		it('Should place `afterHeaders` error in body if function model resolve', function (done) {
+			const name = randString(10);
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({ type: 'soap' });
 			threadneedle.addMethod(name, functionModel, afterHeadersFunction);
 
 			threadneedle[name]({
 				passFlag: true,
 				ahFlag: false
 			})
-			.done(
-				function(result) {
+			.then(
+				function (result) {
 					assert.fail('Wrong clause - succeeding');
 					assert.fail(result);
 					done();
 				},
-				function(result) {
+				function (result) {
 					assert.deepEqual(result.headers, {});
 					assert.deepEqual(result.body.message, 'afterHeaders Error');
 					done();
@@ -431,22 +498,23 @@ describe('#addMethodSOAP', function () {
 			);
 		});
 
-		it('Should place `afterHeaders` object in header if function model reject', function(done) {
-			var name = randString(10);
-			var threadneedle = new ThreadNeedle(true);
+		it('Should place `afterHeaders` object in header if function model reject', function (done) {
+			const name = randString(10);
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({ type: 'soap' });
 			threadneedle.addMethod(name, functionModel, afterHeadersFunction);
 
 			threadneedle[name]({
 				passFlag: false,
 				ahFlag: true
 			})
-			.done(
-				function(result) {
+			.then(
+				function (result) {
 					assert.fail('Wrong clause - succeeding');
 					assert.fail(result);
 					done();
 				},
-				function(result) {
+				function (result) {
 					assert.deepEqual(result.headers.gotError, true);
 					assert.deepEqual(result.body.message, 'functionModel Error');
 					done();
@@ -454,22 +522,23 @@ describe('#addMethodSOAP', function () {
 			);
 		});
 
-		it('Should place `afterHeaders` error in body if function model reject', function(done) {
-			var name = randString(10);
-			var threadneedle = new ThreadNeedle(true);
+		it('Should place `afterHeaders` error in body if function model reject', function (done) {
+			const name = randString(10);
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({ type: 'soap' });
 			threadneedle.addMethod(name, functionModel, afterHeadersFunction);
 
 			threadneedle[name]({
 				passFlag: false,
 				ahFlag: false
 			})
-			.done(
-				function(result) {
+			.then(
+				function (result) {
 					assert.fail('Wrong clause - succeeding');
 					assert.fail(result);
 					done();
 				},
-				function(result) {
+				function (result) {
 					assert.deepEqual(result.headers, {});
 					assert.deepEqual(result.body.message, 'afterHeaders Error');
 					done();
@@ -477,21 +546,22 @@ describe('#addMethodSOAP', function () {
 			);
 		});
 
-		it('Should throw error if `afterHeaders` is not a function', function(done) {
-			var name = randString(10);
-			var threadneedle = new ThreadNeedle(true);
+		it('Should throw error if `afterHeaders` is not a function', function (done) {
+			const name = randString(10);
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({ type: 'soap' });
 			threadneedle.addMethod(name, functionModel, {});
 
 			threadneedle[name]({
 				passFlag: true,
 				ahFlag: true
 			})
-			.done(
-				function(result) {
+			.then(
+				function (result) {
 					assert.fail(result);
 					done();
 				},
-				function(ahError) {
+				function (ahError) {
 					assert.strictEqual(ahError.message, 'afterHeaders must be a function.');
 					done();
 				}
@@ -499,71 +569,82 @@ describe('#addMethodSOAP', function () {
 		});
 
 
-    });
+	});
 
-    describe('Ad-hoc from REST mode', function () {
-        this.timeout(10000);
+	describe('Ad-hoc from REST mode', function () {
+		this.timeout(10000);
 
-        it('should be fine with allowing a single SOAP method config from REST mode', function (done) {
+		it('should be fine with allowing a single SOAP method config from REST mode', function (done) {
 
-            var threadneedle = new ThreadNeedle();
+			const threadneedle = new ThreadNeedle();
 
-            threadneedle.addMethod(
-                'myCustomMethod',
-                function (params) {
-                    return params.name;
-                }
-            );
+			threadneedle.addMethod(
+				'myCustomMethod',
+				function (params) {
+					return params.name;
+				}
+			);
 
-            threadneedle.addMethod(
-                'mySOAPMethod',
-                {
+			threadneedle.addMethod(
+				'mySOAPMethod',
+				{
 
-                    soap: true,
+					type: 'SOAP',
 
-                    wsdl: 'https://www.regonline.com/api/default.asmx?WSDL',
+					wsdl: 'http://localhost:8000/default.asmx?WSDL',
 
-                    options: {
-                        headers: [{
-                            value: {
-                                TokenHeader: {
-                                    APIToken: regonline_token
-                                }
-                            },
-                            xmlns: 'http://www.regonline.com/api',
-                        }]
-                    },
+					options: {
+						headers: [
+							{
+								value: {
+									TokenHeader: {
+										APIToken: REGONLINE_TOKEN
+									}
+								},
+								xmlns: 'http://www.regonline.com/api',
+							}
+						]
+					},
 
-                    method: 'GetEvents',
+					method: 'GetEvents',
 
-                    data: {
-                        orderBy: 'ID DESC',
-                    },
+					data: {
+						orderBy: 'ID DESC',
+					},
 
-                    afterHeaders: function () {
-                        return {
-                            success: true
-                        }
-                    }
+					afterHeaders: function () {
+						return {
+							success: true
+						};
+					}
 
-                }
-            );
+				}
+			);
 
-            threadneedle['mySOAPMethod']({})
+			threadneedle['mySOAPMethod']({})
 
-            .done(
-                function (val) {
-                    assert.deepEqual(val.headers.success, true);
-                    assert(val.body['GetEventsResult']['Success']);
-                    done();
-                },
-                function (err) {
-                    assert.fail(err);
-                }
-            );
+			.then(
+				function (val) {
+					assert.deepEqual(val.headers.success, true);
+					assert(val.body['GetEventsResult']['Success']);
+					done();
+				},
+				function (err) {
+					assert.fail(err);
+				}
+			);
 
-        });
+		});
 
-    });
+	});
+
+	after((done) => {
+		soapServer.stopServer((closeError) => {
+			if (closeError) {
+				throw closeError;
+			}
+			done();
+		});
+	});
 
 });
