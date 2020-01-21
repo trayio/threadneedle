@@ -49,6 +49,7 @@ threadneedle.getLists({
 * [addMethod](#addmethod)
 * [global](#global)
 * [SOAP Mode](#soap-mode)
+* [Smart Substitution](smartSubstitution.md)
 
 
 ## addMethod
