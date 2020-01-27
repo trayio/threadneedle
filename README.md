@@ -49,6 +49,7 @@ threadneedle.getLists({
 * [addMethod](#addmethod)
 * [global](#global)
 * [SOAP Mode](#soap-mode)
+* [Smart Substitution](smartSubstitution.md)
 
 
 ## addMethod
@@ -101,7 +102,7 @@ Runs **before** any templating or requests.
 
 ### method (required)
 
-The HTTP method you'd like to use. Valid values are:
+The HTTP verb to use for the request. Valid values are:
 
 * `post`
 * `put`
@@ -111,6 +112,8 @@ The HTTP method you'd like to use. Valid values are:
 * `head`
 
 The values you declare here are **not case sensitive**.
+
+As of v1.11.0, `method` can be a function or mustaching can be used to provide one of the valid values.
 
 ### options
 

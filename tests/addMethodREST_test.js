@@ -69,7 +69,7 @@ describe('#addMethodREST', function () {
 					method: 'chris'
 				});
 			} catch (err) {
-				assert.strictEqual(err.message, 'The `method` "chris" is not a valid method. Allowed methods are: get, put, post, delete, head, patch');
+				assert.strictEqual(err.message, 'The `method` "chris" is not a valid method. Allowed methods are: get, put, post, delete, head, patch, options');
 				caught++;
 			}
 			assert.strictEqual(caught, 1);
