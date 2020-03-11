@@ -32,7 +32,7 @@
     "needle": "~2.1.2",
     "soap": "~0.30.0",
     "when": "~3.7.8",
-    "winston": "~2.4.4"
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "body-parser": "^1.18.3",
