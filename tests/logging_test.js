@@ -21,10 +21,10 @@ describe('Logging', () => {
 	describe('Should log for logs enabled mode', () => {
 
 		beforeEach(() => {
-			process.env.ENABLE_THREADNEEDLE_LOGS = 'true';
+			process.env.THREADNEEDLE_ENABLE_LOGS = 'true';
 		});
 		afterEach(() => {
-			delete process.env.ENABLE_THREADNEEDLE_LOGS;
+			delete process.env.THREADNEEDLE_ENABLE_LOGS;
 		});
 
 		it('Should set logger level to info', () => {
