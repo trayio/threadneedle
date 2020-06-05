@@ -1056,7 +1056,7 @@ describe('#addMethodREST', function () {
 				assert(called);
 				done();
 			}, function (err) {
-				console.log(err);
+				assert.fail(err);
 			});
 
 		});
