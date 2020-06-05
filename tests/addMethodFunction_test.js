@@ -9,7 +9,7 @@ const randString = require('mout/random/randString');
 
 const addMethodFunction = require('../lib/addMethod/addMethodFunction');
 
-describe.only('#addMethodFunction', function () {
+describe('#addMethodFunction', function () {
 
 	const sampleParams = {
 		'#auth': {
@@ -157,7 +157,7 @@ describe.only('#addMethodFunction', function () {
 
 	});
 
-	describe.only('Running - afterHeaders', () => {
+	describe('Running - afterHeaders', () => {
 
 		it('should modify header after "afterSuccess"', async () => {
 			const result = await addMethodFunction(
