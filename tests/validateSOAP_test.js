@@ -53,7 +53,7 @@ describe('validateSOAPInput', function () {
     });
 
     it('should err if config.method is not provided', function () {
-        throwTest('test', {}, 'The `method` config parameter should be declared.');
+        throwTest('test', {}, `The 'method' config parameter should be declared. Operation: test`);
     });
 
     it('should err if config.expects and/or config.notExpects is provided but is not a function', function () {
