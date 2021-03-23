@@ -17,9 +17,9 @@ describe('validateSOAPInput', function () {
     }
 
     it('should err if methodName is not provided or a string', function () {
-        throwTest(undefined, undefined, 'The first parameter passed to `addMethod` should be a string.');
-        throwTest(123, undefined, 'The first parameter passed to `addMethod` should be a string.');
-    });
+        throwTest(undefined, undefined, `The first parameter passed to 'addMethod' should be a string. Operation: `);
+        throwTest(123, undefined, `The first parameter passed to 'addMethod' should be a string. Operation: 123`);
+    }); 
 
     it('should return if config is a function', function () {
         assert(
@@ -30,8 +30,8 @@ describe('validateSOAPInput', function () {
     });
 
     it('should err if config is not provided or an object', function () {
-        throwTest('test', undefined, 'The `config` object should be an object.');
-        throwTest('test', 123, 'The `config` object should be an object.');
+        throwTest('test', undefined, `The 'config' object should be an object. Operation: test`);
+        throwTest('test', 123, `The 'config' object should be an object. Operation: test`);
     });
 
     it('should err if methodName already exists', function () {
