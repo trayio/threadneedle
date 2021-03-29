@@ -17,7 +17,7 @@ describe('validateSOAPInput', function () {
     }
 
     it('should err if methodName is not provided or a string', function () {
-        throwTest(undefined, undefined, `The first parameter passed to 'addMethod' should be a string. Method: `);
+        throwTest(undefined, undefined, `The first parameter passed to 'addMethod' should be a string. Method: undefined`);
         throwTest(123, undefined, `The first parameter passed to 'addMethod' should be a string. Method: 123`);
     }); 
 
