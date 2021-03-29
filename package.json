@@ -1,6 +1,6 @@
 {
   "name": "@trayio/threadneedle",
-  "version": "1.12.1",
+  "version": "1.13.0",
   "description": "A framework for simplifying working with HTTP-based APIs.",
   "main": "lib/index.js",
   "directories": {
@@ -41,7 +41,6 @@
     "grunt": "^1.0.4",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
-    "mocha": "~7.2.0",
-    "mocha-unfunk-reporter": "^0.4.0"
+    "mocha": "~7.2.0"
   }
 }
