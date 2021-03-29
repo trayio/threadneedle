@@ -29,7 +29,7 @@ describe('#addMethodREST', function () {
 			try {
 				threadneedle.addMethod(true);
 			} catch (err) {
-				assert(err.message, `The 'url' config parameter should be declared. Method: create_list`);
+				assert(err.message, `The first parameter passed to 'addMethod' should be a string. Method:`);
 				caught++;
 			}
 
@@ -55,7 +55,7 @@ describe('#addMethodREST', function () {
 			try {
 				threadneedle.addMethod('createList', {});
 			} catch (err) {
-				assert.strictEqual(err.message, `The 'url' config parameter should be declared. Operation: create_list`);
+				assert.strictEqual(err.message, `The 'url' config parameter should be declared Method: create_list`);
 				caught++;
 			}
 			assert.strictEqual(caught, 1);
