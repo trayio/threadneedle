@@ -6,9 +6,6 @@ module.exports = function (grunt) {
 		// Configure a mochaTest task
 		mochaTest: {
 			test: {
-				options: {
-					reporter: 'mocha-unfunk-reporter'
-				},
 				src: ['tests/*_test.js']
 			}
 		},
