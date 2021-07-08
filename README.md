@@ -1,5 +1,5 @@
 # threadneedle
-An opinionated ORM-style abstraction layer for interacting with third party HTTP-based APIs. Built on top of the fantastic [Needle](https://github.com/tomas/needle) API to provide a more structured and declarative framework.
+An opinionated ORM-style abstraction layer for interacting with third party HTTP-based APIs. Built on top of the fantastic [Needle](https://github.com/trayio/needle) API to provide a more structured and declarative framework.
 
 Threadneedle works by allowing you to declare and run various API methods, easily handle expected responses, and providing you with a vastly simpler framework for running requests in your core code.
 
@@ -117,7 +117,7 @@ As of v1.11.0, `method` can be a function or mustaching can be used to provide o
 
 ### options
 
-Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/tomas/needle#request-options) defined in Needle.
+Other options you'd like to apply to the request. These directly correspond directly to the [request options](https://github.com/trayio/needle#request-options) defined in Needle.
 
 Also gets templated.
 
