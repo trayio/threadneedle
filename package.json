@@ -1,6 +1,6 @@
 {
   "name": "@trayio/threadneedle",
-  "version": "1.15.0",
+  "version": "1.15.1",
   "description": "A framework for simplifying working with HTTP-based APIs.",
   "main": "lib/index.js",
   "directories": {
@@ -27,20 +27,17 @@
   "homepage": "https://github.com/trayio/threadneedle#readme",
   "dependencies": {
     "@trayio/needle": "^3.1.0",
-    "lodash": "~4.17.20",
-    "mout": "~1.2.2",
+    "lodash": "~4.17.21",
+    "mout": "~1.2.3",
     "mustache": "~3.2.1",
-    "soap": "~0.35.0",
+    "soap": "~0.43.0",
     "when": "~3.7.8",
-    "winston": "~2.4.4"
+    "winston": "~3.7.2"
   },
   "devDependencies": {
     "body-parser": "^1.18.3",
     "eslint": "^6.8.0",
     "express": "^4.16.4",
-    "grunt": "^1.0.4",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-mocha-test": "^0.13.3",
     "mocha": "~7.2.0"
   }
 }

@@ -15,7 +15,7 @@ describe('Logging', () => {
 
 		it('Should set logger level to info', () => {
 			const logger = require('../lib/logger');
-			assert.equal(logger.transports.console.level, 'info');
+			assert.equal(logger.transports[0].level, 'info');
 		});
 	});
 	describe('Should log for logs enabled mode', () => {
@@ -29,13 +29,13 @@ describe('Logging', () => {
 
 		it('Should set logger level to info', () => {
 			const logger = require('../lib/logger');
-			assert.equal(logger.transports.console.level, 'info');
+			assert.equal(logger.transports[0].level, 'info');
 		});
 	});
 	describe('Should not log for no mode', () => {
 		it('Should set logger level to warning', () => {
 			const logger = require('../lib/logger');
-			assert.equal(logger.transports.console.level, 'warning');
+			assert.equal(logger.transports[0].level, 'warning');
 		});
 	});
 });
