@@ -27,12 +27,12 @@
   "homepage": "https://github.com/trayio/threadneedle#readme",
   "dependencies": {
     "@trayio/needle": "^3.1.0",
-    "lodash": "~4.17.20",
-    "mout": "~1.2.2",
+    "lodash": "~4.17.21",
+    "mout": "~1.2.3",
     "mustache": "~3.2.1",
-    "soap": "~0.35.0",
+    "soap": "~0.43.0",
     "when": "~3.7.8",
-    "winston": "~2.4.4"
+    "winston": "~2.4.5"
   },
   "devDependencies": {
     "body-parser": "^1.18.3",
