@@ -5,7 +5,7 @@ const _ = require('lodash');
 const when = require('when');
 const express = require('express');
 
-const randString = require('mout/random/randString');
+var { randString }	= require('../lib/utils/mout');
 const globalize = require('../lib/addMethod/globalize');
 const ThreadNeedle = require('../');
 

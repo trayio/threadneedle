@@ -4,7 +4,7 @@ var express      = require('express');
 var bodyParser   = require('body-parser');
 var when         = require('when');
 var fs           = require('fs');
-var randString   = require('mout/random/randString');
+var { randString }	= require('../lib/utils/mout');
 var ThreadNeedle = require('../');
 
 
