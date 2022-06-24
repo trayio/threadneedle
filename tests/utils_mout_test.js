@@ -5,6 +5,7 @@ const {
 	guid,
 	startsWith,
 	setParam,
+	randString,
 } = require('../lib/utils/mout');
 
 describe('util/mout - setParam', function () {
@@ -94,4 +95,45 @@ describe('util/mout - startsWith()', function () {
 		assert(startsWith('lorem', null));
 	});
 
+});
+
+describe('util/mout - randString', function () {
+	it('should return a string.', function () {
+		assert.strictEqual(typeof randString(), 'string');
+	});
+
+	it('should default to 8 characters.', function () {
+		assert.strictEqual(randString().length, 8);
+	});
+
+	it('should allow for user specified lengths.', function () {
+		assert.strictEqual(randString(10).length, 10);
+	});
+
+	it('should default on invalid lengths.', function () {
+		assert.strictEqual(randString(0).length, 8);
+		assert.strictEqual(randString('').length, 8);
+		assert.strictEqual(randString(false).length, 8);
+		assert.strictEqual(randString(-1).length, 8);
+	});
+
+	it('should return a base62 subset of characters by default.', function () {
+		assert((/[a-zA-Z0-9]*/).test(randString()));
+	});
+
+	it('should use default dictionary if an invalid one is provided.', function () {
+		assert(((/[a-zA-Z0-9]{4}/)).test(randString(4, null)));
+		assert(((/[a-zA-Z0-9]{4}/)).test(randString(4, '')));
+	});
+
+	it('should use a provided dictionary.', function () {
+		assert(((/[ab]{4}/)).test(randString(4, 'ab')));
+		assert(((/[Random]{4}/)).test(randString(4, 'Random')));
+	});
+
+	it('should generate a "random" string.', function () {
+		assert.notStrictEqual(randString(), randString());
+		assert.notStrictEqual(randString(4), randString(4));
+		assert.notStrictEqual(randString(16, 'ab'), randString(16, 'ab'));
+	});
 });
