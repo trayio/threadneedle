@@ -8,7 +8,7 @@ const {
 	randString,
 } = require('../lib/utils/mout');
 
-describe('util/mout - setParam', function () {
+describe('utils/mout - setParam', function () {
 	it('should add value if it doesn\'t exist', function () {
 		assert.strictEqual(setParam('foo.com', 'bar', true), 'foo.com?bar=true');
 		assert.strictEqual(setParam('foo.com?bar=1', 'ipsum', 'dolor'), 'foo.com?bar=1&ipsum=dolor');
@@ -35,7 +35,7 @@ describe('util/mout - setParam', function () {
 	});
 });
 
-describe('util/mout - randHex()', function () {
+describe('utils/mout - randHex()', function () {
 	it('should return a random hexadecimal value', function () {
 		var a = randHex(),
 			b = randHex();
@@ -59,7 +59,7 @@ describe('util/mout - randHex()', function () {
 
 });
 
-describe('util/mout - guid()', function () {
+describe('utils/mout - guid()', function () {
 	it('returns a random guid each call', function () {
 		let a = guid();
 		let b = guid();
@@ -70,7 +70,7 @@ describe('util/mout - guid()', function () {
 	});
 });
 
-describe('util/mout - startsWith()', function () {
+describe('utils/mout - startsWith()', function () {
 
 	it('should return true if string starts with prefix', function () {
 		assert(startsWith('lorem-ipsum', 'lorem'));
@@ -97,7 +97,7 @@ describe('util/mout - startsWith()', function () {
 
 });
 
-describe('util/mout - randString', function () {
+describe('utils/mout - randString', function () {
 	it('should return a string.', function () {
 		assert.strictEqual(typeof randString(), 'string');
 	});
