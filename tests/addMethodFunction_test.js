@@ -5,7 +5,6 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const when = require('when');
-const randString = require('mout/random/randString');
 
 const addMethodFunction = require('../lib/addMethod/addMethodFunction');
 
