@@ -1189,5 +1189,91 @@ describe('#addMethodREST', function () {
 
 	});
 
+	describe('Ad-hoc from SOAP mode', function () {
+		this.timeout(10000);
 
+		const host = 'http://localhost:4000';
+		let server;
+		let app;
+
+		before(function (done) {
+			app = express();
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({
+				extended: true
+			}));
+			server = app.listen(4000, done);
+		});
+
+		after(function (done) {
+			server.close(done);
+		});
+
+		it('should be fine with allowing a single REST method config from SOAP mode', function (done) {
+			let called = false;
+			app.get('/test', function (req, res) {
+				called = true;
+				res.status(200).send('ok');
+			});
+
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({
+
+				type: 'SOAP',
+
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
+
+				options: {
+					headers: [
+						{
+							value: {
+								TokenHeader: {
+									APIToken: 'abc1234'
+								}
+							},
+							xmlns: 'http://www.regonline.com/api',
+						}
+					]
+				},
+
+				data: {}
+
+
+			});
+
+			threadneedle.addMethod(
+				'myRESTMethod',
+				{
+
+					type: 'REST',
+
+					method: 'GET',
+
+					url: 'http://localhost:4000/test',
+
+					afterHeaders: function () {
+						return {
+							success: true
+						};
+					}
+
+				}
+			);
+
+			threadneedle['myRESTMethod']({})
+			.then(
+				(val) => {
+					assert.deepEqual(val.headers.success, true);
+					assert.deepEqual(val.body, 'ok');
+					assert.deepEqual(called, true);
+					done();
+				},
+				(err) => {
+					assert.fail(err);
+				}
+			);
+
+		});
+
+	});
 });
