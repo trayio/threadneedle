@@ -4,32 +4,52 @@ const winston = require('winston');
 let loggedDebugMessages = [];
 let loggedInfoMessages = [];
 let actualLoggerTransport = undefined;
+let actualLoggerOptions = undefined;
 const mockLogger = {
 	add: (transport) => { actualLoggerTransport = transport; },
 	debug: (message) => { loggedDebugMessages.push(message); },
 	info: (message) => { loggedInfoMessages.push(message); }
 };
 const winstonStub = {
-	createLogger: () => { return mockLogger; }
+	createLogger: (options) => { 
+		actualLoggerOptions = options;
+		return mockLogger; 
+	}
 };
 
 const loadLogger = () => { return proxyquire('../lib/newLogger', { 'winston': winstonStub }); };
 
+function cleanup () {
+	loggedDebugMessages = [];
+	loggedInfoMessages = [];
+	actualLoggerTransport = undefined;
+	actualLoggerOptions = undefined;
+	delete process.env.THREADNEEDLE_ENABLE_LOGS;
+	delete process.env.THREADNEEDLE_ENABLE_REQUEST_RESPONSE;
+	delete require.cache[require.resolve('../lib/newLogger.js')];
+}
 
 describe('newLogger', () => {
-	beforeEach(() => {
-		loggedDebugMessages = [];
-		loggedInfoMessages = [];
-		delete process.env.THREADNEEDLE_ENABLE_LOGS;
-		delete process.env.THREADNEEDLE_ENABLE_REQUEST_RESPONSE;
-		delete require.cache[require.resolve('../lib/newLogger.js')];
-	});
+	beforeEach(cleanup);
 
+	afterEach(cleanup);
 
-	afterEach(() => {
-		delete process.env.THREADNEEDLE_ENABLE_LOGS;
-		delete process.env.THREADNEEDLE_ENABLE_REQUEST_RESPONSE;
-		delete require.cache[require.resolve('../lib/newLogger.js')];
+	it('Logger created with correct log levels', () =>{
+		const logger = loadLogger();
+
+		assert.equal(
+			JSON.stringify(actualLoggerOptions.levels), 
+			JSON.stringify({ 
+				emerg: 0,
+				alert: 1,
+				crit: 2,
+				error: 3,
+				warning: 4,
+				notice: 5,
+				info: 6,
+				debug: 7 
+			})
+		);
 	});
 
 	it('should use debug level when logging is enabled', () =>{
@@ -48,7 +68,7 @@ describe('newLogger', () => {
 		assert.equal(actualLoggerTransport.level, 'info');
 	});
 
-	it('should use warning level when request-response is disabled', () =>{
+	it('should use warning level when neither logging flags are enabled', () =>{
 		const logger = loadLogger();
 
 		assert.equal(actualLoggerTransport.level, 'warning');
