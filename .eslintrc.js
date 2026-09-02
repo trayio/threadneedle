@@ -19,6 +19,11 @@ module.exports = {
         'no-case-declarations': 0,
         'no-inner-declarations': 0,
 
+        //`new require('x')` parses as `new require` followed by a plain
+        //`.x()` call, and throws under module systems whose `require` is not
+        //constructible (e.g. Jest).
+        'no-new-require': 'error',
+
         //global rules
         'indent': [
             'error',
