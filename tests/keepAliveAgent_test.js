@@ -25,6 +25,27 @@ describe('#keepAliveAgent', function () {
 
 	});
 
+	describe('Disabling', function () {
+
+		it('should not attach an agent when disabled', function () {
+			assert.strictEqual(resolveKeepAliveAgent({}, true), undefined);
+		});
+
+		it('should attach an agent when explicitly not disabled', function () {
+			assert.ok(resolveKeepAliveAgent({}, false) instanceof http.Agent);
+		});
+
+		it('should attach an agent when nothing was said either way', function () {
+			assert.ok(resolveKeepAliveAgent({}, undefined) instanceof http.Agent);
+		});
+
+		it('should still honour a caller supplied agent when disabled', function () {
+			var mine = new https.Agent({ keepAlive: true });
+			assert.strictEqual(resolveKeepAliveAgent({ agent: mine }, true), mine);
+		});
+
+	});
+
 	describe('Protocol handling', function () {
 
 		/*

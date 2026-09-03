@@ -2067,4 +2067,77 @@ describe('#globalize', function () {
 
 	});
 
+	describe('#disableKeepAliveAgent', function () {
+
+		it('should be enabled by default', function () {
+			const sample = { _globalOptions: {} };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, {}),
+				false
+			);
+		});
+
+		it('should allow a method to disable it', function () {
+			const sample = { _globalOptions: {} };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { disableKeepAliveAgent: true }),
+				true
+			);
+		});
+
+		it('should allow a connector to disable it for every method', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, {}),
+				true
+			);
+		});
+
+		it('should let a method re-enable it where the connector disabled it', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { disableKeepAliveAgent: false }),
+				false
+			);
+		});
+
+		it('should ignore non-boolean values', function () {
+			const sample = { _globalOptions: {} };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { disableKeepAliveAgent: 'true' }),
+				false
+			);
+		});
+
+		/*
+		  Deliberately unlike every other global: a kill switch set because
+		  keep-alive breaks a service must not be undone by `globals: false`,
+		  which is common on auth endpoints for unrelated reasons.
+		*/
+		it('should not be discarded by `globals: false`', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { globals: false }),
+				true
+			);
+		});
+
+		it('should not be discarded by a per-key global opt-out', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { globals: { disableKeepAliveAgent: false } }),
+				true
+			);
+		});
+
+	});
+
+
 });

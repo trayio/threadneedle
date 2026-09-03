@@ -216,6 +216,72 @@ describe('#keepAlive integration', function () {
 
 	});
 
+	describe('Disabling', function () {
+
+		function respondOk () {
+			server.once('request', function (req, res) {
+				res.writeHead(200);
+				res.end('ok');
+			});
+		}
+
+		it('should attach no agent when a method disables it', function (done) {
+			var name = randString(10);
+			var threadneedle = new ThreadNeedle();
+			respondOk();
+
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name,
+				expects: 200,
+				disableKeepAliveAgent: true
+			});
+
+			threadneedle[name]({}).done(function () {
+				assert.strictEqual(armed.length, 0, 'no keep-alive should have been armed');
+				done();
+			}, done);
+		});
+
+		it('should attach no agent when the connector disables it globally', function (done) {
+			var name = randString(10);
+			var threadneedle = new ThreadNeedle();
+			threadneedle.global({ disableKeepAliveAgent: true });
+			respondOk();
+
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name,
+				expects: 200
+			});
+
+			threadneedle[name]({}).done(function () {
+				assert.strictEqual(armed.length, 0, 'no keep-alive should have been armed');
+				done();
+			}, done);
+		});
+
+		it('should let a method re-enable it where the connector disabled it', function (done) {
+			var name = randString(10);
+			var threadneedle = new ThreadNeedle();
+			threadneedle.global({ disableKeepAliveAgent: true });
+			respondOk();
+
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name,
+				expects: 200,
+				disableKeepAliveAgent: false
+			});
+
+			threadneedle[name]({}).done(function () {
+				assert.strictEqual(armed[0].delay, resolveKeepAliveAgent.KEEPALIVE_DELAY);
+				done();
+			}, done);
+		});
+
+	});
+
 	describe('Caller overrides', function () {
 
 		it('should use an agent supplied by the method instead of its own', function (done) {
@@ -240,7 +306,11 @@ describe('#keepAlive integration', function () {
 				method: 'get',
 				url: host + '/' + name,
 				expects: 200,
-				//A function value survives substitution, which an agent object does not
+				/*
+				  Substitution invokes function values and keeps what they return, so
+				  an agent returned this way keeps its prototype. Passing the agent
+				  itself would have it walked as a plain object instead.
+				*/
 				options: { agent: function () { return mine; } }
 			});
 
