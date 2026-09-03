@@ -3,7 +3,7 @@ var http			= require('http');
 var net				= require('net');
 
 var { randString }	= require('../lib/utils/mout');
-var resolveAgent	= require('../lib/addMethod/keepAliveAgent');
+var resolveKeepAliveAgent	= require('../lib/addMethod/keepAliveAgent');
 var ThreadNeedle	= require('../');
 
 
@@ -150,7 +150,7 @@ describe('#keepAlive integration', function () {
 
 			threadneedle[name]({}).done(function (result) {
 				assert.strictEqual(result.body, 'via proxy');
-				assert.strictEqual(armed[0].delay, resolveAgent.KEEPALIVE_DELAY);
+				assert.strictEqual(armed[0].delay, resolveKeepAliveAgent.KEEPALIVE_DELAY);
 				done();
 			}, done);
 		});
@@ -209,7 +209,7 @@ describe('#keepAlive integration', function () {
 					'keep-alive should be armed while the request is still in flight'
 				);
 				assert.strictEqual(armed[0].enable, true);
-				assert.strictEqual(armed[0].delay, resolveAgent.KEEPALIVE_DELAY);
+				assert.strictEqual(armed[0].delay, resolveKeepAliveAgent.KEEPALIVE_DELAY);
 				done();
 			}, done);
 		});

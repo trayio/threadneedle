@@ -3,7 +3,7 @@ var http			= require('http');
 var https			= require('https');
 var net				= require('net');
 
-var resolveAgent	= require('../lib/addMethod/keepAliveAgent');
+var resolveKeepAliveAgent	= require('../lib/addMethod/keepAliveAgent');
 
 
 describe('#keepAliveAgent', function () {
@@ -12,15 +12,15 @@ describe('#keepAliveAgent', function () {
 
 		it('should return a caller supplied agent untouched', function () {
 			var mine = new https.Agent({ keepAlive: true });
-			assert.strictEqual(resolveAgent({ agent: mine }), mine);
+			assert.strictEqual(resolveKeepAliveAgent({ agent: mine }), mine);
 		});
 
 		it('should pass `false` through, so opting out remains possible', function () {
-			assert.strictEqual(resolveAgent({ agent: false }), false);
+			assert.strictEqual(resolveKeepAliveAgent({ agent: false }), false);
 		});
 
 		it('should attach an agent when none was supplied', function () {
-			assert.ok(resolveAgent({}) instanceof http.Agent);
+			assert.ok(resolveKeepAliveAgent({}) instanceof http.Agent);
 		});
 
 	});
@@ -36,17 +36,17 @@ describe('#keepAliveAgent', function () {
 		  If a Node upgrade ever changes that, this is the test that says so.
 		*/
 		it('should declare no protocol, so either is accepted', function () {
-			assert.strictEqual(resolveAgent({}).protocol, undefined);
+			assert.strictEqual(resolveKeepAliveAgent({}).protocol, undefined);
 		});
 
 		function connectionFor (protocol) {
-			var agent = resolveAgent({});
+			var agent = resolveKeepAliveAgent({});
 			var chosen = null;
 
 			var originals = {};
-			Object.keys(resolveAgent.factories).forEach(function (key) {
-				originals[key] = resolveAgent.factories[key].createConnection;
-				resolveAgent.factories[key].createConnection = function () {
+			Object.keys(resolveKeepAliveAgent.factories).forEach(function (key) {
+				originals[key] = resolveKeepAliveAgent.factories[key].createConnection;
+				resolveKeepAliveAgent.factories[key].createConnection = function () {
 					chosen = key;
 					return new net.Socket();
 				};
@@ -56,7 +56,7 @@ describe('#keepAliveAgent', function () {
 				agent.createConnection({ protocol: protocol, host: 'example.com', port: 443 }, function () {});
 			} finally {
 				Object.keys(originals).forEach(function (key) {
-					resolveAgent.factories[key].createConnection = originals[key];
+					resolveKeepAliveAgent.factories[key].createConnection = originals[key];
 				});
 			}
 
@@ -80,7 +80,7 @@ describe('#keepAliveAgent', function () {
 	describe('Agent configuration', function () {
 
 		it('should not pool connections, leaving socket lifetime unchanged', function () {
-			assert.strictEqual(resolveAgent({}).keepAlive, false);
+			assert.strictEqual(resolveKeepAliveAgent({}).keepAlive, false);
 		});
 
 		it('should arm keep-alive with usable margin inside the NAT idle timeout', function () {
@@ -89,13 +89,13 @@ describe('#keepAliveAgent', function () {
 			var REQUIRED_MARGIN = 30000;
 
 			assert.ok(
-				resolveAgent.KEEPALIVE_DELAY <= NAT_IDLE_TIMEOUT - REQUIRED_MARGIN,
+				resolveKeepAliveAgent.KEEPALIVE_DELAY <= NAT_IDLE_TIMEOUT - REQUIRED_MARGIN,
 				'a probe must land early enough to reset the gateway timer, not just before it'
 			);
 		});
 
 		it('should return a new agent per request', function () {
-			assert.notStrictEqual(resolveAgent({}), resolveAgent({}));
+			assert.notStrictEqual(resolveKeepAliveAgent({}), resolveKeepAliveAgent({}));
 		});
 
 		/*
@@ -104,10 +104,10 @@ describe('#keepAliveAgent', function () {
 		  client certificate into every later request in the process.
 		*/
 		it('should not share TLS options between requests', function () {
-			var first = resolveAgent({});
+			var first = resolveKeepAliveAgent({});
 			first.options.rejectUnauthorized = false;
 
-			assert.notStrictEqual(resolveAgent({}).options.rejectUnauthorized, false);
+			assert.notStrictEqual(resolveKeepAliveAgent({}).options.rejectUnauthorized, false);
 		});
 
 	});
