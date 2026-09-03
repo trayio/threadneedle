@@ -30,9 +30,8 @@ describe('#keepAlive integration', function () {
 			host = 'http://localhost:' + server.address().port;
 
 			/*
-			  Reserve a port and immediately release it, so requests to it are
-			  refused rather than answered. Used to check protocol handling
-			  without needing a TLS server, and so without a checked-in key.
+			  A port reserved then released, so requests to it are refused. Lets us
+			  check protocol handling without a TLS server, and so without a key.
 			*/
 			var scout = net.createServer();
 			scout.listen(0, function () {
@@ -58,11 +57,9 @@ describe('#keepAlive integration', function () {
 	describe('Protocol handling', function () {
 
 		/*
-		  The whole REST suite otherwise runs against http, which is why an
-		  http-only agent installed as a needle default went unnoticed. Node
-		  compares the agent's protocol against the request before it opens a
-		  socket, so reaching the network at all is the thing worth asserting -
-		  no TLS server, and therefore no key material, is needed to prove it.
+		  The rest of the suite runs against http, which is how an http-only agent
+		  went unnoticed. Node checks the agent's protocol before opening a socket,
+		  so reaching the network at all is what proves this.
 		*/
 		it('should reach the network on an https request rather than reject the agent', function (done) {
 			var name = randString(10);
@@ -82,20 +79,9 @@ describe('#keepAlive integration', function () {
 		});
 
 		/*
-		  The failure the test above guards against, pinned deliberately: if Node
-		  ever stops rejecting a mismatched agent, that test would silently lose
-		  its teeth, and this one would start failing to say so.
-		*/
-		/*
-		  needle follows redirects by re-entering `send_request` with the same
-		  config object, so the agent attached to the first request is reused for
-		  the redirect target. An agent fixed to one protocol threw
-		  ERR_INVALID_PROTOCOL here - uncaught, from inside needle's response
-		  handler, taking the process down with it.
-
-		  Connectors opt into this: http-client and http-client-vpc expose
-		  redirect following as a user option, and several others set
-		  `follow_max` directly.
+		  needle reuses the same agent for the redirect target, so an agent fixed
+		  to one protocol threw here - uncaught, taking the process down. Several
+		  connectors follow redirects, and http-client exposes it as a user option.
 		*/
 		it('should follow a redirect that switches protocol', function (done) {
 			var name = randString(10);
@@ -115,21 +101,15 @@ describe('#keepAlive integration', function () {
 			threadneedle[name]({}).done(function () {
 				done(new Error('nothing should be listening on the redirect target'));
 			}, function (error) {
-				/*
-				  Reaching the redirect target at all is the point: the protocol
-				  switch no longer throws, so the request fails on the refused
-				  connection instead.
-				*/
+				//Reaching the target at all is the point - it fails on the refused connection
 				assert.strictEqual(errorCodeOf(error), 'ECONNREFUSED');
 				done();
 			});
 		});
 
 		/*
-		  Behind a proxy, needle connects to the proxy rather than the target, so
-		  the socket's protocol is the proxy's. Choosing the connection type from
-		  `options.protocol` handles that without the agent needing to know a
-		  proxy is involved.
+		  needle connects to the proxy, not the target, so the socket's protocol is
+		  the proxy's. Picking from `options.protocol` handles that for free.
 		*/
 		it('should connect over the proxy\'s protocol, not the target\'s', function (done) {
 			var name = randString(10);
@@ -155,6 +135,10 @@ describe('#keepAlive integration', function () {
 			}, done);
 		});
 
+		/*
+		  Pins the failure the tests above rely on: if Node stopped rejecting a
+		  mismatched agent, they would quietly lose their teeth.
+		*/
 		it('should show that a mismatched agent is what breaks such a request', function (done) {
 			var name = randString(10);
 			var threadneedle = new ThreadNeedle();
@@ -179,9 +163,8 @@ describe('#keepAlive integration', function () {
 	describe('Arming', function () {
 
 		/*
-		  The point of the fix. Node's own `keepAliveMsecs` is applied when a
-		  socket returns to the pool, i.e. after the response - too late for a
-		  call that idles behind the NAT gateway while awaiting a slow reply.
+		  The point of the fix: Node's own `keepAliveMsecs` is applied only once a
+		  socket returns to the pool, after the response, which is too late.
 		*/
 		it('should arm keep-alive before the response arrives', function (done) {
 			var name = randString(10);
@@ -306,11 +289,7 @@ describe('#keepAlive integration', function () {
 				method: 'get',
 				url: host + '/' + name,
 				expects: 200,
-				/*
-				  Substitution invokes function values and keeps what they return, so
-				  an agent returned this way keeps its prototype. Passing the agent
-				  itself would have it walked as a plain object instead.
-				*/
+				//Substitution keeps what a function returns, so the agent's prototype survives
 				options: { agent: function () { return mine; } }
 			});
 

@@ -49,12 +49,9 @@ describe('#keepAliveAgent', function () {
 	describe('Protocol handling', function () {
 
 		/*
-		  Node only enforces its agent/request protocol check when the agent
-		  declares a protocol. Declaring none is what lets one agent serve both,
-		  which in turn is what stops a redirect from http to https - where
-		  needle reuses the original agent - throwing ERR_INVALID_PROTOCOL.
-
-		  If a Node upgrade ever changes that, this is the test that says so.
+		  Declaring no protocol is what lets one agent serve both, and so what
+		  keeps cross-protocol redirects working. If a Node upgrade changes that
+		  check, this test says so.
 		*/
 		it('should declare no protocol, so either is accepted', function () {
 			assert.strictEqual(resolveKeepAliveAgent({}).protocol, undefined);
@@ -119,11 +116,7 @@ describe('#keepAliveAgent', function () {
 			assert.notStrictEqual(resolveKeepAliveAgent({}), resolveKeepAliveAgent({}));
 		});
 
-		/*
-		  needle assigns TLS options onto `agent.options` when an agent is
-		  present, so a shared agent would leak one method's TLS settings or
-		  client certificate into every later request in the process.
-		*/
+		//needle writes TLS options onto `agent.options`, so sharing would leak them
 		it('should not share TLS options between requests', function () {
 			var first = resolveKeepAliveAgent({});
 			first.options.rejectUnauthorized = false;

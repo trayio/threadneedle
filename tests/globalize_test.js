@@ -2114,11 +2114,7 @@ describe('#globalize', function () {
 			);
 		});
 
-		/*
-		  Deliberately unlike every other global: a kill switch set because
-		  keep-alive breaks a service must not be undone by `globals: false`,
-		  which is common on auth endpoints for unrelated reasons.
-		*/
+		//Unlike other globals - a switch set because keep-alive breaks a service
 		it('should not be discarded by `globals: false`', function () {
 			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
 
