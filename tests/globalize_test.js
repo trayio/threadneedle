@@ -2124,11 +2124,21 @@ describe('#globalize', function () {
 			);
 		});
 
-		it('should not be discarded by a per-key global opt-out', function () {
+		//Naming the key is deliberate, unlike a blanket `globals: false`
+		it('should be discarded when the method names it in `globals`', function () {
 			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
 
 			assert.strictEqual(
 				globalize.disableKeepAliveAgent.call(sample, { globals: { disableKeepAliveAgent: false } }),
+				false
+			);
+		});
+
+		it('should still apply where a method names other keys in `globals`', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { globals: { before: false } }),
 				true
 			);
 		});
