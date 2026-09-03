@@ -89,7 +89,8 @@ describe('#keepAliveAgent', function () {
 			assert.strictEqual(connectionFor('http:'), 'http:');
 		});
 
-		it('should fall back to a plain connection when the protocol is unknown', function () {
+		//needle dispatches anything but `https:` through http, so this must match
+		it('should fall back to a plain connection for any other protocol', function () {
 			assert.strictEqual(connectionFor(undefined), 'http:');
 		});
 
