@@ -113,6 +113,16 @@ describe('#keepAliveAgent', function () {
 			);
 		});
 
+		/*
+		  The shared https factory keys its TLS session cache with
+		  `http.Agent.getName`, which omits TLS options, so a lax session would be
+		  offered to a strict request for the same host. Nothing here needs
+		  session reuse.
+		*/
+		it('should not cache TLS sessions across requests', function () {
+			assert.strictEqual(resolveKeepAliveAgent.factories['https:'].maxCachedSessions, 0);
+		});
+
 		it('should return a new agent per request', function () {
 			assert.notStrictEqual(resolveKeepAliveAgent({}), resolveKeepAliveAgent({}));
 		});
