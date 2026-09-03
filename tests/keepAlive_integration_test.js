@@ -86,6 +86,75 @@ describe('#keepAlive integration', function () {
 		  ever stops rejecting a mismatched agent, that test would silently lose
 		  its teeth, and this one would start failing to say so.
 		*/
+		/*
+		  needle follows redirects by re-entering `send_request` with the same
+		  config object, so the agent attached to the first request is reused for
+		  the redirect target. An agent fixed to one protocol threw
+		  ERR_INVALID_PROTOCOL here - uncaught, from inside needle's response
+		  handler, taking the process down with it.
+
+		  Connectors opt into this: http-client and http-client-vpc expose
+		  redirect following as a user option, and several others set
+		  `follow_max` directly.
+		*/
+		it('should follow a redirect that switches protocol', function (done) {
+			var name = randString(10);
+			var threadneedle = new ThreadNeedle();
+
+			server.once('request', function (req, res) {
+				res.writeHead(302, { location: 'https://127.0.0.1:' + closedPort + '/moved' });
+				res.end();
+			});
+
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name,
+				options: { follow_max: 3 }
+			});
+
+			threadneedle[name]({}).done(function () {
+				done(new Error('nothing should be listening on the redirect target'));
+			}, function (error) {
+				/*
+				  Reaching the redirect target at all is the point: the protocol
+				  switch no longer throws, so the request fails on the refused
+				  connection instead.
+				*/
+				assert.strictEqual(errorCodeOf(error), 'ECONNREFUSED');
+				done();
+			});
+		});
+
+		/*
+		  Behind a proxy, needle connects to the proxy rather than the target, so
+		  the socket's protocol is the proxy's. Choosing the connection type from
+		  `options.protocol` handles that without the agent needing to know a
+		  proxy is involved.
+		*/
+		it('should connect over the proxy\'s protocol, not the target\'s', function (done) {
+			var name = randString(10);
+			var threadneedle = new ThreadNeedle();
+
+			//The plain http server above stands in for an http proxy
+			server.once('request', function (req, res) {
+				res.writeHead(200, { 'content-type': 'text/plain' });
+				res.end('via proxy');
+			});
+
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: 'https://example.com/' + name,
+				expects: 200,
+				options: { proxy: host }
+			});
+
+			threadneedle[name]({}).done(function (result) {
+				assert.strictEqual(result.body, 'via proxy');
+				assert.strictEqual(armed[0].delay, resolveAgent.KEEPALIVE_DELAY);
+				done();
+			}, done);
+		});
+
 		it('should show that a mismatched agent is what breaks such a request', function (done) {
 			var name = randString(10);
 			var threadneedle = new ThreadNeedle();
