@@ -2067,4 +2067,83 @@ describe('#globalize', function () {
 
 	});
 
+	describe('#disableKeepAliveAgent', function () {
+
+		it('should be enabled by default', function () {
+			const sample = { _globalOptions: {} };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, {}),
+				false
+			);
+		});
+
+		it('should allow a method to disable it', function () {
+			const sample = { _globalOptions: {} };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { disableKeepAliveAgent: true }),
+				true
+			);
+		});
+
+		it('should allow a connector to disable it for every method', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, {}),
+				true
+			);
+		});
+
+		it('should let a method re-enable it where the connector disabled it', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { disableKeepAliveAgent: false }),
+				false
+			);
+		});
+
+		it('should ignore non-boolean values', function () {
+			const sample = { _globalOptions: {} };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { disableKeepAliveAgent: 'true' }),
+				false
+			);
+		});
+
+		//Unlike other globals - a switch set because keep-alive breaks a service
+		it('should not be discarded by `globals: false`', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { globals: false }),
+				true
+			);
+		});
+
+		//Naming the key is deliberate, unlike a blanket `globals: false`
+		it('should be discarded when the method names it in `globals`', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { globals: { disableKeepAliveAgent: false } }),
+				false
+			);
+		});
+
+		it('should still apply where a method names other keys in `globals`', function () {
+			const sample = { _globalOptions: { disableKeepAliveAgent: true } };
+
+			assert.strictEqual(
+				globalize.disableKeepAliveAgent.call(sample, { globals: { before: false } }),
+				true
+			);
+		});
+
+	});
+
+
 });

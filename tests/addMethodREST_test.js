@@ -109,8 +109,7 @@ describe('#addMethodREST', function () {
 		});
 
 		after(function (done) {
-			server.close();
-			done();
+			server.close(done);
 		});
 
 		var threadneedle;
