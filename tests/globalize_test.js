@@ -367,6 +367,41 @@ describe('#globalize', function () {
 
 	describe('#object', function () {
 
+		it('should default params to an empty object', function () {
+			var sample = {
+				_globalOptions: {
+					data: {
+						id: '123'
+					}
+				}
+			};
+
+			assert.deepEqual(globalize.object.call(sample, 'data', {
+				data: {
+					name: 'Chris'
+				}
+			}), {
+				id: '123',
+				name: 'Chris'
+			});
+		});
+
+		it('should return a local `data` string as is, without merging the global object', function () {
+			var sample = {
+				_globalOptions: {
+					data: {
+						id: '123'
+					}
+				}
+			};
+
+			assert.strictEqual(globalize.object.call(sample, 'data', {
+				data: 'raw {{body}}'
+			}, {
+				body: 'payload'
+			}), 'raw payload');
+		});
+
 		it('should globalize to an object on a shallow level', function () {
 			var sample = {
 				_globalOptions: {
@@ -1682,6 +1717,21 @@ describe('#globalize', function () {
 
 	describe('#afterSuccess', function () {
 
+		it('should use the value returned by the global afterSuccess as the body', function (done) {
+			var sample = {
+				_globalOptions: {
+					afterSuccess: function (body) {
+						return { replaced: true, was: body };
+					}
+				}
+			};
+
+			globalize.afterSuccess.call(sample, {}, { original: true }).done(function (body) {
+				assert.deepEqual(body, { replaced: true, was: { original: true } });
+				done();
+			}, done);
+		});
+
 		it('should run the global before method when declared', function (done) {
 			var sample = {
 				_globalOptions: {
@@ -1769,6 +1819,21 @@ describe('#globalize', function () {
 	});
 
 	describe('#afterFailure', function () {
+
+		it('should use the value returned by the global afterFailure as the error', function (done) {
+			var sample = {
+				_globalOptions: {
+					afterFailure: function (err) {
+						return { code: 'replaced', was: err };
+					}
+				}
+			};
+
+			globalize.afterFailure.call(sample, {}, { code: 'original' }).done(function (err) {
+				assert.deepEqual(err, { code: 'replaced', was: { code: 'original' } });
+				done();
+			}, done);
+		});
 
 		it('should run the global before method when declared', function (done) {
 			var sample = {
@@ -1859,6 +1924,36 @@ describe('#globalize', function () {
 
 
 	describe('#afterHeaders', function () {
+
+		it('should warn, not throw, if headers is not an object outside development mode', function (done) {
+			var originalWarn = console.warn;
+			var warnings = [];
+			console.warn = function (message) {
+				warnings.push(message);
+			};
+
+			globalize.afterHeaders.call(
+				{ _globalOptions: {} },
+				{
+					afterHeaders: function () {
+						return null;
+					}
+				},
+				null,
+				{},
+				{},
+				{}
+			)
+			.then(function (headers) {
+				console.warn = originalWarn;
+				assert.deepEqual(headers, {});
+				assert.deepEqual(warnings, ['`afterHeaders` must return an object.']);
+			}, function (error) {
+				console.warn = originalWarn;
+				throw error;
+			})
+			.then(done, done);
+		});
 
 		it('should run the global before method when declared', function (done) {
 			const sampleThread = {

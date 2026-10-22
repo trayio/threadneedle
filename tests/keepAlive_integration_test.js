@@ -13,14 +13,23 @@ describe('#keepAlive integration', function () {
 	var host;
 	var closedPort;
 
-	//Records every setKeepAlive call made while these tests run
+	/*
+	  Records the setKeepAlive calls made by Threadneedle's agent while these
+	  tests run, picked out by its delay. Since Node 19 the default http agent
+	  is keep-alive too, and arms each socket with its own `keepAliveMsecs` as
+	  the socket returns to the pool. Those calls happen when Threadneedle
+	  attaches no agent, so counting them would make the opt-out tests fail for
+	  the wrong reason.
+	*/
 	var armed;
 	var originalSetKeepAlive;
 
 	before(function (done) {
 		originalSetKeepAlive = net.Socket.prototype.setKeepAlive;
 		net.Socket.prototype.setKeepAlive = function (enable, delay) {
-			armed.push({ enable: enable, delay: delay, at: Date.now() });
+			if (delay === resolveKeepAliveAgent.KEEPALIVE_DELAY) {
+				armed.push({ enable: enable, delay: delay, at: Date.now() });
+			}
 			return originalSetKeepAlive.apply(this, arguments);
 		};
 

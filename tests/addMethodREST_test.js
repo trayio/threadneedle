@@ -75,6 +75,51 @@ describe('#addMethodREST', function () {
 			assert.strictEqual(caught, 1);
 		});
 
+		it('should error when `config` is not an object', function () {
+			assert.throws(function () {
+				threadneedle.addMethod('createList', 'not an object');
+			}, /The 'config' object should be an object\. Method: createList/);
+		});
+
+		it('should error when `method` is not provided', function () {
+			assert.throws(function () {
+				threadneedle.addMethod('createList', {
+					url: 'http://yourdomain.com'
+				});
+			}, /The 'method' parameter needs to be provided in the method configuration\. Method: createList/);
+		});
+
+		it('should error if `type` is not a string', function () {
+			assert.throws(function () {
+				threadneedle.addMethod(randString(10), {
+					type: 123,
+					method: 'get',
+					url: 'http://localhost:4000'
+				});
+			}, /`type` must be strings 'REST' or 'SOAP'/);
+		});
+
+		it('should warn when the deprecated `soap` flag is set on a method, and add it as SOAP', function () {
+			var originalWarn = console.warn;
+			var warnings = [];
+			console.warn = function (message) {
+				warnings.push(message);
+			};
+
+			try {
+				threadneedle.addMethod('soapFlagged', {
+					soap: true,
+					method: 'GetEvents',
+					wsdl: 'http://localhost:8000/default.asmx?WSDL'
+				});
+			} finally {
+				console.warn = originalWarn;
+			}
+
+			assert(_.isFunction(threadneedle.soapFlagged));
+			assert.deepEqual(warnings, ['soapFlagged: `soap` flag has been deprecated. Use `type: \'SOAP\'` instead.']);
+		});
+
 		it('should error if `type` is not valid', function () {
 			const privateThreadneedle = new ThreadNeedle();
 			try {
@@ -210,6 +255,81 @@ describe('#addMethodREST', function () {
 			});
 		});
 
+		it('should add `query` parameters to the url, joining arrays and skipping empty values', function (done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name + '?existing=1',
+				query: {
+					ids: [ '{{first}}', '{{second}}' ],
+					empty: '',
+					missing: '{{nothing}}',
+					name: '{{name}}'
+				},
+				expects: 200
+			});
+
+			app.get('/' + name, function (req, res) {
+				res.status(200).json(req.query);
+			});
+
+			threadneedle[name]({
+				first: 'a',
+				second: 'b',
+				name: 'Chris'
+			}).done(function (result) {
+				assert.deepEqual(result.body, {
+					existing: '1',
+					ids: 'a,b',
+					name: 'Chris'
+				});
+				done();
+			}, done);
+		});
+
+		it('should support the `options` method', function (done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, {
+				method: 'options',
+				url: host + '/' + name,
+				expects: 200
+			});
+
+			var seenMethod;
+			app.options('/' + name, function (req, res) {
+				seenMethod = req.method;
+				res.status(200).send('allowed');
+			});
+
+			threadneedle[name]({}).done(function (result) {
+				assert.strictEqual(seenMethod, 'OPTIONS');
+				assert.strictEqual(result.body, 'allowed');
+				done();
+			}, done);
+		});
+
+		it('should reject with `api_timeout` when the socket hangs up', function (done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name,
+				expects: 200
+			});
+
+			app.get('/' + name, function (req) {
+				req.socket.destroy();
+			});
+
+			threadneedle[name]({}).done(function () {
+				done(new Error('should have rejected'));
+			}, function (err) {
+				assert.deepEqual(err.headers, {});
+				assert.strictEqual(err.body.code, 'api_timeout');
+				assert.deepEqual(err.body.response, {});
+				done();
+			});
+		});
+
 		it('should substitute to the headers', function (done) {
 			var name = randString(10);
 			threadneedle.addMethod(name, {
@@ -256,6 +376,30 @@ describe('#addMethodREST', function () {
 				password: 'hello'
 			}).done(function (result) {
 				assert.equal(result.body.authorization, 'Basic Y2hyaXM6aGVsbG8=');
+				done();
+			});
+		});
+
+		it('should keep the original error in body if `afterHeaders` rejects without a value', function (done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, {
+				method: 'get',
+				url: host + '/' + name,
+				expects: 201,
+				afterHeaders: function () {
+					return when.reject();
+				}
+			});
+
+			app.get('/' + name, function (req, res) {
+				res.status(200).send('ok');
+			});
+
+			threadneedle[name]({}).done(function () {
+				done(new Error('should have rejected'));
+			}, function (err) {
+				assert.deepEqual(err.headers, {});
+				assert.strictEqual(err.body.message, 'Invalid response status code');
 				done();
 			});
 		});
@@ -1162,6 +1306,27 @@ describe('#addMethodREST', function () {
 				function (result) {
 					assert.deepEqual(result.headers, {});
 					assert.deepEqual(result.body.message, 'afterHeaders Error');
+					done();
+				}
+			);
+		});
+
+		it('Should keep the function model error in body if `afterHeaders` rejects without a value', function (done) {
+			var name = randString(10);
+			threadneedle.addMethod(name, functionModel, function () {
+				return when.reject();
+			});
+
+			threadneedle[name]({
+				passFlag: false
+			})
+			.done(
+				function (result) {
+					done(new Error('Wrong clause - succeeding'));
+				},
+				function (result) {
+					assert.deepEqual(result.headers, {});
+					assert.deepEqual(result.body.message, 'functionModel Error');
 					done();
 				}
 			);

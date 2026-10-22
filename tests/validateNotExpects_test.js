@@ -21,6 +21,22 @@ describe('#validateNotExpects', function () {
     assert(_.isUndefined(err));
   });
 
+  it('should stop at the first failing notExpects item', function () {
+    var err = validateNotExpects({
+      statusCode: 500,
+      body: {}
+    }, [{
+      statusCode: [500]
+    }, {
+      statusCode: [500, 501]
+    }]);
+    assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_status_code');
+    assert.deepEqual(err.notExpects, {
+      statusCode: [500]
+    });
+  });
+
   it('it should not be ok with invalid status codes', function () {
     var err = validateNotExpects({
       statusCode: 201
