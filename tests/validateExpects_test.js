@@ -14,6 +14,22 @@ describe('#validateExpects', function () {
     assert(_.isUndefined(err));
   });
 
+  it('should stop at the first failing expects item', function () {
+    var err = validateExpects({
+      statusCode: 299,
+      body: {}
+    }, [{
+      statusCode: [200]
+    }, {
+      statusCode: [201]
+    }]);
+    assert(_.isObject(err));
+    assert.equal(err.code, 'invalid_response_status_code');
+    assert.deepEqual(err.expects, {
+      statusCode: [200]
+    });
+  });
+
   it('should not be ok with invalid status codes', function () {
     var err = validateExpects({
       statusCode: 201

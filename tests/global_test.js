@@ -45,6 +45,50 @@ describe('Global settings', function () {
 			}
 		});
 
+		it('should warn, not error, if soap flag is used outside development mode', function () {
+			const originalWarn = console.warn;
+			const warnings = [];
+			console.warn = function (message) {
+				warnings.push(message);
+			};
+
+			let threadneedle;
+			try {
+				threadneedle = new ThreadNeedle(true);
+			} finally {
+				console.warn = originalWarn;
+			}
+
+			assert.strictEqual(threadneedle._globalOptions.type, 'soap');
+			assert.strictEqual(warnings.length, 1);
+			assert(warnings[0].includes('`soap` flag has been deprecated. Use `type: \'SOAP\'` instead.'));
+		});
+
+		it('should keep the current type if `type` is not a string', function () {
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({
+				type: 5
+			});
+			assert.deepEqual(threadneedle._globalOptions, {
+				type: 'rest'
+			});
+		});
+
+		it('should keep the current type if `type` is defined but invalid', function () {
+			const threadneedle = new ThreadNeedle();
+			threadneedle.global({
+				type: 'SOAP'
+			});
+			threadneedle.global({
+				type: 'graphql',
+				chris: 'test'
+			});
+			assert.deepEqual(threadneedle._globalOptions, {
+				type: 'soap',
+				chris: 'test'
+			});
+		});
+
 
 
 	});

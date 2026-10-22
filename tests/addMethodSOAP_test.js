@@ -1,9 +1,11 @@
 const assert = require('assert');
 const fs = require('fs');
+const net = require('net');
 
 const _ = require('lodash');
 const when = require('when');
 const express = require('express');
+const SOAP = require('soap');
 
 var { randString }	= require('../lib/utils/mout');
 const globalize = require('../lib/addMethod/globalize');
@@ -46,6 +48,40 @@ describe('#addMethodSOAP', function () {
 			}
 			done();
 		});
+	});
+
+	//A port reserved then released, so requests to it are refused
+	let closedPort;
+	before((done) => {
+		const scout = net.createServer();
+		scout.listen(0, () => {
+			closedPort = scout.address().port;
+			scout.close(done);
+		});
+	});
+
+	/*
+	  Serves the WSDL, pointed at itself, then drops the socket on every SOAP
+	  call. The client sees a `socket hang up`, which is what the api_timeout
+	  handling is for.
+	*/
+	const hangUpServer = {};
+	before((done) => {
+		const app = express();
+		app.get('/default.asmx', (req, res) => {
+			res.type('text/xml').send(soapServer.wsdlXML.replace(/http:\/\/localhost:8000/g, 'http://localhost:' + hangUpServer.port));
+		});
+		app.post('/default.asmx', (req) => {
+			req.socket.destroy();
+		});
+		hangUpServer.server = app.listen(0, () => {
+			hangUpServer.port = hangUpServer.server.address().port;
+			done();
+		});
+	});
+
+	after((done) => {
+		hangUpServer.server.close(done);
 	});
 
 	describe('Running', function () {
@@ -322,6 +358,256 @@ describe('#addMethodSOAP', function () {
 
 		});
 
+
+		asyncTest('should accept string SOAP headers and `authentication` in the options', async function () {
+
+			const privateThreadneedle = new ThreadNeedle();
+
+			privateThreadneedle.global({
+
+				type: 'SOAP',
+
+				wsdl: 'http://localhost:8000/default.asmx?WSDL',
+
+				options: {
+					headers: ['<TokenHeader xmlns="http://www.regonline.com/api"><APIToken>' + REGONLINE_TOKEN + '</APIToken></TokenHeader>']
+				},
+
+				data: {}
+
+			});
+
+			await privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
+
+					data: {
+						orderBy: 'ID DESC',
+					},
+
+					/*
+					  Substitution rebuilds `options` as a plain object, so a security
+					  instance set there would lose its methods. Set it on the request.
+					*/
+					beforeRequest: function (soapRequest) {
+						soapRequest.clientConfig.options.authentication = new SOAP.WSSecurity('user', 'pass');
+						return soapRequest;
+					}
+				}
+			);
+
+			const results = await privateThreadneedle['list_events']({});
+
+			assert.deepEqual(results.headers, {});
+			assert(results.body['GetEventsResult']['Success']);
+
+		});
+
+		asyncTest('should reject if the wsdl cannot be fetched', async function () {
+
+			const privateThreadneedle = new ThreadNeedle();
+
+			privateThreadneedle.global({
+				type: 'SOAP',
+				wsdl: 'http://127.0.0.1:' + closedPort + '/default.asmx?WSDL',
+				data: {}
+			});
+
+			await privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
+					data: {}
+				}
+			);
+
+			await privateThreadneedle['list_events']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert.strictEqual(err.body.code, 'ECONNREFUSED');
+				}
+			);
+
+		});
+
+		asyncTest('should reject if the method does not exist on the client', async function () {
+
+			await threadneedle.addMethod(
+				'list_nothing',
+				{
+					method: 'GetNothing',
+					data: {}
+				}
+			);
+
+			await threadneedle['list_nothing']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert.strictEqual(err.body.message, 'GetNothing method does not exist.');
+				}
+			);
+
+		});
+
+		asyncTest('should reject with `api_timeout` when the socket hangs up', async function () {
+
+			const privateThreadneedle = new ThreadNeedle();
+
+			privateThreadneedle.global({
+				type: 'SOAP',
+				wsdl: 'http://localhost:' + hangUpServer.port + '/default.asmx?WSDL',
+				data: {}
+			});
+
+			await privateThreadneedle.addMethod(
+				'list_events',
+				{
+					method: 'GetEvents',
+					data: {}
+				}
+			);
+
+			await privateThreadneedle['list_events']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert.strictEqual(err.body.code, 'api_timeout');
+					assert.deepEqual(err.body.response, {});
+				}
+			);
+
+		});
+
+		asyncTest('should reject with the SOAP fault when the service errors', async function () {
+
+			//`GetEvent` is in the WSDL but the test service does not implement it
+			await threadneedle.addMethod(
+				'get_event',
+				{
+					method: 'GetEvent',
+					data: {}
+				}
+			);
+
+			await threadneedle['get_event']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert(_.isObject(err.body));
+					assert.notStrictEqual(err.body.code, 'api_timeout');
+				}
+			);
+
+		});
+
+		asyncTest('should place `afterHeaders` error in body after a successful request', async function () {
+
+			await threadneedle.addMethod(
+				'list_events_ah_resolve',
+				{
+					method: 'GetEvents',
+					data: {},
+					afterHeaders: function () {
+						throw new Error('afterHeaders Error');
+					}
+				}
+			);
+
+			await threadneedle['list_events_ah_resolve']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert.strictEqual(err.body.message, 'afterHeaders Error');
+				}
+			);
+
+		});
+
+		asyncTest('should default params to an empty object', async function () {
+
+			await threadneedle.addMethod(
+				'list_events_no_params',
+				{
+					method: 'GetEvents',
+					data: {}
+				}
+			);
+
+			const results = await threadneedle['list_events_no_params']();
+
+			assert.deepEqual(results.headers, {});
+			assert(results.body['GetEventsResult']['Success']);
+
+		});
+
+		asyncTest('should keep the original error in body if `afterHeaders` rejects without a value after a failed request', async function () {
+
+			await threadneedle.addMethod(
+				'list_events_ah_reject_empty',
+				{
+					method: 'GetEvents',
+					data: {},
+					expects: function () {
+						return 'Test Error';
+					},
+					afterHeaders: function () {
+						return when.reject();
+					}
+				}
+			);
+
+			await threadneedle['list_events_ah_reject_empty']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert.strictEqual(err.body.message, 'Test Error');
+				}
+			);
+
+		});
+
+		asyncTest('should place `afterHeaders` error in body after a failed request', async function () {
+
+			await threadneedle.addMethod(
+				'list_events_ah_reject',
+				{
+					method: 'GetEvents',
+					data: {},
+					expects: function () {
+						return 'Test Error';
+					},
+					afterHeaders: function () {
+						throw new Error('afterHeaders Error');
+					}
+				}
+			);
+
+			await threadneedle['list_events_ah_reject']({}).then(
+				function () {
+					assert.fail('should have rejected');
+				},
+				function (err) {
+					assert.deepEqual(err.headers, {});
+					assert.strictEqual(err.body.message, 'afterHeaders Error');
+				}
+			);
+
+		});
 
 		it('should reject if expects function returns error', function (done) {
 			this.timeout(10000);
